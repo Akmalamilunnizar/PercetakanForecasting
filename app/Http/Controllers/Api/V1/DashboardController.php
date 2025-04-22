@@ -10,62 +10,67 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
+
     public function Index()
     {
-        // Data terbaru per bulan untuk setiap sensor
-        $dataSensorPH = Sensor::selectRaw('MONTH(created_at) as bulan, ph as nilai')
-            ->whereIn('id_sensor', function ($query) {
-                $query->select(DB::raw('MAX(id_sensor)'))
-                    ->from('sensor')
-                    ->groupBy(DB::raw('MONTH(created_at)'));
-            })
-            ->orderBy('bulan')
-            ->pluck('nilai');
-
-
-        $dataSensorTemperature = Sensor::selectRaw('MONTH(created_at) as bulan, temperature as nilai')
-            ->whereIn('id_sensor', function ($query) {
-                $query->select(DB::raw('MAX(id_sensor)'))
-                    ->from('sensor')
-                    ->groupBy(DB::raw('MONTH(created_at)'));
-            })
-            ->orderBy('bulan')
-            ->pluck('nilai');
-
-        $dataSensorTDS = Sensor::selectRaw('MONTH(created_at) as bulan, tds as nilai')
-            ->whereIn('id_sensor', function ($query) {
-                $query->select(DB::raw('MAX(id_sensor)'))
-                    ->from('sensor')
-                    ->groupBy(DB::raw('MONTH(created_at)'));
-            })
-            ->orderBy('bulan')
-            ->pluck('nilai');
-
-        $dataBulan = Sensor::selectRaw('MONTH(created_at) as bulan')
-            ->whereIn('id_sensor', function ($query) {
-                $query->select(DB::raw('MAX(id_sensor)'))
-                    ->from('sensor')
-                    ->groupBy(DB::raw('MONTH(created_at)'));
-            })
-            ->orderBy('bulan')
-            ->pluck('bulan');
-
-        // Nilai terbaru dari setiap sensor
-        $latestSensorData = Sensor::latest()->first();
-        $phValue = $latestSensorData->ph ?? 0; // Default ke 0 jika tidak ada data
-        $temperatureValue = $latestSensorData->temperature ?? 0;
-        $tdsValue = $latestSensorData->tds ?? 0;
-
-        return view('admin.dashboard', compact(
-            'dataBulan',
-            'dataSensorPH',
-            'dataSensorTemperature',
-            'dataSensorTDS',
-            'phValue',
-            'temperatureValue',
-            'tdsValue'
-        ));
+        return view('admin.dashboard');
     }
+    // public function Index()
+    // {
+    //     // Data terbaru per bulan untuk setiap sensor
+    //     $dataSensorPH = Sensor::selectRaw('MONTH(created_at) as bulan, ph as nilai')
+    //         ->whereIn('id_sensor', function ($query) {
+    //             $query->select(DB::raw('MAX(id_sensor)'))
+    //                 ->from('sensor')
+    //                 ->groupBy(DB::raw('MONTH(created_at)'));
+    //         })
+    //         ->orderBy('bulan')
+    //         ->pluck('nilai');
+
+
+    //     $dataSensorTemperature = Sensor::selectRaw('MONTH(created_at) as bulan, temperature as nilai')
+    //         ->whereIn('id_sensor', function ($query) {
+    //             $query->select(DB::raw('MAX(id_sensor)'))
+    //                 ->from('sensor')
+    //                 ->groupBy(DB::raw('MONTH(created_at)'));
+    //         })
+    //         ->orderBy('bulan')
+    //         ->pluck('nilai');
+
+    //     $dataSensorTDS = Sensor::selectRaw('MONTH(created_at) as bulan, tds as nilai')
+    //         ->whereIn('id_sensor', function ($query) {
+    //             $query->select(DB::raw('MAX(id_sensor)'))
+    //                 ->from('sensor')
+    //                 ->groupBy(DB::raw('MONTH(created_at)'));
+    //         })
+    //         ->orderBy('bulan')
+    //         ->pluck('nilai');
+
+    //     $dataBulan = Sensor::selectRaw('MONTH(created_at) as bulan')
+    //         ->whereIn('id_sensor', function ($query) {
+    //             $query->select(DB::raw('MAX(id_sensor)'))
+    //                 ->from('sensor')
+    //                 ->groupBy(DB::raw('MONTH(created_at)'));
+    //         })
+    //         ->orderBy('bulan')
+    //         ->pluck('bulan');
+
+    //     // Nilai terbaru dari setiap sensor
+    //     $latestSensorData = Sensor::latest()->first();
+    //     $phValue = $latestSensorData->ph ?? 0; // Default ke 0 jika tidak ada data
+    //     $temperatureValue = $latestSensorData->temperature ?? 0;
+    //     $tdsValue = $latestSensorData->tds ?? 0;
+
+    //     return view('admin.dashboard', compact(
+    //         'dataBulan',
+    //         'dataSensorPH',
+    //         'dataSensorTemperature',
+    //         'dataSensorTDS',
+    //         'phValue',
+    //         'temperatureValue',
+    //         'tdsValue'
+    //     ));
+    // }
 
     public function get_sensor_list(Request $request)
     {

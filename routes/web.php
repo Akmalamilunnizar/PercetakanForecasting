@@ -7,7 +7,7 @@ use App\Http\Controllers\Api\V1\FoodsController;
 use App\Http\Controllers\Api\V1\FoodTypeController;
 // use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Api\V1\OrderController;
-use App\Http\Controllers\Api\V1\PondController;
+use App\Http\Controllers\Api\V1\ItemsController;
 use App\Http\Controllers\Api\V1\ParameterReportController;
 use App\Http\Controllers\Api\V1\DiseaseReportController;
 use App\Http\Controllers\Api\V1\ProductController;
@@ -15,15 +15,15 @@ use App\Http\Controllers\Api\V1\SubCategoryController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
-use App\Models\Pond;
+use App\Models\Items;
 use App\Models\ParameterReport;
 use App\Models\DiseaseReport;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\DiagnosaController;
 use App\Http\Controllers\Api\V1\AdminProfileController;
-use App\Http\Controllers\Api\V1\DaftarKoiController;
-use App\Http\Controllers\Api\V1\JenisKoiController;
+use App\Http\Controllers\Api\V1\TypeItemsController;
 use App\Http\Controllers\Api\V1\PcvController;
+use App\Models\TypeItems;
 
 Route::get('/', function () {
     return view('welcome');
@@ -66,17 +66,17 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // Route::get('resources/admin/logout', 'App\Http\Controllers\Auth\AuthenticatedSessionController@logout');
 
 
-    Route::controller(PondController::class)->group(function () {
-        Route::get('/admin/all-pond', 'Index')->name('allponds');
-        Route::get('/admin/manage-pond', 'ManagePonds')->name('manageponds');
-        Route::get('/admin/all-pond/search', 'SearchPond')->name('searchpond');
-        Route::get('/admin/add-pond', 'AddPond')->name('addponds');
-        Route::post('/admin/store-pond', 'StorePond')->name('store-pond');
-        Route::get('/admin/edit-pond/{id}', 'EditPond')->name('editpond');
-        Route::get('/admin/edit-pond-img/{id}', 'EditPondImg')->name('editpondimg');
-        Route::post('/admin/update-pond-img', 'UpdatePondImg')->name('updatepondimg');
-        Route::post('/admin/update-pond', 'UpdatePond')->name('updatepond');
-        Route::get('/admin/delete-pond/{id}', 'DeletePond')->name('deletepond');
+    Route::controller(ItemsController::class)->group(function () {
+        Route::get('/admin/all-item', 'Index')->name('allitems');
+        Route::get('/admin/manage-item', 'ManageItems')->name('manageitems');
+        Route::get('/admin/all-item/search', 'SearchItem')->name('searchitem');
+        Route::get('/admin/add-items', 'AddItems')->name('additems');
+        Route::post('/admin/store-item', 'StoreItem')->name('store-item');
+        Route::get('/admin/edit-item/{id}', 'EditItem')->name('edititem');
+        Route::get('/admin/edit-item-img/{id}', 'EditItemImg')->name('edititemimg');
+        Route::post('/admin/update-item-img', 'UpdateItemImg')->name('updateitemimg');
+        Route::post('/admin/update-item', 'UpdateItem')->name('updateitem');
+        Route::get('/admin/delete-item/{id}', 'DeleteItem')->name('deleteitem');
     });
 
     Route::controller(ParameterReportController::class)->group(function () {
@@ -87,30 +87,30 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/admin/disease-report', 'Index')->name('diseasereport');
     });
 
-    Route::controller(DaftarKoiController::class)->group(function () {
-        Route::get('/admin/daftar-koi', 'index')->name('daftarkoi');
-        Route::get('/admin/daftar-koi/add-daftar-koi', 'addDaftarKoi')->name('adddaftarkoi');
-        Route::post('/admin/daftar-koi/add-daftar-koi', 'addDaftarKoi')->name('adddaftarkoi');
-        // GET request untuk menampilkan form tambah koi
-        Route::get('/admin/daftar-koi/add-daftar-koi', 'addDaftarKoi')->name('adddaftarkoi');
-        // POST request untuk memproses form tambah koi
-        Route::post('/admin/daftar-koi/add-daftar-koi', 'addDaftarKoi')->name('adddaftarkoi'); // Ubah ke store, bukan addDaftarKoi
-        // Rute untuk tambah jenis koi baru
-        Route::post('/admin/jenis-koi/add', [JenisKoiController::class, 'addDaftarKoi'])->name('addJenisKoi');
-        // Route untuk detail koi
-        Route::get('/admin/daftar-koi/koi/{id}/detail', 'show')->name('koi.detail');
-        // Route untuk edit koi
-        Route::get('/admin/daftar-koi/koi/{id}/edit', 'edit')->name('koi.edit');
-        // Route untuk update koi
-        Route::put('/admin/daftar-koi/koi/{id}/update', 'update')->name('koi.update'); // Perbaiki route untuk update
-        // Route untuk delete koi
-        Route::delete('/admin/daftar-koi/koi/{id}', 'destroy')->name('koi.delete');
+    Route::controller(ItemsController::class)->group(function () {
+        Route::get('/admin/daftar-barang', 'index')->name('daftarbarang');
+        Route::get('/admin/daftar-barang/add-daftar-barang', 'addDaftarBarang')->name('adddaftarbarang');
+        Route::post('/admin/daftar-barang/add-daftar-barang', 'addDaftarBarang')->name('adddaftarbarang');
+        // GET request untuk menampilkan form tambah barang
+        Route::get('/admin/daftar-barang/add-daftar-barang', 'addDaftarBarang')->name('adddaftarbarang');
+        // POST request untuk memproses form tambah barang
+        Route::post('/admin/daftar-barang/add-daftar-barang', 'addDaftarBarang')->name('adddaftarbarang'); // Ubah ke store, bukan addDaftarBarang
+        // Rute untuk tambah jenis barang baru
+        Route::post('/admin/jenis-barang/add', [TypeItems::class, 'addDaftarBarang'])->name('addTypeItems');
+        // Route untuk detail barang
+        Route::get('/admin/daftar-barang/barang/{id}/detail', 'show')->name('barang.detail');
+        // Route untuk edit barang
+        Route::get('/admin/daftar-barang/barang/{id}/edit', 'edit')->name('barang.edit');
+        // Route untuk update barang
+        Route::put('/admin/daftar-barang/barang/{id}/update', 'update')->name('barang.update'); // Perbaiki route untuk update
+        // Route untuk delete barang
+        Route::delete('/admin/daftar-barang/barang/{id}', 'destroy')->name('barang.delete');
 
-        Route::post('/add-penyakit', [DaftarKoiController::class, 'addPenyakit'])->name('addPenyakit');
+        Route::post('/add-penyakit', [ItemsController::class, 'addPenyakit'])->name('addPenyakit');
 
-        Route::post('/add-jenis-koi', [DaftarKoiController::class, 'addJenisKoi'])->name('addJenisKoi');
-        Route::delete('/delete-jenis-koi/{id}', [DaftarKoiController::class, 'deleteJenisKoi'])->name('deleteJenisKoi');
-        Route::post('/add-kolam', [PondController::class, 'addKolam'])->name('addKolam');
+        Route::post('/add-jenis-barang', [ItemsController::class, 'addTypeItems'])->name('addTypeItems');
+        Route::delete('/delete-jenis-barang/{id}', [ItemsController::class, 'deleteTypeItems'])->name('deleteTypeItems');
+        Route::post('/add-kolam', [ItemsController::class, 'addKolam'])->name('addKolam');
 
     });
 

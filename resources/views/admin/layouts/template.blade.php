@@ -86,16 +86,16 @@
                             <div data-i18n="Basic" class="larger-text">Penyakit Ikan Koi</div>
                         </a>
                     </li>
-                    <li class="menu-item {{ request()->is('admin/daftar-koi*') ? 'active' : '' }}">
-                        <a href="{{ route('daftarkoi') }}" class="menu-link">
+                    <li class="menu-item {{ request()->is('admin/daftar-barang*') ? 'active' : '' }}">
+                        <a href="{{ route('daftarbarang') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-table"></i>
-                            <div data-i18n="Basic" class="larger-text">Daftar Ikan Koi</div>
+                            <div data-i18n="Basic" class="larger-text">Daftar Barang</div>
                         </a>
                     </li>
-                    <li class="menu-item {{ request()->is('admin/all-pond*') ? 'active' : '' }}">
-                        <a href="{{ route('allponds') }}" class="menu-link">
+                    <li class="menu-item {{ request()->is('admin/all-item*') ? 'active' : '' }}">
+                        <a href="{{ route('allitems') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-collection"></i>
-                            <div data-i18n="Basic" class="larger-text">Semua Kolam</div>
+                            <div data-i18n="Basic" class="larger-text">Semua Barang</div>
                         </a>
                     </li>
                     <li class="menu-item {{ request()->is('admin/all-pcv*') ? 'active' : '' }}">
@@ -168,7 +168,7 @@
                     }
 
 
-                    < ! -- Header --><li class="menu-header small text-uppercase"><span class="menu-header-text">Pengguna</span></li>< !-- Apps --><li class="menu-item {{ request()->is('admin/add-users*') ? 'active' : '' }}"><a href="{{ route('add-users') }}" class="menu-link"><i class="menu-icon tf-icons bx bx-collection"></i><div data-i18n="Basic">Tambah Pengguna</div></a></li><li class="menu-item {{ request()->is('admin/all-users*') ? 'active' : '' }}"><a href="{{ route('allusers') }}" class="menu-link"><i class="menu-icon tf-icons bx bx-collection"></i><div data-i18n="Basic">Semua Pengguna</div></a></li>< ! -- Header --><li class="menu-header small text-uppercase"><span class="menu-header-text">Kolam</span></li>< !-- Apps --><li class="menu-item {{ request()->is('admin/add-pond*') ? 'active' : '' }}"><a href="{{ route('addponds') }}" class="menu-link"><i class="menu-icon tf-icons bx bx-collection"></i><div data-i18n="Basic">Tambah Kolam</div></a></li><li class="menu-item {{ request()->is('admin/all-pond*') ? 'active' : '' }}"><a href="{{ route('allponds') }}" class="menu-link"><i class="menu-icon tf-icons bx bx-collection"></i><div data-i18n="Basic">Semua Kolam</div></a></li>< !-- Header --><li class="menu-header small text-uppercase"><span class="menu-header-text">Laporan</span></li>< !-- Apps --><li class="menu-item {{ request()->is('admin/parameter-report*') ? 'active' : '' }}"><a href="{{ route('parameterreport') }}" class="menu-link"><i class="menu-icon tf-icons bx bx-collection"></i><div data-i18n="Basic">Parameter</div></a></li><li class="menu-item {{ request()->is('admin/disease-report*') ? 'active' : '' }}"><a href="{{ route('diseasereport') }}" class="menu-link"><i class="menu-icon tf-icons bx bx-collection"></i><div data-i18n="Basic">Kesehatan</div></a></li>< !-- <li class="menu-item {{ request()->is('admin/pending-order*') ? 'active' : '' }}"><a href="{{ route('pendingorder') }}" class="menu-link"><i class="menu-icon tf-icons bx bx-collection"></i><div data-i18n="Basic">Parameter</div></a></li><li class="menu-item {{ request()->is('admin/history-order*') ? 'active' : '' }}"><a href="{{ route('historyorder') }}" class="menu-link"><i class="menu-icon tf-icons bx bx-collection"></i><div data-i18n="Basic">Profil</div></a></li>--></ul>
+
 
                     /* Jika Anda ingin mengubah latar belakang item menu aktif */
                     #layout-menu .menu-item.active {

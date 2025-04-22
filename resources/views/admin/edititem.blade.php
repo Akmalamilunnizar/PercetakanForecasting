@@ -8,7 +8,7 @@
         <div class="col-xxl">
             <div class="card mb-4">
                 <div class="card-header d-flex align-items-center justify-content-between">
-                    <h5 class="mb-0">Edit Kolam</h5>
+                    <h5 class="mb-0">Edit Barang</h5>
                     <small class="text-muted float-end">Input Informasi</small>
                 </div>
                 <div class="card-body">
@@ -21,45 +21,56 @@
                             </ul>
                         </div>
                     @endif
-                    <form action="{{ route('updatepond') }}" method="POST" >
+                    <form action="{{ route('updateitem') }}" method="POST" >
                         @csrf
+                        <input type="hidden" value="{{$iteminfo->id}}" name="id">
                         <div class="row mb-3">
-                            <label class="col-sm-2 col-form-label" for="basic-default-name">Nama Kolam</label>
+                            <label class="col-sm-2 col-form-label" for="basic-default-name">Nama Barang</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="name" name="name"
-                                    placeholder="Kolam Tegalgede" />
+                                <input type="text" class="form-control" id="NamaBarang" name="NamaBarang" value="{{$iteminfo->NamaBarang}}"
+                                    placeholder="Nasi Padang" />
                             </div>
                         </div>
-
-                        {{-- <div class="row mb-3">
-                            <label class="col-sm-2 col-form-label" for="basic-default-name">Tipe Makanan</label>
+                        <div class="row mb-3">
+                            <label class="col-sm-2 col-form-label" for="basic-default-name">Pilih Jenis</label>
                             <div class="col-sm-10">
                                 <select class="form-select" id="type_id" name="type_id"
                                     aria-label="Default select example">
-                                    <option selected>Pilih Tipe Makanan</option>
+                                    <option value="{{ $parent_title->IdBarang ?? '0' }}" selected>
+                                        {{ $parent_title->JenisBarang ?? 'ROOT' }}</option>
+                                    @foreach ($typeid as $type)
+                                        <option value="{{ $type->IdJenisBarang }}">{{ $type->title }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label class="col-sm-2 col-form-label" for="basic-default-name">Jumlah Stok</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="JumlahStok" name="JumlahStok" value="{{ $iteminfo->JumlahStok }}" />
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <label class="col-sm-2 col-form-label" for="basic-default-name">Pilih Satuan</label>
+                            <div class="col-sm-10">
+                                <select class="form-select" id="type_id" name="type_id"
+                                    aria-label="Default select example">
+                                    <option value="{{ $parent_title->id ?? '0' }}" selected>
+                                        {{ $parent_title->title ?? 'ROOT' }}</option>
                                     @foreach ($typeid as $type)
                                         <option value="{{ $type->id }}">{{ $type->title }}</option>
                                     @endforeach
                                 </select>
                             </div>
-                        </div> --}}
-
-                        <div class="row mb-3">
-                            <label class="col-sm-2 col-form-label" for="basic-default-name">Volume Kolam</label>
-                            <div class="col-sm-10">
-                                <input type="number" class="form-control" id="volume" name="volume"
-                                    placeholder="12000" />
-                            </div>
                         </div>
 
-
-
-                        <div class="row mb-3">
+                        {{-- <div class="row mb-3">
                             <label class="col-sm-2 col-form-label" for="basic-default-name">Upload Gambar</label>
                             <div class="col-sm-10">
                                 <input class="form-control" type="file" id="img" name="img" />
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="row justify-content-end">
                             <div class="col-sm-10">

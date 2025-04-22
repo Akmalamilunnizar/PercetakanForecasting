@@ -1,14 +1,14 @@
 @extends('admin.layouts.template')
 @section('page_title')
-SANKE | Halaman Tambah Kolam Baru 
+SANKE | Halaman Tambah Kolam Baru
 @endsection
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
-    <h4 class="py-3 mb-4"><span class="text-muted fw-light">Halaman/</span> Tambah Kolam Baru</h4>
+    <h4 class="py-3 mb-4"><span class="text-muted fw-light">Halaman/</span>Tambah Data Barang</h4>
     <div class="col-xxl">
         <div class="card mb-4">
             <div class="card-header d-flex align-items-center justify-content-between">
-                <h5 class="mb-0">Tambah Kolam Baru</h5>
+                <h5 class="mb-0">Tambah Data Barang</h5>
                 <small class="text-muted float-end">Input Informasi</small>
             </div>
             <div class="card-body">
@@ -21,45 +21,53 @@ SANKE | Halaman Tambah Kolam Baru
                         </ul>
                     </div>
                 @endif
-                <form action="{{ route('store-pond') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('store-item') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row mb-3">
-                        <label class="col-sm-2 col-form-label" for="basic-default-name">Nama Kolam</label>
+                        <label class="col-sm-2 col-form-label" for="basic-default-name">Nama Barang</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="name" name="name"
-                                placeholder="Kolam Tegalgede" />
+                            <input type="text" class="form-control" id="NamaBarang" name="NamaBarang" placeholder="Banner" />
                         </div>
                     </div>
-
-                    {{-- <div class="row mb-3">
-                        <label class="col-sm-2 col-form-label" for="basic-default-name">Tipe Makanan</label>
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" for="basic-default-name">Kategori Barang</label>
                         <div class="col-sm-10">
-                            <select class="form-select" id="type_id" name="type_id" aria-label="Default select example">
-                                <option selected>Pilih Tipe Makanan</option>
+                            <select class="form-select" id="IdJenisBarang" name="IdJenisBarang" aria-label="Default select example">
+                                <option selected>Pilih Kategori Barang</option>
                                 @foreach ($typeid as $type)
-                                <option value="{{ $type->id }}">{{ $type->title }}</option>
+                                <option value="{{ $type->IdJenisBarang }}">{{ $type->JenisBarang }}</option>
                                 @endforeach
                             </select>
                         </div>
-                    </div> --}}
-
+                    </div>
                     <div class="row mb-3">
-                        <label class="col-sm-2 col-form-label" for="basic-default-name">Volume Kolam</label>
+                        <label class="col-sm-2 col-form-label" for="basic-default-name">Jumlah Stok</label>
                         <div class="col-sm-10">
-                            <input type="number" class="form-control" id="volume" name="volume" placeholder="12000" />
+                            <input type="number" class="form-control" id="JumlahStok" name="JumlahStok" placeholder="100" />
                         </div>
                     </div>
                     <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" for="basic-default-name">Satuan</label>
+                        <div class="col-sm-10">
+                            <select class="form-select" id="IdSatuan" name="IdSatuan" aria-label="Default select example">
+                                <option selected>Pilih Satuan</option>
+                                @foreach ($typeS as $type)
+                                <option value="{{ $type->IdSatuan }}">{{ $type->Satuan }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    {{-- <div class="row mb-3">
                         <label class="col-sm-2 col-form-label" for="basic-default-name">Upload Gambar</label>
                         <div class="col-sm-10">
                             <input class="form-control" type="file" id="img" name="img" />
                         </div>
-                    </div>
+                    </div> --}}
                     <div class="row justify-content-end">
                         <div class="col-sm-10">
                             <button type="submit" class="btn"
                                 style="background: linear-gradient(45deg, #28a745, #34d058); color: white;">
-                                Tambah Kolam
+                                Tambah Barang
                             </button>
                         </div>
                     </div>
