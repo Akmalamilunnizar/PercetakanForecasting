@@ -24,6 +24,12 @@ SANKE | Halaman Tambah Kolam Baru
                 <form action="{{ route('store-item') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" for="basic-default-name">Id Barang</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="IdBarang" name="IdBarang" placeholder="48342873129" />
+                        </div>
+                    </div>
+                    <div class="row mb-3">
                         <label class="col-sm-2 col-form-label" for="basic-default-name">Nama Barang</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="NamaBarang" name="NamaBarang" placeholder="Banner" />

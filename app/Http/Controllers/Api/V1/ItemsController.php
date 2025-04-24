@@ -55,6 +55,7 @@ class ItemsController extends Controller
     public function StoreItem(Request $request)
     {
         $request->validate([
+            'IdBarang' => 'required|unique:databarang',
             'NamaBarang' => 'required|unique:databarang',
             'IdJenisBarang' => 'required',
             'JumlahStok' => 'required',
@@ -64,6 +65,7 @@ class ItemsController extends Controller
         $mytime = Carbon::now();
         $mytime->toDateTimeString();
         Items::insert([
+            'IdBarang' => $request->IdBarang,
             'NamaBarang' => $request->NamaBarang,
             'IdJenisBarang' => $request->IdJenisBarang,
             'JumlahStok' => $request->JumlahStok,
@@ -72,8 +74,6 @@ class ItemsController extends Controller
         // dd($request->all());
 
         return redirect()->route('allitems')->with('message', 'Barang telah berhasil ditambah!');
-
-
     }
 
     public function EditItem($IdBarang)
@@ -81,28 +81,38 @@ class ItemsController extends Controller
 
         $iteminfo = Items::findOrFail($IdBarang);
         $category_parent = $iteminfo->IdJenisBarang;
-        $parent_title = Items::where('JenisBarang', $category_parent)->first();
+        // dd($category_parent);
+        $parent_title = TypeItems::where('IdJenisBarang', $category_parent)->first();
+        $category_parentS = $iteminfo->IdSatuan;
+        $parent_titleS = Satuan::where('IdSatuan', $category_parentS)->first();
+        // dd($iteminfo);
         $typeid = TypeItems::all();
         $typeS = Satuan::all();
 
-        return view('admin.edititem', compact('iteminfo', 'typeid', 'typeS', 'parent_title'));
+        return view('admin.edititem', compact('iteminfo', 'typeid', 'typeS', 'parent_title', 'parent_titleS'));
     }
 
     public function UpdateItem(Request $request)
     {
-        $itemid = $request->id;
+        $itemid = $request->IdBarang;
 
         $request->validate([
-            'name' => ['required', Rule::unique('items')->ignore($request->id),],
-            'volume' => 'required'
+            'NamaBarang' => [
+                'required',
+                Rule::unique('databarang', 'NamaBarang')->ignore($request->IdBarang, 'IdBarang'),
+            ],
+
+            'IdJenisBarang' => 'required',
+            'JumlahStok' => 'required',
+            'IdSatuan' => 'required',
         ]);
 
-        $mytime = Carbon::now();
-        $mytime->toDateTimeString();
         Items::findOrFail($itemid)->update([
-            'name' => $request->name,
-            'updated_at' => $mytime,
-            'volume' => $request->volume,
+            'IdBarang' => $request->IdBarang,
+            'NamaBarang' => $request->NamaBarang,
+            'IdJenisBarang' => $request->IdJenisBarang,
+            'JumlahStok' => $request->JumlahStok,
+            'IdSatuan' => $request->IdSatuan,
         ]);
 
         return redirect()->route('allitems')->with('message', 'Update Informasi Barang Berhasil!');

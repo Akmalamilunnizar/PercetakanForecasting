@@ -86,16 +86,16 @@
                             <div data-i18n="Basic" class="larger-text">Penyakit Ikan Koi</div>
                         </a>
                     </li>
-                    <li class="menu-item {{ request()->is('admin/daftar-barang*') ? 'active' : '' }}">
-                        <a href="{{ route('daftarbarang') }}" class="menu-link">
+                    {{-- <li class="menu-item {{ request()->is('admin/daftar-satuan*') ? 'active' : '' }}">
+                        <a href="{{ route('daftarsatuan') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-table"></i>
-                            <div data-i18n="Basic" class="larger-text">Daftar Barang</div>
+                            <div data-i18n="Basic" class="larger-text">Daftar Satuan</div>
                         </a>
-                    </li>
+                    </li> --}}
                     <li class="menu-item {{ request()->is('admin/all-item*') ? 'active' : '' }}">
                         <a href="{{ route('allitems') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-collection"></i>
-                            <div data-i18n="Basic" class="larger-text">Semua Barang</div>
+                            <div data-i18n="Basic" class="larger-text">Daftar Barang</div>
                         </a>
                     </li>
                     <li class="menu-item {{ request()->is('admin/all-pcv*') ? 'active' : '' }}">

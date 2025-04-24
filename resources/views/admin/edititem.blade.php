@@ -21,25 +21,26 @@
                             </ul>
                         </div>
                     @endif
-                    <form action="{{ route('updateitem') }}" method="POST" >
+                    <form action="{{ route('updateitem') }}" method="POST">
                         @csrf
-                        <input type="hidden" value="{{$iteminfo->id}}" name="id">
+                        <input type="hidden" value="{{ $iteminfo->IdBarang }}" name="IdBarang">
                         <div class="row mb-3">
                             <label class="col-sm-2 col-form-label" for="basic-default-name">Nama Barang</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="NamaBarang" name="NamaBarang" value="{{$iteminfo->NamaBarang}}"
-                                    placeholder="Nasi Padang" />
+                                <input type="text" class="form-control" id="NamaBarang" name="NamaBarang"
+                                    value="{{ $iteminfo->NamaBarang }}" placeholder="Nasi Padang" />
                             </div>
                         </div>
                         <div class="row mb-3">
                             <label class="col-sm-2 col-form-label" for="basic-default-name">Pilih Jenis</label>
                             <div class="col-sm-10">
-                                <select class="form-select" id="type_id" name="type_id"
+                                <select class="form-select" id="IdJenisBarang" name="IdJenisBarang"
                                     aria-label="Default select example">
-                                    <option value="{{ $parent_title->IdBarang ?? '0' }}" selected>
+                                    <option value="{{ $parent_title->IdJenisBarang ?? '0' }}" selected>
                                         {{ $parent_title->JenisBarang ?? 'ROOT' }}</option>
+                                    {{-- foreach for showing each available jenis barang --}}
                                     @foreach ($typeid as $type)
-                                        <option value="{{ $type->IdJenisBarang }}">{{ $type->title }}</option>
+                                        <option value="{{ $type->IdJenisBarang }}">{{ $type->JenisBarang }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -48,22 +49,25 @@
                         <div class="row mb-3">
                             <label class="col-sm-2 col-form-label" for="basic-default-name">Jumlah Stok</label>
                             <div class="col-sm-10">
-                                <input type="number" class="form-control" id="JumlahStok" name="JumlahStok" value="{{ $iteminfo->JumlahStok }}" />
+                                <input type="number" class="form-control" id="JumlahStok" name="JumlahStok"
+                                    value="{{ $iteminfo->JumlahStok }}" />
                             </div>
                         </div>
                         <div class="row mb-3">
                             <label class="col-sm-2 col-form-label" for="basic-default-name">Pilih Satuan</label>
                             <div class="col-sm-10">
-                                <select class="form-select" id="type_id" name="type_id"
-                                    aria-label="Default select example">
-                                    <option value="{{ $parent_title->id ?? '0' }}" selected>
-                                        {{ $parent_title->title ?? 'ROOT' }}</option>
-                                    @foreach ($typeid as $type)
-                                        <option value="{{ $type->id }}">{{ $type->title }}</option>
+                                <select class="form-select" id="IdSatuan" name="IdSatuan">
+                                    <option value="">-- Pilih Satuan --</option>
+                                    @foreach ($typeS as $satuan)
+                                        <option value="{{ $satuan->IdSatuan }}"
+                                            {{ $iteminfo->IdSatuan == $satuan->IdSatuan ? 'selected' : '' }}>
+                                            {{ $satuan->Satuan }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
+
 
                         {{-- <div class="row mb-3">
                             <label class="col-sm-2 col-form-label" for="basic-default-name">Upload Gambar</label>
