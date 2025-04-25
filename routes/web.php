@@ -23,6 +23,7 @@ use App\Http\Controllers\Api\V1\DiagnosaController;
 use App\Http\Controllers\Api\V1\AdminProfileController;
 use App\Http\Controllers\Api\V1\TypeItemsController;
 use App\Http\Controllers\Api\V1\PcvController;
+use App\Http\Controllers\Api\V1\SupplierController;
 use App\Models\TypeItems;
 
 Route::get('/', function () {
@@ -114,6 +115,25 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     });
 
+
+    Route::controller(SupplierController::class)->group(function () {
+        // Tampilkan semua supplier
+        Route::get('/admin/daftar-supplier', 'index')->name('allsuppliers');
+        // Tampilkan form tambah supplier
+        Route::get('/admin/daftar-supplier/add', 'addSupplier')->name('addsupplier');
+        // Proses form tambah supplier
+        Route::post('/admin/daftar-supplier/add', 'storeSupplier')->name('storesupplier');
+        // Form edit supplier
+        Route::get('/admin/daftar-supplier/{id}/edit', 'editSupplier')->name('editsupplier');
+        // Update supplier
+        Route::put('/admin/daftar-supplier/{id}/update', 'updateSupplier')->name('updatesupplier');
+        // Hapus supplier
+        Route::delete('/admin/daftar-supplier/{id}', 'deleteSupplier')->name('deletesupplier');
+        // Cari supplier
+        Route::get('/admin/search-supplier', 'searchSupplier')->name('searchsupplier');
+        // API get list supplier (JSON)
+        Route::get('/api/suppliers', 'get_supplier_list')->name('getsuppliers');
+    });
 
 
     // Route::controller(FoodsController::class)->group(function () {
