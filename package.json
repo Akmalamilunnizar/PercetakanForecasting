@@ -24,7 +24,8 @@
         "vue": "^3.2.37"
     },
     "dependencies": {
-        "apexcharts": "^3.49.1"
+        "apexcharts": "^3.49.1",
+        "boxicons": "^2.1.4"
     },
     "name": "percetakanforecasting",
     "version": "1.0.0",
