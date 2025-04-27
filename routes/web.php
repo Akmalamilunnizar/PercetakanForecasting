@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\DashboardController;
-use App\Http\Controllers\Api\V1\FoodsController;
+use App\Http\Controllers\Api\V1\SatuanController;
 use App\Http\Controllers\Api\V1\FoodTypeController;
 // use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Api\V1\OrderController;
@@ -73,10 +73,29 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/admin/add-items', 'AddItems')->name('additems');
         Route::post('/admin/store-item', 'StoreItem')->name('store-item');
         Route::get('/admin/edit-item/{id}', 'EditItem')->name('edititem');
-        Route::get('/admin/edit-item-img/{id}', 'EditItemImg')->name('edititemimg');
-        Route::post('/admin/update-item-img', 'UpdateItemImg')->name('updateitemimg');
         Route::post('/admin/update-item', 'UpdateItem')->name('updateitem');
         Route::get('/admin/delete-item/{id}', 'DeleteItem')->name('deleteitem');
+    });
+
+    Route::controller(SatuanController::class)->group(function () {
+        Route::get('/admin/all-satuan', 'Index')->name('allsatuan');
+        Route::get('/admin/manage-satuan', 'ManageSatuan')->name('managesatuan');
+        Route::get('/admin/all-satuan/search', 'SearchSatuan')->name('searchsatuan');
+        Route::get('/admin/add-satuan', 'AddSatuan')->name('addsatuan');
+        Route::post('/admin/store-satuan', 'StoreSatuan')->name('store-satuan');
+        Route::get('/admin/edit-satuan/{id}', 'EditSatuan')->name('editsatuan');
+        Route::post('/admin/update-satuan', 'UpdateSatuan')->name('updatesatuan');
+        Route::get('/admin/delete-satuan/{id}', 'DeleteSatuan')->name('deletesatuan');
+    });
+
+    Route::controller(TypeItemsController::class)->group(function () {
+        Route::get('/admin/all-type', 'Index')->name('alltype');
+        Route::get('/admin/all-type/search', 'SearchType')->name('searchtype');
+        Route::get('/admin/add-type', 'AddType')->name('addtype');
+        Route::post('/admin/store-type', 'StoreType')->name('store-type');
+        Route::get('/admin/edit-type/{id}', 'EditType')->name('edittype');
+        Route::post('/admin/update-type', 'UpdateType')->name('updatetype');
+        Route::get('/admin/delete-type/{id}', 'DeleteType')->name('deletetype');
     });
 
     Route::controller(ParameterReportController::class)->group(function () {
