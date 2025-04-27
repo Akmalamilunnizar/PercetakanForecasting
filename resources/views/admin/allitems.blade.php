@@ -35,7 +35,6 @@
                             <th>Id</th>
                             <th>Nama Barang</th>
                             <th>JenisBarang</th>
-                            <th>IdSatuan</th>
                             <th>Jumlah Stok</th>
                             <th>Actions</th>
                         </tr>
@@ -46,19 +45,14 @@
                             <tr>
                                 <td>{{ $item->IdBarang }}</td>
                                 <td>{{ $item->NamaBarang }}</td>
-                                <td>{{ $item->IdJenisBarang }}</td>
-
-
-
+                                <td>{{ $item->jenisBarang->JenisBarang }}</td>
                                 {{-- <td>{{ $jml_ikan }}</td> --}}
-                                <td>{{ $item->IdSatuan }}</td>
-                                <td>{{ $item->JumlahStok }}</td>
+                                <td>{{ $item->JumlahStok }} {{ $item->satuan->Satuan }}</td>
                                 {{-- <td>{{ $item->updated_at }}</td> --}}
                                 <td>
                                     <a href="{{ route('edititem', $item->IdBarang) }}" class="btn btn-primary">Edit</a>
                                     <a href="{{ route('deleteitem', $item->IdBarang) }}" class="btn btn-warning">Delete</a>
                                 </td>
-
                             </tr>
                         @endforeach
                     </tbody>
