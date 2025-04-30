@@ -24,21 +24,21 @@
                     <form action="{{ route('updateitem') }}" method="POST">
                         @csrf
                         <input type="hidden" value="{{ $iteminfo->IdBarang }}" name="IdBarang">
+
                         <div class="row mb-3">
-                            <label class="col-sm-2 col-form-label" for="basic-default-name">Nama Barang</label>
+                            <label class="col-sm-2 col-form-label" for="NamaBarang">Nama Barang</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="NamaBarang" name="NamaBarang"
-                                    value="{{ $iteminfo->NamaBarang }}" placeholder="Nasi Padang" />
+                                    value="{{ $iteminfo->NamaBarang }}" placeholder="Contoh: Banner" required />
                             </div>
                         </div>
+
                         <div class="row mb-3">
-                            <label class="col-sm-2 col-form-label" for="basic-default-name">Pilih Jenis</label>
+                            <label class="col-sm-2 col-form-label" for="IdJenisBarang">Pilih Jenis</label>
                             <div class="col-sm-10">
-                                <select class="form-select" id="IdJenisBarang" name="IdJenisBarang"
-                                    aria-label="Default select example">
+                                <select class="form-select" id="IdJenisBarang" name="IdJenisBarang" required>
                                     <option value="{{ $parent_title->IdJenisBarang ?? '0' }}" selected>
                                         {{ $parent_title->JenisBarang ?? 'ROOT' }}</option>
-                                    {{-- foreach for showing each available jenis barang --}}
                                     @foreach ($typeid as $type)
                                         <option value="{{ $type->IdJenisBarang }}">{{ $type->JenisBarang }}</option>
                                     @endforeach
@@ -46,17 +46,17 @@
                             </div>
                         </div>
 
-                        <div class="row mb-3">
-                            <label class="col-sm-2 col-form-label" for="basic-default-name">Jumlah Stok</label>
+                        {{-- <div class="row mb-3">
+                            <label class="col-sm-2 col-form-label">Jumlah Stok </label>
                             <div class="col-sm-10">
-                                <input type="number" class="form-control" id="JumlahStok" name="JumlahStok"
-                                    value="{{ $iteminfo->JumlahStok }}" />
+                                <input type="number" class="form-control" value="{{ $iteminfo->JumlahStok }}" readonly />
                             </div>
-                        </div>
+                        </div> --}}
+
                         <div class="row mb-3">
-                            <label class="col-sm-2 col-form-label" for="basic-default-name">Pilih Satuan</label>
+                            <label class="col-sm-2 col-form-label" for="IdSatuan">Pilih Satuan</label>
                             <div class="col-sm-10">
-                                <select class="form-select" id="IdSatuan" name="IdSatuan">
+                                <select class="form-select" id="IdSatuan" name="IdSatuan" required>
                                     <option value="">-- Pilih Satuan --</option>
                                     @foreach ($typeS as $satuan)
                                         <option value="{{ $satuan->IdSatuan }}"
@@ -68,17 +68,9 @@
                             </div>
                         </div>
 
-
-                        {{-- <div class="row mb-3">
-                            <label class="col-sm-2 col-form-label" for="basic-default-name">Upload Gambar</label>
-                            <div class="col-sm-10">
-                                <input class="form-control" type="file" id="img" name="img" />
-                            </div>
-                        </div> --}}
-
                         <div class="row justify-content-end">
                             <div class="col-sm-10">
-                                <button type="submit" class="btn btn-primary">Update Kolam</button>
+                                <button type="submit" class="btn btn-primary">Update Supplier</button>
                             </div>
                         </div>
                     </form>

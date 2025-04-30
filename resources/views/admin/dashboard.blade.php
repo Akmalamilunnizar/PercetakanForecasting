@@ -63,23 +63,52 @@ SANKE | Halaman Dashboard Admin
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-lg-8 order-1 order-md-1 order-lg-1 mb-4">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div id="lineChart"></div>
-                        </div>
-                    </div>
+            <div class="card">
+                <h5 class="card-header">Barang Yang Tersedia</h5>
+                <div class="table-responsive text-nowrap">
+                    <table class="table">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Id</th>
+                                <th>Nama Barang</th>
+                                <th>Jenis Barang</th>
+                                <th>Jumlah Stok</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+
+                            @foreach ($items as $item)
+                                <tr>
+                                    <td>{{ $item->IdBarang }}</td>
+                                    <td>{{ $item->NamaBarang }}</td>
+                                    <td>{{ $item->jenisBarang->JenisBarang }}</td>
+
+                                    {{-- <td>{{ $jml_ikan }}</td> --}}
+                                    <td>{{ $item->JumlahStok }} {{ $item->satuan->Satuan }}</td>
+                                    {{-- <td>{{ $item->updated_at }}</td> --}}
+                                    <td>
+                                        <a href="{{ route('edititem', $item->IdBarang) }}" class="btn btn-primary">Edit</a>
+                                        <a href="{{ route('deleteitem', $item->IdBarang) }}" class="btn btn-warning">Delete</a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
+            <!-- Bootstrap Table with Header - Light -->
+        </div>
+
+            <!-- Bootstrap Table with Header - Light -->
+        </div>
             <div class="col-12 col-lg-4 col-md-8 order-2 order-md-2">
                 <div class="row">
                     <div class="col-md-8 col-lg-12 col-xl-12 order-0 mb-4">
                         <div class="card">
                             <div class="card-body">
-                                <div class="fw-bold text-dark mb-2">Keterangan</div>
+                                {{-- <div class="fw-bold text-dark mb-2">Keterangan</div> --}}
                                 <div id="pieChart"></div>
-
                             </div>
                         </div>
                     </div>
@@ -97,7 +126,7 @@ SANKE | Halaman Dashboard Admin
                                             alt="Credit Card" class="rounded" />
                                     </div>
                                 </div>
-                               
+
                             </div>
                         </div>
                     </div>
@@ -110,7 +139,7 @@ SANKE | Halaman Dashboard Admin
                                             alt="Credit Card" class="rounded" />
                                     </div>
                                 </div>
-                               
+
                             </div>
                         </div>
                     </div>
@@ -123,7 +152,7 @@ SANKE | Halaman Dashboard Admin
                                             alt="Credit Card" class="rounded" />
                                     </div>
                                 </div>
-                                
+
                             </div>
                         </div>
                     </div>

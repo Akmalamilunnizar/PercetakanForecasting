@@ -7,6 +7,8 @@ import 'boxicons';
 
 window.PerfectScrollbar = PerfectScrollbar
 
+
+
 document.addEventListener('alpine:init', () => {
     Alpine.data('mainState', () => {
         let lastScrollTop = 0

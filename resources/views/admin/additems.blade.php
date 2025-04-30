@@ -24,9 +24,49 @@ SANKE | Halaman Tambah Kolam Baru
                 <form action="{{ route('store-item') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" for="basic-default-name">Username Admin</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="username" name="username" value="{{ $username }}" readonly/>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" for="basic-default-name">Id Masuk</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="IdMasuk" name="IdMasuk" value="{{ $newIdMasuk }}" readonly />
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" for="basic-default-name">Supplier</label>
+                        <div class="col-sm-10">
+                        <select class="form-select" id="IdSupplier" name="IdSupplier">
+                            @foreach($suppliers as $supplier)
+                                <option value="{{ $supplier->IdSupplier }}">{{ $supplier->NamaSupplier }}</option>
+                            @endforeach
+                        </select>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" for="basic-default-name">Kuantitas Masuk</label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" id="QtyMasuk" name="QtyMasuk" placeholder="50" />
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" for="basic-default-name">Harga Satuan</label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" id="HargaSatuan" name="HargaSatuan" placeholder="55000" />
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" for="basic-default-name">Sub Total</label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control" id="SubTotal" name="SubTotal" placeholder="1100000" readonly/>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
                         <label class="col-sm-2 col-form-label" for="basic-default-name">Id Barang</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="IdBarang" name="IdBarang" placeholder="48342873129" />
+                            <input type="number" class="form-control" id="IdBarang" name="IdBarang" placeholder="Scan Id Barang" />
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -44,12 +84,6 @@ SANKE | Halaman Tambah Kolam Baru
                                 <option value="{{ $type->IdJenisBarang }}">{{ $type->JenisBarang }}</option>
                                 @endforeach
                             </select>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <label class="col-sm-2 col-form-label" for="basic-default-name">Jumlah Stok</label>
-                        <div class="col-sm-10">
-                            <input type="number" class="form-control" id="JumlahStok" name="JumlahStok" placeholder="100" />
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -82,4 +116,10 @@ SANKE | Halaman Tambah Kolam Baru
         </div>
     </div>
 </div>
+
+<script src="{{ asset('js/script.js') }}"></script>
+
+
+
+
 @endsection

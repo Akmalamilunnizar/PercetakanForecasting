@@ -33,6 +33,11 @@
                     <thead class="table-light">
                         <tr>
                             <th>Id</th>
+                            <th>Id Masuk</th>
+                            <th>Id Supplier</th>
+                            <th>Qty Masuk</th>
+                            <th>Harga Satuan</th>
+                            <th>Sub Total</th>
                             <th>Nama Barang</th>
                             <th>JenisBarang</th>
                             <th>Jumlah Stok</th>
@@ -44,6 +49,11 @@
                         @foreach ($items as $item)
                             <tr>
                                 <td>{{ $item->IdBarang }}</td>
+                                <td>{{ $item->detailBarangMasuk?->IdMasuk ?? '-' }}</td>
+                                <td>{{ $item->detailBarangMasuk?->IdSupplier ?? '-' }}</td>
+                                <td>{{ $item->detailBarangMasuk?->QtyMasuk ?? '-' }}</td>
+                                <td>{{ $item->detailBarangMasuk?->HargaSatuan ?? '-' }}</td>
+                                <td>{{ $item->detailBarangMasuk?->SubTotal ?? '-' }}</td>
                                 <td>{{ $item->NamaBarang }}</td>
                                 <td>{{ $item->jenisBarang->JenisBarang }}</td>
                                 {{-- <td>{{ $jml_ikan }}</td> --}}

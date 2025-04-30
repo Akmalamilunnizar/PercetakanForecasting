@@ -9,7 +9,7 @@ class Items extends Model
 {
     use HasFactory;
     protected $table = 'databarang';
-    protected $primaryKey = 'IdBarang'; // ini yang penting
+    protected $primaryKey = 'IdBarang'; 
     protected $fillable = [
         'IdBarang', // ini buat id
         'NamaBarang',
@@ -30,4 +30,10 @@ class Items extends Model
     {
         return $this->belongsTo(Satuan::class, 'IdSatuan', 'IdSatuan');
     }
+
+    public function detailBarangMasuk()
+{
+    return $this->hasOne(DetailMasuk::class, 'IdBarang', 'IdBarang');
+}
+
 }
