@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Models\DetailMasuk;
+use App\Models\BarangMasuk;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\TypeItems;
 use App\Models\Satuan;
+use App\Models\Supplier;
 use App\Models\Items;
 use Illuminate\Validation\Rule;
 use Encore\Admin\Layout\Content;
@@ -17,14 +21,8 @@ class ItemsController extends Controller
 {
     public function Index()
     {
-        // Ambil jumlah ikan per kolam berdasarkan pond_id
-        // $jml_ikan = DB::table('detail_koi')
-        //     ->selectRaw('count(*) as jml_ikan, pond_id')
-        //     ->groupBy('pond_id')
-        //     ->get();
+        $items = Items::with('detailBarangMasuk')->get();
 
-        // Ambil data kolam
-        $items = Items::all();
 
         // Kirim data ke view
         return view("admin.allitems", compact('items'));
@@ -46,10 +44,20 @@ class ItemsController extends Controller
 
     public function AddItems()
     {
+        $username = Auth::user()->username;
+        $lastMasuk = DetailMasuk::orderBy('IdMasuk', 'desc')->first();
+        $newIdMasuk = $lastMasuk ? 'BM' . str_pad((int) substr($lastMasuk->IdMasuk, 2) + 1, 4, '0', STR_PAD_LEFT) : 'BM0001';
+        // dd($username);
+
+        // Ambil ID terakhir dari tabel supplier
+        $lastSupplier = Supplier::orderBy('IdSupplier', 'desc')->first();
+        $newIdSupplier = $lastSupplier ? 'SP' . str_pad((int) substr($lastSupplier->IdSupplier, 2) + 1, 4, '0', STR_PAD_LEFT) : 'SP0001';
+
+        $suppliers = Supplier::all();
         $typeid = TypeItems::all();
         $typeS = Satuan::all();
 
-        return view("admin.additems", compact('typeid', 'typeS'));
+        return view("admin.additems", compact('typeid', 'typeS', 'newIdSupplier', 'newIdMasuk', 'typeid', 'typeS', 'suppliers', 'username'));
     }
 
     public function StoreItem(Request $request)
@@ -58,23 +66,45 @@ class ItemsController extends Controller
             'IdBarang' => 'required|unique:databarang',
             'NamaBarang' => 'required|unique:databarang',
             'IdJenisBarang' => 'required',
-            'JumlahStok' => 'required',
             'IdSatuan' => 'required',
+            'IdMasuk' => 'required',
+            'username' => 'required',
+            'IdSupplier' => 'required',
+            'QtyMasuk' => 'required|numeric',
+            'HargaSatuan' => 'required|numeric',
+            'SubTotal' => 'required|numeric',
         ]);
 
-        $mytime = Carbon::now();
-        $mytime->toDateTimeString();
+        // Simpan ke tabel databarang
         Items::insert([
             'IdBarang' => $request->IdBarang,
             'NamaBarang' => $request->NamaBarang,
             'IdJenisBarang' => $request->IdJenisBarang,
-            'JumlahStok' => $request->JumlahStok,
+            'JumlahStok' => 0, // Tidak perlu diisi karena udah ada trigger sql
             'IdSatuan' => $request->IdSatuan,
         ]);
-        // dd($request->all());
+
+        // Simpan ke tabel barangmasuk (master transaksi)
+        BarangMasuk::insert([
+            'IdMasuk' => $request->IdMasuk,
+            'username' => $request->username,
+            'tglMasuk' => Carbon::now(),
+        ]);
+
+        // Simpan ke tabel detail_barangmasuk (detail transaksi)
+        DetailMasuk::insert([
+            'IdMasuk' => $request->IdMasuk,
+            'IdSupplier' => $request->IdSupplier,
+            'IdBarang' => $request->IdBarang,
+            'QtyMasuk' => $request->QtyMasuk,
+            'HargaSatuan' => $request->HargaSatuan,
+            'SubTotal' => $request->SubTotal,
+        ]);
 
         return redirect()->route('allitems')->with('message', 'Barang telah berhasil ditambah!');
     }
+
+
 
     public function EditItem($IdBarang)
     {
@@ -102,16 +132,14 @@ class ItemsController extends Controller
                 Rule::unique('databarang', 'NamaBarang')->ignore($request->IdBarang, 'IdBarang'),
             ],
 
+            'IdBarang' => 'required',
             'IdJenisBarang' => 'required',
-            'JumlahStok' => 'required',
             'IdSatuan' => 'required',
         ]);
 
-        Items::findOrFail($itemid)->update([
-            'IdBarang' => $request->IdBarang,
+        Items::where('IdBarang', $request->IdBarang)->update([
             'NamaBarang' => $request->NamaBarang,
             'IdJenisBarang' => $request->IdJenisBarang,
-            'JumlahStok' => $request->JumlahStok,
             'IdSatuan' => $request->IdSatuan,
         ]);
 
@@ -120,10 +148,28 @@ class ItemsController extends Controller
 
     public function DeleteItem($IdBarang)
     {
-        Items::findOrFail($IdBarang)->delete();
+        // Ambil semua IdMasuk yang berkaitan dengan barang ini
+        $idMasukList = DetailMasuk::where('IdBarang', $IdBarang)->pluck('IdMasuk');
 
-        return redirect()->route('allitems')->with('message', 'Penghapusan Barang Berhasil!');
+        // Hapus semua entri detail masuk yang terkait dengan barang ini
+        DetailMasuk::where('IdBarang', $IdBarang)->delete();
+
+        // Hapus dari databarang
+        Items::where('IdBarang', $IdBarang)->delete();
+
+        // Cek apakah IdMasuk yang tadi sudah tidak digunakan lagi di detail_barangmasuk
+        foreach ($idMasukList as $idMasuk) {
+            $used = DetailMasuk::where('IdMasuk', $idMasuk)->exists();
+            if (!$used) {
+                BarangMasuk::where('IdMasuk', $idMasuk)->delete();
+            }
+        }
+
+        return redirect()->route('allitems')->with('message', 'Penghapusan Barang ');
     }
+
+
+
 
     public function get_item_list()
     {

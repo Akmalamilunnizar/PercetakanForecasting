@@ -2,23 +2,21 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class TypeItems extends Model
 {
-    // use DefaultDatetimeFormat;
-    //table name
+    use HasFactory;
+
+    protected $table = 'jenisbarang';
+    protected $primaryKey = 'IdJenisBarang';  // <- PENTING: Ini harus sesuai nama kolom PK di DB
+    public $incrementing = false;         // Jika IdSatuan bukan auto increment
+    protected $keyType = 'string';        // Jika IdSatuan bertipe VARCHAR
+    public $timestamps = false;
+
     protected $fillable = [
         'IdJenisBarang',
         'JenisBarang',
     ];
-
-    protected $table = 'jenisbarang';
-
-    public $timestamps = false;  // Karena tabel jenis_koi tidak menggunakan created_at dan updated_at
-    public function jenisKoi()
-    {
-        return $this->belongsTo(TypeItems::class, 'jenis_koi');
-    }
-
 }

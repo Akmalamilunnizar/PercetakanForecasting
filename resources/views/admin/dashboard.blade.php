@@ -25,105 +25,6 @@ SANKE | Halaman Dashboard Admin
 {{--
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script> --}}
 
-<script>
-    // Line Chart (Laporan Penjualan)
-    // Line Chart (Laporan Sensor)
-    var lineChartOptions = {
-        series: [
-            {
-                name: "pH",
-                data: @json($dataSensorPH)
-            },
-            {
-                name: "Suhu",
-                data: @json($dataSensorTemperature)
-            },
-            {
-                name: "TDS",
-                data: @json($dataSensorTDS)
-            }
-        ],
-        chart: {
-            type: 'bar',
-            height: 350
-        },
-        plotOptions: {
-            bar: {
-                horizontal: false,
-                columnWidth: '55%',
-                borderRadius: 5,
-                borderRadiusApplication: 'end'
-            },
-        },
-        dataLabels: {
-            enabled: false
-        },
-        stroke: {
-            show: true,
-            width: 2,
-            colors: ['transparent']
-        },
-        xaxis: {
-            categories: @json($dataBulan),
-            title: {
-                text: 'Bulan'
-            }
-        },
-        yaxis: {
-            title: {
-                text: 'Nilai Sensor'
-            }
-        },
-        fill: {
-            opacity: 1
-        },
-        tooltip: {
-            y: {
-                formatter: function (val) {
-                    return val ;
-                }
-            }
-        }
-    };
-
-    // Render the line chart in the 'lineChart' div
-    var lineChart = new ApexCharts(document.querySelector("#lineChart"), lineChartOptions);
-    lineChart.render();
-
-    // Pie Chart (Example Pie Chart)
-    var pieChartOptions = {
-        series: [
-            {{ $phValue }},
-            {{ $temperatureValue }},
-            {{ $tdsValue }}
-        ],
-        chart: {
-            width: 435,
-            type: 'pie',
-        },
-        labels: ['pH', 'Suhu', 'TDS'],
-        legend: {
-            position: 'bottom', // This places the legend at the bottom for all screen sizes
-        },
-        responsive: [{
-            breakpoint: 450,
-            options: {
-                chart: {
-                    width: 200
-                },
-                legend: {
-                    position: 'bottom' // Ensures the legend remains at the bottom for small screens
-                }
-            }
-        }]
-    };
-
-    // Render the pie chart in the 'pieChart' div
-    var pieChart = new ApexCharts(document.querySelector("#pieChart"), pieChartOptions);
-    pieChart.render();
-</script>
-@endsection
-
 @section('content')
 <!-- Content wrapper -->
 <div class="content-wrapper">
@@ -162,23 +63,52 @@ SANKE | Halaman Dashboard Admin
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-lg-8 order-1 order-md-1 order-lg-1 mb-4">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <div id="lineChart"></div>
-                        </div>
-                    </div>
+            <div class="card">
+                <h5 class="card-header">Barang Yang Tersedia</h5>
+                <div class="table-responsive text-nowrap">
+                    <table class="table">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Id</th>
+                                <th>Nama Barang</th>
+                                <th>Jenis Barang</th>
+                                <th>Jumlah Stok</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-border-bottom-0">
+
+                            @foreach ($items as $item)
+                                <tr>
+                                    <td>{{ $item->IdBarang }}</td>
+                                    <td>{{ $item->NamaBarang }}</td>
+                                    <td>{{ $item->jenisBarang->JenisBarang }}</td>
+
+                                    {{-- <td>{{ $jml_ikan }}</td> --}}
+                                    <td>{{ $item->JumlahStok }} {{ $item->satuan->Satuan }}</td>
+                                    {{-- <td>{{ $item->updated_at }}</td> --}}
+                                    <td>
+                                        <a href="{{ route('edititem', $item->IdBarang) }}" class="btn btn-primary">Edit</a>
+                                        <a href="{{ route('deleteitem', $item->IdBarang) }}" class="btn btn-warning">Delete</a>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
+            <!-- Bootstrap Table with Header - Light -->
+        </div>
+
+            <!-- Bootstrap Table with Header - Light -->
+        </div>
             <div class="col-12 col-lg-4 col-md-8 order-2 order-md-2">
                 <div class="row">
                     <div class="col-md-8 col-lg-12 col-xl-12 order-0 mb-4">
                         <div class="card">
                             <div class="card-body">
-                                <div class="fw-bold text-dark mb-2">Keterangan</div>
+                                {{-- <div class="fw-bold text-dark mb-2">Keterangan</div> --}}
                                 <div id="pieChart"></div>
-
                             </div>
                         </div>
                     </div>
@@ -196,10 +126,7 @@ SANKE | Halaman Dashboard Admin
                                             alt="Credit Card" class="rounded" />
                                     </div>
                                 </div>
-                                <span class="d-block mb-1 text-center">pH</span>
-                                <h3 class="card-title text-center mb-2">{{ $phValue }}</h3>
-                                <small class="text-danger fw-semibold text-center"><i
-                                        class="bx bx-down-arrow-alt"></i></small>
+
                             </div>
                         </div>
                     </div>
@@ -212,10 +139,7 @@ SANKE | Halaman Dashboard Admin
                                             alt="Credit Card" class="rounded" />
                                     </div>
                                 </div>
-                                <span class="fw-semibold d-block mb-1 text-center">Suhu</span>
-                                <h3 class="card-title text-center mb-2">{{ $temperatureValue }}</h3>
-                                <small class="text-success fw-semibold text-center"><i
-                                        class="bx bx-up-arrow-alt"></i></small>
+
                             </div>
                         </div>
                     </div>
@@ -228,10 +152,7 @@ SANKE | Halaman Dashboard Admin
                                             alt="Credit Card" class="rounded" />
                                     </div>
                                 </div>
-                                <span class="fw-semibold d-block mb-1 text-center">TDS</span>
-                                <h3 class="card-title text-center mb-2">{{ $tdsValue }}</h3>
-                                <small class="text-success fw-semibold text-center"><i
-                                        class="bx bx-up-arrow-alt"></i></small>
+
                             </div>
                         </div>
                     </div>

@@ -38,7 +38,7 @@
     <link rel="stylesheet" href="{{ asset('dashboard2/assets/vendor/libs/apex-charts/apex-charts.css') }}" />
 
     <!-- Page CSS -->
-
+    @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/sass/style.scss'])
     <!-- Helpers -->
     <script src="{{ asset('dashboard2/assets/vendor/js/helpers.js') }}"></script>
     <script src="{{ asset('dashboard2/assets/js/config.js') }}"></script>
@@ -86,18 +86,33 @@
                             <div data-i18n="Basic" class="larger-text">Barang Masuk</div>
                         </a>
                     </li>
-                    {{-- <li class="menu-item {{ request()->is('admin/daftar-satuan*') ? 'active' : '' }}">
-                        <a href="{{ route('daftarsatuan') }}" class="menu-link">
+                    <li class="menu-item {{ request()->is('admin/all-satuan*') ? 'active' : '' }}">
+                        <a href="{{ route('allsatuan') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-table"></i>
                             <div data-i18n="Basic" class="larger-text">Daftar Satuan</div>
                         </a>
-                    </li> --}}
+                    </li>
+                    <li class="menu-item {{ request()->is('admin/all-type*') ? 'active' : '' }}">
+                        <a href="{{ route('alltype') }}" class="menu-link">
+                            <i class='menu-icon tf-icons bx bx-package'></i>
+                            <div data-i18n="Basic" class="larger-text">Daftar Jenis Barang</div>
+                        </a>
+
+                    </li>
                     <li class="menu-item {{ request()->is('admin/all-item*') ? 'active' : '' }}">
                         <a href="{{ route('allitems') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-collection"></i>
+                            <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
                             <div data-i18n="Basic" class="larger-text">Daftar Barang</div>
                         </a>
                     </li>
+
+                    <li class="menu-item {{ request()->is('admin/daftar-supplier*') ? 'active' : '' }}">
+                        <a href="{{ route('allsuppliers') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-store"></i>
+                            <div data-i18n="Basic" class="larger-text">Data Supplier</div>
+                        </a>
+                    </li>
+                    
                     <li class="menu-item {{ request()->is('admin/all-pcv*') ? 'active' : '' }}">
                         <a href="{{ route('pcv') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-collection"></i>

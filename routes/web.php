@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\DashboardController;
-use App\Http\Controllers\Api\V1\FoodsController;
+use App\Http\Controllers\Api\V1\SatuanController;
 use App\Http\Controllers\Api\V1\FoodTypeController;
 // use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Api\V1\OrderController;
@@ -23,6 +23,7 @@ use App\Http\Controllers\Api\V1\DiagnosaController;
 use App\Http\Controllers\Api\V1\AdminProfileController;
 use App\Http\Controllers\Api\V1\TypeItemsController;
 use App\Http\Controllers\Api\V1\PcvController;
+use App\Http\Controllers\Api\V1\SupplierController;
 use App\Models\TypeItems;
 
 Route::get('/', function () {
@@ -73,10 +74,29 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/admin/add-items', 'AddItems')->name('additems');
         Route::post('/admin/store-item', 'StoreItem')->name('store-item');
         Route::get('/admin/edit-item/{id}', 'EditItem')->name('edititem');
-        Route::get('/admin/edit-item-img/{id}', 'EditItemImg')->name('edititemimg');
-        Route::post('/admin/update-item-img', 'UpdateItemImg')->name('updateitemimg');
         Route::post('/admin/update-item', 'UpdateItem')->name('updateitem');
         Route::get('/admin/delete-item/{id}', 'DeleteItem')->name('deleteitem');
+    });
+
+    Route::controller(SatuanController::class)->group(function () {
+        Route::get('/admin/all-satuan', 'Index')->name('allsatuan');
+        Route::get('/admin/manage-satuan', 'ManageSatuan')->name('managesatuan');
+        Route::get('/admin/all-satuan/search', 'SearchSatuan')->name('searchsatuan');
+        Route::get('/admin/add-satuan', 'AddSatuan')->name('addsatuan');
+        Route::post('/admin/store-satuan', 'StoreSatuan')->name('store-satuan');
+        Route::get('/admin/edit-satuan/{id}', 'EditSatuan')->name('editsatuan');
+        Route::post('/admin/update-satuan', 'UpdateSatuan')->name('updatesatuan');
+        Route::get('/admin/delete-satuan/{id}', 'DeleteSatuan')->name('deletesatuan');
+    });
+
+    Route::controller(TypeItemsController::class)->group(function () {
+        Route::get('/admin/all-type', 'Index')->name('alltype');
+        Route::get('/admin/all-type/search', 'SearchType')->name('searchtype');
+        Route::get('/admin/add-type', 'AddType')->name('addtype');
+        Route::post('/admin/store-type', 'StoreType')->name('store-type');
+        Route::get('/admin/edit-type/{id}', 'EditType')->name('edittype');
+        Route::post('/admin/update-type', 'UpdateType')->name('updatetype');
+        Route::get('/admin/delete-type/{id}', 'DeleteType')->name('deletetype');
     });
 
     Route::controller(ParameterReportController::class)->group(function () {
@@ -114,6 +134,25 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     });
 
+
+    Route::controller(SupplierController::class)->group(function () {
+        // Tampilkan semua supplier
+        Route::get('/admin/daftar-supplier', 'index')->name('allsuppliers');
+        // Tampilkan form tambah supplier
+        Route::get('/admin/daftar-supplier/add', 'addSupplier')->name('addsupplier');
+        // Proses form tambah supplier
+        Route::post('/admin/daftar-supplier/add', 'storeSupplier')->name('storesupplier');
+        // Form edit supplier
+        Route::get('/admin/daftar-supplier/{id}/edit', 'editSupplier')->name('editsupplier');
+        // Update supplier
+        Route::put('/admin/daftar-supplier/{id}/update', 'updateSupplier')->name('updatesupplier');
+        // Hapus supplier
+        Route::delete('/admin/daftar-supplier/{id}', 'deleteSupplier')->name('deletesupplier');
+        // Cari supplier
+        Route::get('/admin/search-supplier', 'searchSupplier')->name('searchsupplier');
+        // API get list supplier (JSON)
+        Route::get('/api/suppliers', 'get_supplier_list')->name('getsuppliers');
+    });
 
 
     // Route::controller(FoodsController::class)->group(function () {
