@@ -19,18 +19,25 @@
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
 
-        <div class="btn-group mb-3">
-            <button type="button" class="btn btn-outline-success dropdown-toggle custom-dropdown" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                Kolam
-            </button>
-            <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="javascript:void(0);">Kolam 1</a></li>
-                <li><a class="dropdown-item" href="javascript:void(0);">Kolam 2</a></li>
-            </ul>
+        <div class="mb-3">
+            <a href="{{ url('/barang-masuk/tambah') }}" class="btn btn-success custom-dropdown">
+                Tambah Barang Masuk
+            </a>
         </div>
+
+
+        <!-- <div class="btn-group mb-3">
+                <button type="button" class="btn btn-outline-success dropdown-toggle custom-dropdown" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    Tambah Barang Masuk
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="javascript:void(0);"></a></li>
+                    <li><a class="dropdown-item" href="javascript:void(0);">Kolam 2</a></li>
+                </ul>
+            </div> -->
         <div class="card">
-            <h5 class="card-header">Daftar Penyakit Ikan Koi</h5>
+            <h5 class="card-header">Daftar Barang Masuk</h5>
 
             @if (session()->has('message'))
                 <div class="alert alert-success">
@@ -41,12 +48,12 @@
                 <table class="table">
                     <thead class="table-light">
                         <tr>
-                            <th>No</th>
-                            <th>Nama Koi</th>
-                            <th>Penyakit</th>
-                            <th>Gambar Koi Terdiagnosa</th>
+                            <th>Id Barang</th>
+                            <th>Nama Petugas</th>
+                            <th>Tanggal Masuk</th>
+                            <!-- <th>Gambar Koi Terdiagnosa</th>
                             <th>Tanggal</th>
-                            <th>Aksi</th>
+                            <th>Aksi</th> -->
                         </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
@@ -54,9 +61,11 @@
                             <tr>
                                 <td>{{ $key + 1 }}</td>
                                 {{-- Show related Koi name --}}
-                                <td>{{ $diagnosas->koiFish->name ?? 'Koi not available' }}</td>  {{-- This will display the Koi name --}}
+                                <td>{{ $diagnosas->koiFish->name ?? 'Koi not available' }}</td> {{-- This will display the Koi
+                                name --}}
                                 {{-- Show related Penyakit name --}}
-                                <td>{{ $diagnosas->penyakit->nama_penyakit ?? 'Penyakit not available' }}</td>  {{-- This will display the Penyakit name --}}
+                                <td>{{ $diagnosas->penyakit->nama_penyakit ?? 'Penyakit not available' }}</td> {{-- This will
+                                display the Penyakit name --}}
                                 <td>
                                     @if ($diagnosas->gambar_koi)
                                         <img src="{{ asset($diagnosas->gambar_koi) }}" alt="Gambar Koi" width="50">
@@ -68,7 +77,8 @@
                                 <td>
                                     <a href="{{ route('editdiagnosa', $diagnosas->id) }}" class="btn btn-primary">Edit</a>
                                     <a href="{{ route('showdiagnosa', $diagnosas->id) }}" class="btn btn-info">Detail</a>
-                                    <a href="{{ url('admin/delete-diagnosa/' . $diagnosas->id) }}" class="btn btn-warning" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">Hapus</a>
+                                    <a href="{{ url('admin/delete-diagnosa/' . $diagnosas->id) }}" class="btn btn-warning"
+                                        onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">Hapus</a>
                                 </td>
                             </tr>
                         @endforeach

@@ -83,7 +83,7 @@
                     <li class="menu-item {{ request()->is('admin/all-diagnosa*') ? 'active' : '' }}">
                         <a href="{{ route('allDiagnosaPenyakit') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-health"></i>
-                            <div data-i18n="Basic" class="larger-text">Penyakit Ikan Koi</div>
+                            <div data-i18n="Basic" class="larger-text">Barang Masuk</div>
                         </a>
                     </li>
                     {{-- <li class="menu-item {{ request()->is('admin/daftar-satuan*') ? 'active' : '' }}">

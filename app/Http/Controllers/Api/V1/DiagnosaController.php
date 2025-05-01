@@ -9,14 +9,30 @@ use Illuminate\Http\Request;
 
 class DiagnosaController extends Controller
 {
-    // Menampilkan semua diagnosa penyakit
     public function index()
     {
-        $diagnoses_d = DiagnosaPenyakit::with(['koiFish', 'penyakit'])->get();
-        $diagnosas = DiagnosaPenyakit::all();
+        try {
+            $diagnoses_d = DiagnosaPenyakit::with(['koiFish', 'penyakit'])->get();
+            $diagnosas = DiagnosaPenyakit::all();
+        } catch (\Exception $e) {
+            // Kalau error (misal tabel gak ada), isi array kosong aja
+            $diagnoses_d = collect();
+            $diagnosas = collect();
+
+            // Atau kalau mau debugging errornya
+            // dd($e->getMessage());
+        }
 
         return view("admin.allDiagnosaPenyakit", compact('diagnosas', 'diagnoses_d'));
     }
+    // Menampilkan semua diagnosa penyakit
+    // public function index()
+    // {
+    //     $diagnoses_d = DiagnosaPenyakit::with(['koiFish', 'penyakit'])->get();
+    //     $diagnosas = DiagnosaPenyakit::all();
+
+    //     return view("admin.allDiagnosaPenyakit", compact('diagnosas', 'diagnoses_d'));
+    // }
 
     // Pencarian diagnosa penyakit berdasarkan jenis koi atau penyakit
     public function searchDiagnosa(Request $request)
