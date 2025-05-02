@@ -56,13 +56,10 @@
                     <a href="dashboard" class="app-brand-link">
                         <span class="app-brand-logo demo"
                             style="display: flex; flex-direction: column; align-items: center;">
-                            <img src="{{ asset('dashboard2/assets/img/favicon/logo.png') }}"
-                                style="width: 275px; height: auto; margin-top: 20px;" />
+                            <img src="{{ asset('dashboard2/assets/img/icons/logocime.png') }}"
+                                style="width: 200px; height: auto; margin-top: 20px; margin-left: 30px;" />
                             <hr>
-                            <p
-                                style="color: #ffffff; font-size: 17px; font-weight: bold;  margin-top: 10px; border-bottom: 1px solid #ffffff; padding-bottom: 8px;">
-                                The Genks Koi 99 Farm
-                            </p>
+                            
                         </span>
                     </a>
                     <div style="margin-top: 30px;"></div>
