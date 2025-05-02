@@ -25,11 +25,17 @@ use App\Http\Controllers\Api\V1\TypeItemsController;
 use App\Http\Controllers\Api\V1\PcvController;
 use App\Http\Controllers\Api\V1\SupplierController;
 use App\Models\TypeItems;
+use App\Http\Controllers\Api\V1\TokoController;
+use App\Models\Produk;
+use App\Models\Supplier;
 
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 Route::get('/', function () {
-    return view('welcome');
+    $produk = Produk::orderBy('IdProduk', 'desc')->take(5)->get();
+    return view('welcome', compact('produk'));
 });
-
 // Route::controller(HomeController::class)->group(function (){
 //     Route::get('/', 'Index')->name('Home');
 // });
@@ -131,6 +137,20 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::post('/add-jenis-barang', [ItemsController::class, 'addTypeItems'])->name('addTypeItems');
         Route::delete('/delete-jenis-barang/{id}', [ItemsController::class, 'deleteTypeItems'])->name('deleteTypeItems');
         Route::post('/add-kolam', [ItemsController::class, 'addKolam'])->name('addKolam');
+
+    });
+
+    Route::controller(TokoController::class)->group(function () {
+        Route::get('/tokodashboard', function () {return view('toko.dashboardToko');})->name('tokodashboard');
+        Route::get('/tokodashboard', [TokoController::class, 'tokodashboard'])->name('tokodashboard');
+        Route::get('/search', [ProductController::class, 'search'])->name('searchProduct');
+
+
+        Route::get('/shop', function () {return view('toko.dashboardToko');})->name('shop');
+        Route::get('/katalog', function () {return view('toko.dashboardToko');})->name('katalog');
+        Route::get('/faq', function () {return view('toko.dashboardToko');})->name('faq');
+        Route::get('/lacak', function () {return view('toko.dashboardToko');})->name('lacak');
+        Route::get('/kontak', function () {return view('toko.dashboardToko');})->name('kontak');
 
     });
 

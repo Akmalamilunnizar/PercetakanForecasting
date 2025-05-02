@@ -1,0 +1,8 @@
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    background-color: white; /* pastikan tidak transparan */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* opsional: bayangan */
+  }
+  
