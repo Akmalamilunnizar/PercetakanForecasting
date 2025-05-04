@@ -24,6 +24,7 @@ class Produk extends Model
         'IdProduk',
         'NamaProduk',
         'HargaProduk',
+        'Img',
     ];
 
     // Kalau tidak pakai timestamps (created_at, updated_at)
