@@ -124,7 +124,7 @@
             <!-- Produk  -->
             <div class="col-md-4 mb-4">
                 <div class="card h-100 shadow-sm border-0 p-4" style="background-color: #ffffff; border-radius: 15px;">
-                    <img src="{{ asset('dashboard2/assets/img/imgtoko/banner.jpg') }}" class="img-fluid" alt="Print Banner"
+                <img src="{{ asset('storage/' . $item->Img) }}" class="img-fluid" alt="Foto Produk"
                     style="height: 280px; width: 100%; object-fit: cover; border-radius: 15px;">
                     <div class="card-body" style="padding: 15px;">
                         <h5 class="fw-bold mb-1" style="color: #2B3674;">{{$item->NamaProduk}}</h5>

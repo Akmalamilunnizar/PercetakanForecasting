@@ -14,11 +14,12 @@
 
   <!-- CSS Files -->
   <link rel="stylesheet" href="{{ asset('css/animate.css') }}" />
-  <link rel="stylesheet" href="{{ asset('css/tiny-slider.css') }}" />
+  <!-- <link rel="stylesheet" href="{{ asset('css/tiny-slider.css') }}" /> -->
   <link rel="stylesheet" href="{{ asset('css/glightbox.min.css') }}" />
   <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" />
   <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
   <link rel="stylesheet" href="https://cdn.lineicons.com/3.0/lineicons.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
 
   <!-- Link CSS Bootstrap -->
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
@@ -83,7 +84,7 @@
                     <a class="page-scroll" href="#about">About</a>
                   </li>
                   <li class="nav-item">
-                    <a class="page-scroll" href="#facts">Why</a>
+                    <a class="page-scroll" href="#location">Location</a>
                   </li>
                   
                 </ul>
@@ -104,7 +105,7 @@
       </div>
     </div>
 
-    <div id="home" class="header-hero bg_cover" style="background-image: url(assets/images/header/headerr222.svg)">
+    <div id="home" class="header-hero bg_cover" style="background-image: url(assets/images/header/header.svg)">
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-lg-10">
@@ -163,23 +164,26 @@
 
       {{-- Carousel --}}
       <div id="carousel" class="d-flex overflow-hidden" style="gap: 20px; scroll-behavior: smooth; max-width: 100%;">
-        @foreach ($produk->take(7) as $item)
+        @foreach ($produk->take(8) as $item)
           <div class="card shadow-sm border-0 p-3 flex-shrink-0"
-               style="min-width: 310px; max-width: 320px; background-color: #ffffff; border-radius: 15px;">
-            <img src="{{ asset('dashboard2/assets/img/imgtoko/banner.jpg') }}" class="img-fluid mb-3"
-                 style="height: 200px; width: 100%; object-fit: cover; border-radius: 12px;" alt="Product Image">
-            <h5 class="fw-bold" style="color: #2B3674;">{{ $item->NamaProduk }}</h5>
-            <p class="text-muted mb-1">Digital Printing</p>
-            <div class="d-flex justify-content-between align-items-center mt-2">
-              <span class="fw-bold" style="color: #4318FF;">Rp {{ number_format($item->HargaProduk, 0, ',', '.') }}</span>
-              <a href="#" class="btn btn-sm" style="background-color: #1D1E94; color: white; border-radius: 20px; padding: 5px 15px;">Pesan</a>
-            </div>
+               style="min-width: 300px; max-width: 300px; background-color: #f5f5f5; border-radius: 15px;">
+               <img src="{{ asset('storage/' . $item->Img) }}" class="img-fluid" alt="FotoProduk"
+               style="height: 280px; width: 100%; object-fit: cover; border-radius: 15px;">
+               <div class="card-body" style="padding: 15px;">
+                        <h5 class="fw-bold mb-1" style="color: #2B3674;">{{$item->NamaProduk}}</h5>
+                        <p class="text-muted mb-2">Digital Printing</p>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span class="fw-bold" style="color: #4318FF;">Rp {{number_format($item->HargaProduk, 0, ',', '.')}}</span>
+                            <a href="#" class="btn" style="background-color: #1D1E94; color: white; border-radius: 30px; padding: 5px 20px;">Pesan</a>
+                        </div>
+                    </div>
           </div>
         @endforeach
       </div>
     </div>
   </div>
 </section>
+
 
 
   <section id="features" class="services-area pt-120">
@@ -301,7 +305,7 @@
           </div>
           <div class="col-lg-6">
             <div class="about-image text-center mt-50 wow fadeInRightBig" data-wow-duration="1s" data-wow-delay="0.5s">
-              <img src="{{ asset('assets/images/about/about1.svg') }}" alt="about" />
+              <img src="{{ asset('dashboard2/assets/img/imgtoko/print3.png') }}" alt="about" />
             </div>
           </div>
         </div>
@@ -317,13 +321,10 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <!-- Tambahkan konten lengkap di sini -->
-            Intellegence System Kontrol Kualitas Air Pada Kolam Ikan Koi Berbasis IoT adalah sistem yang memanfaatkan
-            teknologi Internet of Things (IoT) untuk mengontrol serta memonitor dan mengendalikan kualitas air secara
-            otomatis di kolam ikan koi. Sistem ini dapat mengukur parameter seperti suhu, pH, kadar oksigen, dan tingkat
-            kekeruhan air secara real-time, serta memberikan peringatan atau melakukan tindakan otomatis untuk menjaga
-            kondisi ideal bagi ikan koi. Dengan fitur ini, pengguna dapat lebih mudah mengelola kualitas air dan
-            kesehatan ikan koi mereka.
+          Sistem Intelijen untuk Manajemen Percetakan adalah platform berbasis web yang dirancang untuk membantu pengelolaan
+          proses operasional di bisnis percetakan. Sistem ini mendukung pemantauan status pesanan, pengelolaan data pelanggan,
+          pengaturan stok bahan, hingga pembuatan laporan secara efisien. Dengan fitur-fitur ini, 
+          pemilik percetakan dapat lebih mudah mengontrol alur kerja, mempercepat pelayanan, dan meningkatkan kepuasan pelanggan.
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
@@ -337,7 +338,7 @@
     </div>
     </div>
 
-
+<section id ="location">
     <div class="about-area pt-70">
       <div class="about-shape-2">
         <img src="{{ asset('assets/images/about/about-shape-2.svg') }}" alt="shape" />
@@ -349,7 +350,7 @@
               <div class="section-title">
                 <div class="line"></div>
                 <h3 class="title">
-                  Lokasi Kami <span> - The Genks Koi 99 Farm (Sentral Ikan Koi)</span>
+                  Lokasi Kami <span> - Percetakan Citra Media </span>
                 </h3>
               </div>
 
@@ -380,9 +381,10 @@
       </div>
 
     </div>
+</section>
 
 
-    <div class="about-area pt-70">
+    <!-- <div class="about-area pt-70">
       <div class="container">
         <div class="row">
           <div class="col-lg-6">
@@ -419,9 +421,9 @@
       <div class="about-shape-1">
         <img src="{{ asset('assets/images/about/about-shape-1.svg') }}" alt="shape" />
       </div>
-    </div>
+    </div> -->
 
-  </section>
+  <!-- </section>
 
   <section id="facts" class="video-counter pt-70">
     <div class="container">
@@ -514,7 +516,7 @@
 
     </div>
 
-  </section>
+  </section> -->
 
   <footer id="footer" class="footer-area pt-100">
     <div class="container">
@@ -539,13 +541,12 @@
           <div class="col-lg-4 col-md-6 col-sm-8">
             <div class="footer-about mt-50 wow fadeIn" data-wow-duration="1s" data-wow-delay="0.2s">
               <a class="logo" href="javascript:void(0)">
-                <img src="{{ asset('dashboard2/assets/img/icons/logocime.png') }}}" alt="logo" />
+           
+                <img src="{{ asset('dashboard2/assets/img/icons/logocime.png') }}" alt="Logo" />
               </a>
               <p class="text">
-                The Genks Koi 99 Farm adalah komunitas pencinta koi di Jember yang berdiri pada
-                tanggal 10 Oktober 2019. Komunitas ini terdiri dari lima anggota dan memiliki kemitraan
-                dengan petani di wilayah Jember. The Genks Koi 99 Farm bertujuan untuk memajukan dunia perkoian di
-                Jember.
+              Citra Media adalah usaha percetakan di Jember yang melayani berbagai kebutuhan cetak seperti undangan, 
+              brosur, banner, dan kartu nama. Kami hadir untuk memberikan hasil cetak berkualitas dengan harga bersahabat dan pelayanan cepat.
               </p>
               <ul class="social">
                 <li>
@@ -573,19 +574,19 @@
 
           </div>
 
-          <div class="col-lg-3 col-md-5 col-sm-12">
+          <div class="col-lg-3 col-md-5 col-sm-12" style="margin-left: 550px;">
             <div class="footer-contact mt-50 wow fadeIn" data-wow-duration="1s" data-wow-delay="0.8s">
               <div class="footer-title">
                 <h4 class="title">Contact Us</h4>
               </div>
               <ul class="contact">
-                <li>0811-3662-488</li>
+                <li>0896 2716 0919</li>
                 <li>
-                <li>genkskoi99@gmail.com</li>
+                <li>Citramedia@gmail.com</li>
                 <li>www.genks99.com</li>
                 <li>
-                  Gumuksari, Tegal Besar, Kec. Kaliwates,<br />
-                  Kabupaten Jember, Jawa Timur 68131
+                Kabupaten Jember, Jawa Timur 68121<br />
+                Indonesia
                 </li>
               </ul>
             </div>
@@ -599,7 +600,7 @@
             <div class="copyright d-sm-flex justify-content-between">
               <div class="copyright-content">
                 <p class="text">
-                  The Genk's Koi 99 Farm |
+                  Percetakan Citra Media |
                   <a href="" rel="nofollow">Kabupaten Jember</a>
                 </p>
               </div>
@@ -664,14 +665,14 @@
     data-cf-beacon='{"rayId":"8d17ebe3beab5fe5","version":"2024.10.1","r":1,"serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"token":"9a6015d415bb4773a0bff22543062d3b","b":1}'
     crossorigin="anonymous"></script>
   <script src="{{ asset('js/maind41d.js') }}"></script>
-
+  
   <script>
+document.addEventListener("DOMContentLoaded", function () {
   const carousel = document.getElementById('carousel');
   const nextBtn = document.getElementById('next');
   const prevBtn = document.getElementById('prev');
 
-  const cardWidth = 320; // 300 + gap/margin
-  let scrollDirection = 1;
+  const cardWidth = 320;
 
   // Manual controls
   nextBtn.addEventListener('click', () => {
@@ -682,19 +683,20 @@
     carousel.scrollBy({ left: -cardWidth, behavior: 'smooth' });
   });
 
-  // Auto scroll bolak-balik setiap 0.3 detik
+  // Auto scroll loop
   setInterval(() => {
     const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
 
-    if (carousel.scrollLeft >= maxScrollLeft) {
-      scrollDirection = -1;
-    } else if (carousel.scrollLeft <= 0) {
-      scrollDirection = 1;
+    // Jika sudah sampai ujung kanan, reset ke awal
+    if (carousel.scrollLeft + cardWidth >= maxScrollLeft) {
+      carousel.scrollTo({ left: 0, behavior: 'smooth' });
+    } else {
+      carousel.scrollBy({ left: cardWidth, behavior: 'smooth' });
     }
-
-    carousel.scrollBy({ left: scrollDirection * cardWidth, behavior: 'smooth' });
-  }, 5000);
+  }, 3000); // ganti delay di sini sesuai kecepatan
+});
 </script>
+
 
 
 </body>

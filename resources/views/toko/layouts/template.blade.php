@@ -71,7 +71,7 @@
     <div class="d-none d-lg-block me-4">
       <ul class="navbar-nav flex-row gap-3">
         <li class="nav-item"><a class="nav-link text-primary fw-semibold" href="{{ route('tokodashboard') }}">Beranda</a></li>
-        <li class="nav-item"><a class="nav-link text-primary fw-semibold" href="{{ route('katalog') }}">Katalog Produk</a></li>
+        <li class="nav-item"><a class="nav-link text-primary fw-semibold" href="{{ route('keranjang') }}">Keranjang</a></li>
         <li class="nav-item"><a class="nav-link text-primary fw-semibold" href="{{ route('faq') }}">FAQ</a></li>
         <li class="nav-item"><a class="nav-link text-primary fw-semibold" href="{{ route('lacak') }}">Lacak Pesanan</a></li>
         <li class="nav-item"><a class="nav-link text-primary fw-semibold" href="{{ route('kontak') }}">Kontak Kami</a></li>

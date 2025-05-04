@@ -28,12 +28,13 @@ use App\Models\TypeItems;
 use App\Http\Controllers\Api\V1\TokoController;
 use App\Models\Produk;
 use App\Models\Supplier;
+use App\Http\Controllers\Api\V1\ProdukController;
 
 // Route::get('/', function () {
 //     return view('welcome');
 // });
 Route::get('/', function () {
-    $produk = Produk::orderBy('IdProduk', 'desc')->take(5)->get();
+    $produk = Produk::orderBy('IdProduk', 'desc')->take(7)->get();
     return view('welcome', compact('produk'));
 });
 // Route::controller(HomeController::class)->group(function (){
@@ -147,12 +148,32 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
 
         Route::get('/shop', function () {return view('toko.dashboardToko');})->name('shop');
-        Route::get('/katalog', function () {return view('toko.dashboardToko');})->name('katalog');
+        Route::get('/keranjang', function () {return view('toko.dashboardToko');})->name('keranjang');
         Route::get('/faq', function () {return view('toko.dashboardToko');})->name('faq');
         Route::get('/lacak', function () {return view('toko.dashboardToko');})->name('lacak');
         Route::get('/kontak', function () {return view('toko.dashboardToko');})->name('kontak');
 
     });
+
+    Route::controller(ProdukController::class)->group(function () {
+        // Tampilkan semua produk
+        Route::get('/admin/all-produk', 'index')->name('allproduk');
+        // Tampilkan form tambah produk
+        Route::get('/admin/add-produk', 'addProduk')->name('addproduk');
+        // Proses form tambah produk
+        Route::post('/admin/store-produk', 'storeProduk')->name('storeproduk');
+        // Form edit produk
+        Route::get('/admin/all-produk/{id}/edit', 'editProduk')->name('editproduk');
+        // Update produk
+        Route::put('/admin/all-produk/{id}/update', 'updateProduk')->name('updateproduk');
+        // Hapus produk
+        Route::delete('/admin/all-produk/{id}', 'deleteProduk')->name('deleteproduk');
+        // Cari produk
+        Route::get('/admin/search-produk', 'searchProduk')->name('searchproduk');
+        // API get list produk (JSON)
+        Route::get('/api/produk', 'get_produk_list')->name('getproduk');
+    });
+
 
 
     Route::controller(SupplierController::class)->group(function () {

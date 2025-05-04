@@ -40,7 +40,7 @@
 
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label" for="NamaSupplier">Nama Supplier</label>
-                        <div class="col-sm-10">
+                        <div class="col-sm-10"> 
                             <input type="text" id="NamaSupplier" name="NamaSupplier" class="form-control"
                                    value="{{ $supplier->NamaSupplier }}" required>
                         </div>
