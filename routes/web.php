@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\V1\DiseaseReportController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\SubCategoryController;
 use App\Http\Controllers\Api\V1\UserController;
+use App\Http\Controllers\Api\V1\TransaksiController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Items;
@@ -174,6 +175,26 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         // API get list produk (JSON)
         Route::get('/api/produk', 'get_produk_list')->name('getproduk');
     });
+
+    Route::controller(TransaksiController::class)->group(function () {
+        // Tampilkan semua produk
+        Route::get('/admin/all-transaksi', 'index')->name('alltransaksi');
+        // Tampilkan form tambah produk
+        Route::get('/admin/all-transaksi/{id}/terima', 'terimaOrderan')->name('terimaOrderan');
+        // Proses form tambah produk
+        Route::post('/admin/all-transaksi/{id}/tolak', 'tolakOrderan')->name('tolakOrderan');
+        // Form edit produk
+        Route::get('/admin/all-produk/{id}/edit', 'editProduk')->name('editproduk');
+        // Update produk
+        Route::put('/admin/all-produk/{id}/update', 'updateProduk')->name('updateproduk');
+        // Hapus produk
+        Route::delete('/admin/all-produk/{id}', 'deleteProduk')->name('deleteproduk');
+        // Cari produk
+        Route::get('/admin/search-produk', 'searchProduk')->name('searchproduk');
+        // API get list produk (JSON)
+        Route::get('/api/produk', 'get_produk_list')->name('getproduk');
+    });
+
 
 
 
