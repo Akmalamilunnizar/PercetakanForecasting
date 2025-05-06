@@ -56,13 +56,10 @@
                     <a href="dashboard" class="app-brand-link">
                         <span class="app-brand-logo demo"
                             style="display: flex; flex-direction: column; align-items: center;">
-                            <img src="{{ asset('dashboard2/assets/img/favicon/logo.png') }}"
-                                style="width: 275px; height: auto; margin-top: 20px;" />
+                            <img src="{{ asset('dashboard2/assets/img/icons/logocime.png') }}"
+                                style="width: 200px; height: auto; margin-top: 20px; margin-left: 30px;" />
                             <hr>
-                            <p
-                                style="color: #ffffff; font-size: 17px; font-weight: bold;  margin-top: 10px; border-bottom: 1px solid #ffffff; padding-bottom: 8px;">
-                                The Genks Koi 99 Farm
-                            </p>
+                            
                         </span>
                     </a>
                     <div style="margin-top: 30px;"></div>
@@ -100,18 +97,20 @@
                         </a>
                     </li>
 
+                    <li class="menu-item {{ request()->is('admin/all-produk*') ? 'active' : '' }}">
+                        <a href="{{ route('allproduk') }}" class="menu-link">
+                            <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
+                            <div data-i18n="Basic" class="larger-text">Daftar Produk</div>
+                        </a>
+                    </li>
+
                     <li class="menu-item {{ request()->is('admin/daftar-supplier*') ? 'active' : '' }}">
                         <a href="{{ route('allsuppliers') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-store"></i>
                             <div data-i18n="Basic" class="larger-text">Data Supplier</div>
                         </a>
                     </li>
-                    <li class="menu-item {{ request()->is('admin/all-diagnosa*') ? 'active' : '' }}">
-                        <a href="{{ route('allDiagnosaPenyakit') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-health"></i>
-                            <div data-i18n="Basic" class="larger-text">Laporan</div>
-                        </a>
-                    </li>
+                    
                     <li class="menu-item {{ request()->is('admin/all-pcv*') ? 'active' : '' }}">
                         <a href="{{ route('pcv') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-collection"></i>

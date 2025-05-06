@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\CustomerController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\DashboardController;
@@ -25,11 +26,18 @@ use App\Http\Controllers\Api\V1\TypeItemsController;
 use App\Http\Controllers\Api\V1\PcvController;
 use App\Http\Controllers\Api\V1\SupplierController;
 use App\Models\TypeItems;
+use App\Http\Controllers\Api\V1\TokoController;
+use App\Models\Produk;
+use App\Models\Supplier;
+use App\Http\Controllers\Api\V1\ProdukController;
 
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 Route::get('/', function () {
-    return view('welcome');
+    $produk = Produk::orderBy('IdProduk', 'desc')->take(7)->get();
+    return view('welcome', compact('produk'));
 });
-
 // Route::controller(HomeController::class)->group(function (){
 //     Route::get('/', 'Index')->name('Home');
 // });
@@ -134,6 +142,40 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     });
 
+    Route::controller(TokoController::class)->group(function () {
+        Route::get('/tokodashboard', function () {return view('toko.dashboardToko');})->name('tokodashboard');
+        Route::get('/tokodashboard', [TokoController::class, 'tokodashboard'])->name('tokodashboard');
+        Route::get('/search', [ProductController::class, 'search'])->name('searchProduct');
+
+
+        Route::get('/shop', function () {return view('toko.dashboardToko');})->name('shop');
+        Route::get('/keranjang', function () {return view('toko.dashboardToko');})->name('keranjang');
+        Route::get('/faq', function () {return view('toko.dashboardToko');})->name('faq');
+        Route::get('/lacak', function () {return view('toko.dashboardToko');})->name('lacak');
+        Route::get('/kontak', function () {return view('toko.dashboardToko');})->name('kontak');
+
+    });
+
+    Route::controller(ProdukController::class)->group(function () {
+        // Tampilkan semua produk
+        Route::get('/admin/all-produk', 'index')->name('allproduk');
+        // Tampilkan form tambah produk
+        Route::get('/admin/add-produk', 'addProduk')->name('addproduk');
+        // Proses form tambah produk
+        Route::post('/admin/store-produk', 'storeProduk')->name('storeproduk');
+        // Form edit produk
+        Route::get('/admin/all-produk/{id}/edit', 'editProduk')->name('editproduk');
+        // Update produk
+        Route::put('/admin/all-produk/{id}/update', 'updateProduk')->name('updateproduk');
+        // Hapus produk
+        Route::delete('/admin/all-produk/{id}', 'deleteProduk')->name('deleteproduk');
+        // Cari produk
+        Route::get('/admin/search-produk', 'searchProduk')->name('searchproduk');
+        // API get list produk (JSON)
+        Route::get('/api/produk', 'get_produk_list')->name('getproduk');
+    });
+
+
 
     Route::controller(SupplierController::class)->group(function () {
         // Tampilkan semua supplier
@@ -148,6 +190,25 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::put('/admin/daftar-supplier/{id}/update', 'updateSupplier')->name('updatesupplier');
         // Hapus supplier
         Route::delete('/admin/daftar-supplier/{id}', 'deleteSupplier')->name('deletesupplier');
+        // Cari supplier
+        Route::get('/admin/search-supplier', 'searchSupplier')->name('searchsupplier');
+        // API get list supplier (JSON)
+        Route::get('/api/suppliers', 'get_supplier_list')->name('getsuppliers');
+    });
+
+    Route::controller(CustomerController::class)->group(function () {
+        // Tampilkan semua supplier
+        Route::get('/admin/daftar-customer', 'index')->name('allcustomer');
+        // Tampilkan form tambah supplier
+        Route::get('/admin/daftar-supplier/add', 'addSupplier')->name('addsupplier');
+        // Proses form tambah supplier
+        Route::post('/admin/daftar-supplier/add', 'storeSupplier')->name('storesupplier');
+        // Form edit supplier
+        Route::get('/admin/daftar-supplier/{id}/edit', 'editSupplier')->name('editsupplier');
+        // Update supplier
+        Route::put('/admin/daftar-supplier/{id}/update', 'updateSupplier')->name('updatesupplier');
+        // Hapus supplier
+        Route::delete('/admin/daftar-supplier/{id}', 'deleteCustomer')->name('deletecustomer');
         // Cari supplier
         Route::get('/admin/search-supplier', 'searchSupplier')->name('searchsupplier');
         // API get list supplier (JSON)

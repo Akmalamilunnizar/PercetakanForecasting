@@ -5,20 +5,21 @@
 <head>
   <meta charset="utf-8" />
 
-  <title>SANKE | Selamat Datang Di Website Koi</title>
+  <title>CIME | Website Percetakan</title>
   <meta name="description" content="A SaaS landing page template." />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <!-- Favicon -->
-  <link rel="shortcut icon" href="{{ asset('assets/images/logo/logo4.png') }}" type="image/png" />
+  <link rel="shortcut icon" href="{{ asset('dashboard2/assets/img/icons/logocime.png') }}" type="image/png" />
 
   <!-- CSS Files -->
   <link rel="stylesheet" href="{{ asset('css/animate.css') }}" />
-  <link rel="stylesheet" href="{{ asset('css/tiny-slider.css') }}" />
+  <!-- <link rel="stylesheet" href="{{ asset('css/tiny-slider.css') }}" /> -->
   <link rel="stylesheet" href="{{ asset('css/glightbox.min.css') }}" />
   <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}" />
   <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
   <link rel="stylesheet" href="https://cdn.lineicons.com/3.0/lineicons.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css">
 
   <!-- Link CSS Bootstrap -->
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
@@ -26,9 +27,6 @@
   <!-- Script JS Bootstrap -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-
-
-
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -59,8 +57,8 @@
         <div class="row">
           <div class="col-lg-12">
             <nav class="navbar navbar-expand-lg">
-              <a class="navbar-brand" href="{{ url('/') }}">
-                <img src="{{ asset('assets/images/logo/logo.png') }}" alt="Logo" />
+              <a class="navbar-brand" href="{{ url('/') }}" style="margin-left: 25px;">
+                <img src="{{ asset('dashboard2/assets/img/icons/logocime.png') }}" alt="Logo" />
               </a>
 
               </a>
@@ -77,17 +75,18 @@
                     <a class="page-scroll active" href="#home">Home</a>
                   </li>
                   <li class="nav-item">
+                    <a class="page-scroll active" href="#catalog">Catalog</a>
+                  </li>
+                  <li class="nav-item">
                     <a class="page-scroll" href="#features">Features</a>
                   </li>
                   <li class="nav-item">
                     <a class="page-scroll" href="#about">About</a>
                   </li>
                   <li class="nav-item">
-                    <a class="page-scroll" href="#facts">Why</a>
+                    <a class="page-scroll" href="#location">Location</a>
                   </li>
-                  <li class="nav-item">
-                    <a class="page-scroll" href="#team">Team</a>
-                  </li>
+                  
                 </ul>
               </div>
 
@@ -106,20 +105,17 @@
       </div>
     </div>
 
-    <div id="home" class="header-hero bg_cover" style="background-image: url(assets/images/header/banner-bg.svg)">
+    <div id="home" class="header-hero bg_cover" style="background-image: url(assets/images/header/header.svg)">
       <div class="container">
         <div class="row justify-content-center">
           <div class="col-lg-10">
             <div class="header-hero-content text-center">
               <h2 class="header-title wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.5s"
                 style="font-size: 35px;">
-                Intellegence System
-                Kontrol Kualitas Air Pada
-                Kolam Ikan Koi Berbasis IoT
+                Optimasi Manajemen Stok di Industri Percetakan Menggunakan Prediksi Penjualan
               </h2>
               <p class="text wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.8s" style="font-size: 20px;">
-                Memanfaatkan teknologi Internet of Things (IoT) untuk Controlling dan Monitoring secara otomatis di
-                kolam ikan koi.
+              Sistem prediksi penjualan untuk mengoptimalkan pengelolaan stok bahan di industri percetakan  
               </p>
             </div>
 
@@ -129,7 +125,7 @@
         <div class="row">
           <div class="col-lg-12">
             <div class="header-hero-image text-center wow fadeIn" data-wow-duration="1.3s" data-wow-delay="1.4s">
-              <img src="{{ asset('assets/images/header/header-hero.png') }}" alt="hero" />
+              <img src="{{ asset('dashboard2/assets/img/imgtoko/print2.png') }}" alt="print" />
             </div>
 
           </div>
@@ -142,119 +138,146 @@
 
   </header>
 
+  <section id="catalog" class="about-area pt-120">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div class="section-title text-center pb-40">
+          <div class="line m-auto"></div>
+          <h3 class="title">
+            Katalog <span> Produk</span>
+          </h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end mb-3">
+      <a href="{{ route('tokodashboard') }}" class="btn btn-sm" style="color: #4318FF; font-size: 20px;">
+        Lihat Semua
+      </a>
+    </div>
+
+    <div class="position-relative">
+      {{-- Tombol Panah --}}
+      <button id="prev" class="position-absolute" style="left: -30px; top: 45%; z-index: 10; background: none; border: none; font-size: 2rem; color: #4318FF;">&#8249;</button>
+      <button id="next" class="position-absolute" style="right: -30px; top: 45%; z-index: 10; background: none; border: none; font-size: 2rem; color: #4318FF;">&#8250;</button>
+
+      {{-- Carousel --}}
+      <div id="carousel" class="d-flex overflow-hidden" style="gap: 20px; scroll-behavior: smooth; max-width: 100%;">
+        @foreach ($produk->take(8) as $item)
+          <div class="card shadow-sm border-0 p-3 flex-shrink-0"
+               style="min-width: 300px; max-width: 300px; background-color: #f5f5f5; border-radius: 15px;">
+               <img src="{{ asset('storage/' . $item->Img) }}" class="img-fluid" alt="FotoProduk"
+               style="height: 280px; width: 100%; object-fit: cover; border-radius: 15px;">
+               <div class="card-body" style="padding: 15px;">
+                        <h5 class="fw-bold mb-1" style="color: #2B3674;">{{$item->NamaProduk}}</h5>
+                        <p class="text-muted mb-2">Digital Printing</p>
+                        <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span class="fw-bold" style="color: #4318FF;">Rp {{number_format($item->HargaProduk, 0, ',', '.')}}</span>
+                            <a href="#" class="btn" style="background-color: #1D1E94; color: white; border-radius: 30px; padding: 5px 20px;">Pesan</a>
+                        </div>
+                    </div>
+          </div>
+        @endforeach
+      </div>
+    </div>
+  </div>
+</section>
+
 
 
   <section id="features" class="services-area pt-120">
-    <div class="container">
-      <div class="row justify-content-center">
-        <div class="col-lg-10">
-          <div class="section-title text-center pb-40">
-            <div class="line m-auto"></div>
-            <h3 class="title">
-              Keunggulan Utama <span> dari Sistem SANKE Koi</span>
-            </h3>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div class="section-title text-center pb-40">
+          <div class="line m-auto"></div>
+          <h3 class="title">
+            Keunggulan Utama <span> dari Sistem CIME - Citra Media</span>
+          </h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="row justify-content-center">
+      <!-- Pemesanan Online yang Praktis -->
+      <div class="col-lg-2 col-md-4 col-sm-6"> <!-- Ubah dari col-lg-3 menjadi col-lg-2 untuk 5 kolom -->
+        <div class="single-services text-center mt-30 wow fadeIn" data-wow-duration="1s" data-wow-delay="0.2s">
+          <div class="services-icon">
+            <img class="shape" src="{{ asset('assets/images/services/services-shape.svg') }}" alt="shape" />
+            <img class="shape-1" src="{{ asset('assets/images/services/services-shape-1.svg') }}" alt="shape" />
+            <i class="lni lni-cart"></i>
+          </div>
+          <div class="services-content mt-30">
+            <h4 class="services-title"style="font-size: 19px;">Pemesanan Online yang Praktis</h4>
+            <p class="text" style="font-size: 16px;">Pelanggan dapat memesan produk percetakan kapan saja dan di mana saja melalui website</p>
           </div>
         </div>
       </div>
 
-      <div class="row justify-content-center">
-        <!-- Pemantauan Real-time -->
-        <div class="col-lg-4 col-md-7 col-sm-8">
-          <div class="single-services text-center mt-30 wow fadeIn" data-wow-duration="1s" data-wow-delay="0.2s">
-            <div class="services-icon">
-              <img class="shape" src="{{ asset('assets/images/services/services-shape.svg') }}" alt="shape" />
-              <img class="shape-1" src="{{ asset('assets/images/services/services-shape-1.svg') }}" alt="shape" />
-              <i class="lni lni-timer"></i>
-            </div>
-            <div class="services-content mt-30">
-              <h4 class="services-title">Pemantauan Real-time</h4>
-              <p class="text">
-                Dengan real-time monitoring, pengguna dapat langsung melihat perubahan parameter
-                penting seperti pH, suhu, amonia, TDS.
-              </p>
-
-            </div>
+      <!-- Katalog Produk Lengkap & Terupdate -->
+      <div class="col-lg-2 col-md-4 col-sm-6">
+        <div class="single-services text-center mt-30 wow fadeIn" data-wow-duration="1s" data-wow-delay="0.5s">
+          <div class="services-icon">
+            <img class="shape" src="{{ asset('assets/images/services/services-shape.svg') }}" alt="shape" />
+            <img class="shape-1" src="{{ asset('assets/images/services/services-shape-2.svg') }}" alt="shape" />
+            <i class="lni lni-package"></i>
+          </div>
+          <div class="services-content mt-30">
+            <h4 class="services-title"style="font-size: 19px;">Katalog Produk Lengkap & Terupdate</h4>
+            <p class="text"style="font-size: 16px;">Menampilkan berbagai produk percetakan dengan informasi harga dan deskripsi yang jelas.</p>
           </div>
         </div>
+      </div>
 
-        <!-- Efisiensi Waktu dan Tenaga -->
-        <div class="col-lg-4 col-md-7 col-sm-8">
-          <div class="single-services text-center mt-30 wow fadeIn" data-wow-duration="1s" data-wow-delay="0.5s">
-            <div class="services-icon">
-              <img class="shape" src="{{ asset('assets/images/services/services-shape.svg') }}" alt="shape" />
-              <img class="shape-1" src="{{ asset('assets/images/services/services-shape-2.svg') }}" alt="shape" />
-              <i class="lni lni-reload"></i>
-            </div>
-            <div class="services-content mt-30">
-              <h4 class="services-title">Efisiensi Waktu dan Tenaga</h4>
-              <p class="text">
-                Sistem ini menghemat waktu dan tenaga pengguna dalam melakukan perawatan kolam
-                karena sistem otomatis akan menangani pengukuran dan memberikan informasi dengan cepat.
-              </p>
-
-            </div>
+      <!-- Status Pesanan Real-time -->
+      <div class="col-lg-2 col-md-4 col-sm-6">
+        <div class="single-services text-center mt-30 wow fadeIn" data-wow-duration="1s" data-wow-delay="0.8s">
+          <div class="services-icon">
+            <img class="shape" src="{{ asset('assets/images/services/services-shape.svg') }}" alt="shape" />
+            <img class="shape-1" src="{{ asset('assets/images/services/services-shape-3.svg') }}" alt="shape" />
+            <i class="lni lni-checkmark-circle"></i>
+          </div>
+          <div class="services-content mt-30">
+            <h4 class="services-title" style="font-size: 19px;">Status Pesanan Real-time</h4>
+            <p class="text" style="font-size: 16px;">Pelanggan bisa memantau status pesanan secara langsung, mulai dari proses desain hingga cetak dan pengiriman</p>
           </div>
         </div>
+      </div>
 
-        <!-- Pemberian Tindakan Otomatis -->
-        <div class="col-lg-4 col-md-7 col-sm-8">
-          <div class="single-services text-center mt-30 wow fadeIn" data-wow-duration="1s" data-wow-delay="0.8s">
-            <div class="services-icon">
-              <img class="shape" src="{{ asset('assets/images/services/services-shape.svg') }}" alt="shape" />
-              <img class="shape-1" src="{{ asset('assets/images/services/services-shape-3.svg') }}" alt="shape" />
-              <i class="lni lni-cogs"></i>
-            </div>
-            <div class="services-content mt-30">
-              <h4 class="services-title">Pemberian Tindakan Otomatis</h4>
-              <p class="text">
-                Fitur ini memungkinkan sistem untuk memberikan tindakan seperti mengaktifkan
-                kran otomatis saat air tercemar atau terlalu kotor.
-              </p>
-
-            </div>
+      <!-- Manajemen Admin yang Efisien -->
+      <div class="col-lg-2 col-md-4 col-sm-6">
+        <div class="single-services text-center mt-30 wow fadeIn" data-wow-duration="1s" data-wow-delay="1.1s">
+          <div class="services-icon">
+            <img class="shape" src="{{ asset('assets/images/services/services-shape.svg') }}" alt="shape" />
+            <img class="shape-1" src="{{ asset('assets/images/services/services-shape-3.svg') }}" alt="shape" />
+            <i class="lni lni-cog"></i>
+          </div>
+          <div class="services-content mt-30">
+            <h4 class="services-title" style="font-size: 19px;">Manajemen Admin yang Efisien</h4>
+            <p class="text" style="font-size: 16px;">Admin dapat dengan mudah mengelola pesanan, produk, stok, dan data pelanggan</p>
           </div>
         </div>
+      </div>
 
-        <!-- Akses Jarak Jauh -->
-        <div class="col-lg-4 col-md-7 col-sm-8">
-          <div class="single-services text-center mt-30 wow fadeIn" data-wow-duration="1s" data-wow-delay="1.1s">
-            <div class="services-icon">
-              <img class="shape" src="{{ asset('assets/images/services/services-shape.svg') }}" alt="shape" />
-              <img class="shape-1" src="{{ asset('assets/images/services/services-shape-3.svg') }}" alt="shape" />
-              <i class="lni lni-mobile"></i>
-            </div>
-            <div class="services-content mt-30">
-              <h4 class="services-title">Akses Jarak Jauh</h4>
-              <p class="text">
-                Sistem ini memungkinkan pengguna untuk memantau dan mengendalikan kualitas
-                air kolam ikan koi dari jarak jauh melalui perangkat mobile.
-              </p>
-
-            </div>
+      <!-- Antarmuka Ramah Pengguna -->
+      <div class="col-lg-2 col-md-4 col-sm-6">
+        <div class="single-services text-center mt-30 wow fadeIn" data-wow-duration="1s" data-wow-delay="1.4s">
+          <div class="services-icon">
+            <img class="shape" src="{{ asset('assets/images/services/services-shape.svg') }}" alt="shape" />
+            <img class="shape-1" src="{{ asset('assets/images/services/services-shape-2.svg') }}" alt="shape" />
+            <i class="lni lni-android"></i>
           </div>
-        </div>
-
-        <!-- Data Historis dan Analisis -->
-        <div class="col-lg-4 col-md-7 col-sm-8">
-          <div class="single-services text-center mt-30 wow fadeIn" data-wow-duration="1s" data-wow-delay="1.4s">
-            <div class="services-icon">
-              <img class="shape" src="{{ asset('assets/images/services/services-shape.svg') }}" alt="shape" />
-              <img class="shape-1" src="{{ asset('assets/images/services/services-shape-2.svg') }}" alt="shape" />
-              <i class="lni lni-bar-chart"></i>
-            </div>
-            <div class="services-content mt-30">
-              <h4 class="services-title">Data Historis dan Analisis</h4>
-              <p class="text">
-                Data yang dikumpulkan dari berbagai sensor disimpan dan dianalisis untuk
-                membantu pengguna memahami tren dan pola dalam kualitas air serta kesehatan ikan.
-              </p>
-
-            </div>
+          <div class="services-content mt-30">
+            <h4 class="services-title" style="font-size: 19px;">Antarmuka Ramah Pengguna</h4>
+            <p class="text" style="font-size: 16px;">Tampilan sistem yang responsif dan mudah digunakan dapat memudahkan semua kalangan pelanggan</p>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
+
 
 
   <section id="about">
@@ -266,16 +289,15 @@
               <div class="section-title">
                 <div class="line"></div>
                 <h3 class="title">
-                  Mengenal Sistem Cerdas <span>Pengelolaan Air Kolam Ikan Koi Berbasis IoT</span>
+                  Mengenal Sistem Cerdas <span>Pengelolaan Pesanan dan Produksi Percetakan Berbasis Digital</span>
                 </h3>
               </div>
               <p class="text">
-                Intellegence System Kontrol Kualitas Air Pada Kolam Ikan Koi Berbasis IoT adalah
-                sistem yang memanfaatkan teknologi Internet of Things (IoT) untuk mengontrol serta memonitor dan
-                mengendalikan kualitas air secara otomatis di kolam ikan koi.
-                Sistem ini dapat mengukur parameter seperti suhu, pH, kadar oksigen, dan tingkat kekeruhan air
-                secara real-time, serta memberikan peringatan atau melakukan tindakan otomatis untuk menjaga kondisi
-                ideal bagi ikan koi.
+              Sistem Cerdas Pengelolaan Pesanan dan Produksi Percetakan Berbasis Digital adalah sistem yang mengintegrasikan 
+              teknologi untuk mengelola dan memonitor pesanan serta proses produksi percetakan secara otomatis. 
+              Sistem ini dapat mengoptimalkan alur kerja dari pemesanan produk percetakan, pengaturan jadwal produksi,
+               hingga pengiriman, dengan pemantauan status pesanan secara real-time. Selain itu, sistem ini juga memberikan 
+               peringatan jika ada masalah atau keterlambatan dalam produksi, serta memungkinkan pengaturan stok dan bahan baku secara efisien.
               </p>
               <!-- Tombol untuk membuka modal -->
               <a href="#" class="main-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">Selengkapnya</a>
@@ -283,7 +305,7 @@
           </div>
           <div class="col-lg-6">
             <div class="about-image text-center mt-50 wow fadeInRightBig" data-wow-duration="1s" data-wow-delay="0.5s">
-              <img src="{{ asset('assets/images/about/about1.svg') }}" alt="about" />
+              <img src="{{ asset('dashboard2/assets/img/imgtoko/print3.png') }}" alt="about" />
             </div>
           </div>
         </div>
@@ -299,13 +321,10 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <!-- Tambahkan konten lengkap di sini -->
-            Intellegence System Kontrol Kualitas Air Pada Kolam Ikan Koi Berbasis IoT adalah sistem yang memanfaatkan
-            teknologi Internet of Things (IoT) untuk mengontrol serta memonitor dan mengendalikan kualitas air secara
-            otomatis di kolam ikan koi. Sistem ini dapat mengukur parameter seperti suhu, pH, kadar oksigen, dan tingkat
-            kekeruhan air secara real-time, serta memberikan peringatan atau melakukan tindakan otomatis untuk menjaga
-            kondisi ideal bagi ikan koi. Dengan fitur ini, pengguna dapat lebih mudah mengelola kualitas air dan
-            kesehatan ikan koi mereka.
+          Sistem Intelijen untuk Manajemen Percetakan adalah platform berbasis web yang dirancang untuk membantu pengelolaan
+          proses operasional di bisnis percetakan. Sistem ini mendukung pemantauan status pesanan, pengelolaan data pelanggan,
+          pengaturan stok bahan, hingga pembuatan laporan secara efisien. Dengan fitur-fitur ini, 
+          pemilik percetakan dapat lebih mudah mengontrol alur kerja, mempercepat pelayanan, dan meningkatkan kepuasan pelanggan.
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
@@ -319,7 +338,7 @@
     </div>
     </div>
 
-
+<section id ="location">
     <div class="about-area pt-70">
       <div class="about-shape-2">
         <img src="{{ asset('assets/images/about/about-shape-2.svg') }}" alt="shape" />
@@ -331,7 +350,7 @@
               <div class="section-title">
                 <div class="line"></div>
                 <h3 class="title">
-                  Lokasi Kami <span> - The Genks Koi 99 Farm (Sentral Ikan Koi)</span>
+                  Lokasi Kami <span> - Percetakan Citra Media </span>
                 </h3>
               </div>
 
@@ -362,9 +381,10 @@
       </div>
 
     </div>
+</section>
 
 
-    <div class="about-area pt-70">
+    <!-- <div class="about-area pt-70">
       <div class="container">
         <div class="row">
           <div class="col-lg-6">
@@ -401,9 +421,9 @@
       <div class="about-shape-1">
         <img src="{{ asset('assets/images/about/about-shape-1.svg') }}" alt="shape" />
       </div>
-    </div>
+    </div> -->
 
-  </section>
+  <!-- </section>
 
   <section id="facts" class="video-counter pt-70">
     <div class="container">
@@ -496,107 +516,7 @@
 
     </div>
 
-  </section>
-
-
-  <section id="team" class="team-area pt-120">
-    <div class="container">
-
-      <!-- Section Title -->
-      <div class="row justify-content-center">
-        <div class="col-lg-5">
-          <div class="section-title text-center pb-30">
-            <div class="line m-auto"></div>
-            <h3 class="title">Tim Kami</h3>
-          </div>
-        </div>
-      </div>
-
-      <!-- Row 1: 3 Members -->
-      <div class="row justify-content-center">
-        <!-- Member 1 -->
-        <div class="col-lg-3 col-md-7 col-sm-8">
-          <div class="single-team text-center mt-30 wow fadeIn" data-wow-duration="1s" data-wow-delay="0.2s">
-            <div class="team-image">
-              <img src="{{ asset('assets/images/team/cowo3.png') }}" alt="Team" />
-            </div>
-            <div class="team-content">
-              <h5 class="holder-name">
-                <a href="javascript:void(0)">Muhammad Guntur Wijaya</a>
-              </h5>
-              <p class="text">Developer Mobile Apps</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Member 2 -->
-        <div class="col-lg-3 col-md-7 col-sm-8">
-          <div class="single-team text-center mt-30 wow fadeIn" data-wow-duration="1s" data-wow-delay="0.5s">
-            <div class="team-image">
-              <img src="{{ asset('assets/images/team/cowo1.png') }}" alt="Team" />
-            </div>
-            <div class="team-content">
-              <h5 class="holder-name">
-                <a href="javascript:void(0)">Mohammad Ihsanuddin</a>
-              </h5>
-              <p class="text">Developer Web</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Member 3 -->
-        <div class="col-lg-3 col-md-7 col-sm-8">
-          <div class="single-team text-center mt-30 wow fadeIn" data-wow-duration="1s" data-wow-delay="0.8s">
-            <div class="team-image">
-              <img src="{{ asset('assets/images/team/cowo2.png') }}" alt="Team" />
-            </div>
-            <div class="team-content">
-              <h5 class="holder-name">
-                <a href="javascript:void(0)">Akmal Amilunnizar</a>
-              </h5>
-              <p class="text">Image Processing and Vision</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Row 2: 2 Members -->
-      <div class="row justify-content-center mt-4">
-        <!-- Member 4 -->
-        <div class="col-lg-3 col-md-7 col-sm-8">
-          <div class="single-team text-center mt-30 wow fadeIn" data-wow-duration="1s" data-wow-delay="1.1s">
-
-            <div class="team-image">
-              <img src="{{ asset('assets/images/team/cewe1.png') }}" alt="Team" />
-            </div>
-            <div class="team-content">
-              <h5 class="holder-name">
-                <a href="javascript:void(0)">Khoirunisa Mutawakilah</a>
-              </h5>
-              <p class="text">Developer Web</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Member 5 -->
-        <div class="col-lg-3 col-md-7 col-sm-8">
-          <div class="single-team text-center mt-30 wow fadeIn" data-wow-duration="1s" data-wow-delay="1.4s">
-            <div class="team-image">
-              <img src="{{ asset('assets/images/team/cowo4.png') }}" alt="Team" />
-            </div>
-            <div class="team-content">
-              <h5 class="holder-name">
-                <a href="javascript:void(0)">Akhisyamsah Yusfalana</a>
-              </h5>
-              <p class="text">IoT Enginner</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-
+  </section> -->
 
   <footer id="footer" class="footer-area pt-100">
     <div class="container">
@@ -621,13 +541,12 @@
           <div class="col-lg-4 col-md-6 col-sm-8">
             <div class="footer-about mt-50 wow fadeIn" data-wow-duration="1s" data-wow-delay="0.2s">
               <a class="logo" href="javascript:void(0)">
-                <img src="{{ asset('assets/images/logo/logo.png') }}" alt="logo" />
+           
+                <img src="{{ asset('dashboard2/assets/img/icons/logocime.png') }}" alt="Logo" />
               </a>
               <p class="text">
-                The Genks Koi 99 Farm adalah komunitas pencinta koi di Jember yang berdiri pada
-                tanggal 10 Oktober 2019. Komunitas ini terdiri dari lima anggota dan memiliki kemitraan
-                dengan petani di wilayah Jember. The Genks Koi 99 Farm bertujuan untuk memajukan dunia perkoian di
-                Jember.
+              Citra Media adalah usaha percetakan di Jember yang melayani berbagai kebutuhan cetak seperti undangan, 
+              brosur, banner, dan kartu nama. Kami hadir untuk memberikan hasil cetak berkualitas dengan harga bersahabat dan pelayanan cepat.
               </p>
               <ul class="social">
                 <li>
@@ -655,19 +574,19 @@
 
           </div>
 
-          <div class="col-lg-3 col-md-5 col-sm-12">
+          <div class="col-lg-3 col-md-5 col-sm-12" style="margin-left: 550px;">
             <div class="footer-contact mt-50 wow fadeIn" data-wow-duration="1s" data-wow-delay="0.8s">
               <div class="footer-title">
                 <h4 class="title">Contact Us</h4>
               </div>
               <ul class="contact">
-                <li>0811-3662-488</li>
+                <li>0896 2716 0919</li>
                 <li>
-                <li>genkskoi99@gmail.com</li>
+                <li>Citramedia@gmail.com</li>
                 <li>www.genks99.com</li>
                 <li>
-                  Gumuksari, Tegal Besar, Kec. Kaliwates,<br />
-                  Kabupaten Jember, Jawa Timur 68131
+                Kabupaten Jember, Jawa Timur 68121<br />
+                Indonesia
                 </li>
               </ul>
             </div>
@@ -681,7 +600,7 @@
             <div class="copyright d-sm-flex justify-content-between">
               <div class="copyright-content">
                 <p class="text">
-                  The Genk's Koi 99 Farm |
+                  Percetakan Citra Media |
                   <a href="" rel="nofollow">Kabupaten Jember</a>
                 </p>
               </div>
@@ -746,6 +665,40 @@
     data-cf-beacon='{"rayId":"8d17ebe3beab5fe5","version":"2024.10.1","r":1,"serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}},"token":"9a6015d415bb4773a0bff22543062d3b","b":1}'
     crossorigin="anonymous"></script>
   <script src="{{ asset('js/maind41d.js') }}"></script>
+  
+  <script>
+document.addEventListener("DOMContentLoaded", function () {
+  const carousel = document.getElementById('carousel');
+  const nextBtn = document.getElementById('next');
+  const prevBtn = document.getElementById('prev');
+
+  const cardWidth = 320;
+
+  // Manual controls
+  nextBtn.addEventListener('click', () => {
+    carousel.scrollBy({ left: cardWidth, behavior: 'smooth' });
+  });
+
+  prevBtn.addEventListener('click', () => {
+    carousel.scrollBy({ left: -cardWidth, behavior: 'smooth' });
+  });
+
+  // Auto scroll loop
+  setInterval(() => {
+    const maxScrollLeft = carousel.scrollWidth - carousel.clientWidth;
+
+    // Jika sudah sampai ujung kanan, reset ke awal
+    if (carousel.scrollLeft + cardWidth >= maxScrollLeft) {
+      carousel.scrollTo({ left: 0, behavior: 'smooth' });
+    } else {
+      carousel.scrollBy({ left: cardWidth, behavior: 'smooth' });
+    }
+  }, 3000); // ganti delay di sini sesuai kecepatan
+});
+</script>
+
+
+
 </body>
 
 </html>
