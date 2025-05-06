@@ -80,12 +80,6 @@
                             <div data-i18n="Analytics" class="larger-text">Dashboard</div>
                         </a>
                     </li>
-                    <li class="menu-item {{ request()->is('admin/all-diagnosa*') ? 'active' : '' }}">
-                        <a href="{{ route('allDiagnosaPenyakit') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-health"></i>
-                            <div data-i18n="Basic" class="larger-text">Barang Masuk</div>
-                        </a>
-                    </li>
                     <li class="menu-item {{ request()->is('admin/all-satuan*') ? 'active' : '' }}">
                         <a href="{{ route('allsatuan') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-table"></i>
@@ -112,7 +106,12 @@
                             <div data-i18n="Basic" class="larger-text">Data Supplier</div>
                         </a>
                     </li>
-                    
+                    <li class="menu-item {{ request()->is('admin/all-diagnosa*') ? 'active' : '' }}">
+                        <a href="{{ route('allDiagnosaPenyakit') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-health"></i>
+                            <div data-i18n="Basic" class="larger-text">Laporan</div>
+                        </a>
+                    </li>
                     <li class="menu-item {{ request()->is('admin/all-pcv*') ? 'active' : '' }}">
                         <a href="{{ route('pcv') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-collection"></i>
@@ -125,10 +124,10 @@
                             <div data-i18n="Basic" class="larger-text">Profil</div>
                         </a>
                     </li>
-                    <div class="koi-image-container">
+                    <!-- <div class="koi-image-container">
                         <img src="{{ asset('assets/images/koi1.png') }}"
                             style="opacity: 0.5; margin-top: 70px; width: 230px; height: auto;" />
-                    </div>
+                    </div> -->
                 </ul>
                 <style>
                     /* Mengubah warna teks menu menjadi putih terang dan bold */
