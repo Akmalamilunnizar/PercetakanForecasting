@@ -116,6 +116,12 @@
                             <div data-i18n="Basic" class="larger-text">Data Supplier</div>
                         </a>
                     </li>
+                    <li class="menu-item {{ request()->is('admin/daftar-customer*') ? 'active' : '' }}">
+                        <a href="{{ route('allcustomer') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-store"></i>
+                            <div data-i18n="Basic" class="larger-text">Data Customer</div>
+                        </a>
+                    </li>
                     
                     <li class="menu-item {{ request()->is('admin/all-pcv*') ? 'active' : '' }}">
                         <a href="{{ route('pcv') }}" class="menu-link">

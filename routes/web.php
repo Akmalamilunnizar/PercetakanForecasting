@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\CustomerController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\DashboardController;
@@ -189,6 +190,25 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::put('/admin/daftar-supplier/{id}/update', 'updateSupplier')->name('updatesupplier');
         // Hapus supplier
         Route::delete('/admin/daftar-supplier/{id}', 'deleteSupplier')->name('deletesupplier');
+        // Cari supplier
+        Route::get('/admin/search-supplier', 'searchSupplier')->name('searchsupplier');
+        // API get list supplier (JSON)
+        Route::get('/api/suppliers', 'get_supplier_list')->name('getsuppliers');
+    });
+
+    Route::controller(CustomerController::class)->group(function () {
+        // Tampilkan semua supplier
+        Route::get('/admin/daftar-customer', 'index')->name('allcustomer');
+        // Tampilkan form tambah supplier
+        Route::get('/admin/daftar-supplier/add', 'addSupplier')->name('addsupplier');
+        // Proses form tambah supplier
+        Route::post('/admin/daftar-supplier/add', 'storeSupplier')->name('storesupplier');
+        // Form edit supplier
+        Route::get('/admin/daftar-supplier/{id}/edit', 'editSupplier')->name('editsupplier');
+        // Update supplier
+        Route::put('/admin/daftar-supplier/{id}/update', 'updateSupplier')->name('updatesupplier');
+        // Hapus supplier
+        Route::delete('/admin/daftar-supplier/{id}', 'deleteCustomer')->name('deletecustomer');
         // Cari supplier
         Route::get('/admin/search-supplier', 'searchSupplier')->name('searchsupplier');
         // API get list supplier (JSON)
