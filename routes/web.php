@@ -31,7 +31,6 @@ use App\Http\Controllers\Api\V1\TokoController;
 use App\Models\Produk;
 use App\Models\Supplier;
 use App\Http\Controllers\Api\V1\ProdukController;
-use App\Http\Controllers\Api\V1\TransaksiController;
 use App\Http\Controllers\Api\V1\ForecastController;
 use App\Http\Controllers\DeliveryShoppingController;
 
@@ -102,7 +101,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::post('/admin/update-satuan', 'UpdateSatuan')->name('updatesatuan');
         Route::get('/admin/delete-satuan/{id}', 'DeleteSatuan')->name('deletesatuan');
     });
-    
+
     Route::controller(TransaksiController::class)->group(function () {
         Route::get('/admin/all-transaksi', 'Index')->name('alltransaksi');
         Route::get('/admin/manage-transaksi', 'ManageTransaksi')->name('managetransaksi');
@@ -164,7 +163,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::controller(TokoController::class)->group(function () {
         Route::get('/tokodashboard', function () {return view('toko.dashboardToko');})->name('tokodashboard');
         Route::get('/tokodashboard', [TokoController::class, 'tokodashboard'])->name('tokodashboard');
-        Route::get('/search', [ProductController::class, 'search'])->name('searchProduct');
 
 
         Route::get('/shop', function () {return view('toko.dashboardToko');})->name('shop');
@@ -317,7 +315,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::post('/admin/profile', [AdminProfileController::class, 'StoreProfile'])->name('storeprofile');
     });
 
-    
+
 
     Route::controller(PcvController::class)->group(function () {
         Route::get('/admin/pcv-page', 'Index')->name('pcv');
