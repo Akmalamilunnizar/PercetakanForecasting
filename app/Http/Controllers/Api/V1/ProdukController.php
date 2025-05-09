@@ -134,4 +134,17 @@ class ProdukController extends Controller
 
         return view('admin.allproduk', compact('produk', 'search'));
     }
+    public function destroy($id)
+    {
+        $supplier = Supplier::find($id);
+
+        if (!$supplier) {
+            return response()->json(['message' => 'Supplier not found'], 404);
+        }
+
+        $supplier->delete();
+
+        return response()->json(['message' => 'Supplier deleted successfully'], 200);
+    }
+
 }

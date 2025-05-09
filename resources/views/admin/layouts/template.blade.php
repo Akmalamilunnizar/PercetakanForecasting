@@ -77,12 +77,6 @@
                             <div data-i18n="Analytics" class="larger-text">Dashboard</div>
                         </a>
                     </li>
-                    <li class="menu-item {{ request()->is('admin/all-diagnosa*') ? 'active' : '' }}">
-                        <a href="{{ route('allDiagnosaPenyakit') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-health"></i>
-                            <div data-i18n="Basic" class="larger-text">Penyakit Ikan Koi</div>
-                        </a>
-                    </li>
                     <li class="menu-item {{ request()->is('admin/all-satuan*') ? 'active' : '' }}">
                         <a href="{{ route('allsatuan') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-table"></i>
@@ -103,12 +97,12 @@
                         </a>
                     </li>
 
-                    <li class="menu-item {{ request()->is('admin/all-produk*') ? 'active' : '' }}">
+                    {{-- <li class="menu-item {{ request()->is('admin/all-produk*') ? 'active' : '' }}">
                         <a href="{{ route('allproduk') }}" class="menu-link">
                             <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
                             <div data-i18n="Basic" class="larger-text">Daftar Produk</div>
                         </a>
-                    </li>
+                    </li> --}}
 
                     <li class="menu-item {{ request()->is('admin/daftar-supplier*') ? 'active' : '' }}">
                         <a href="{{ route('allsuppliers') }}" class="menu-link">
@@ -116,11 +110,17 @@
                             <div data-i18n="Basic" class="larger-text">Data Supplier</div>
                         </a>
                     </li>
+                    <li class="menu-item {{ request()->is('admin/all-customer*') ? 'active' : '' }}">
+                        <a href="{{ route('allcustomer') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-table"></i>
+                            <div data-i18n="Basic" class="larger-text">Daftar Customer</div>
+                        </a>
+                    </li>
                     
-                    <li class="menu-item {{ request()->is('admin/all-pcv*') ? 'active' : '' }}">
-                        <a href="{{ route('pcv') }}" class="menu-link">
+                    <li class="menu-item {{ request()->is('admin/all-transaksi*') ? 'active' : '' }}">
+                        <a href="{{ route('alltransaksi') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-collection"></i>
-                            <div data-i18n="Basic" class="larger-text">Deteksi Penyakit</div>
+                            <div data-i18n="Basic" class="larger-text">Data Transaksi</div>
                         </a>
                     </li>
                     <li class="menu-item {{ request()->is('admin/admin-profile*') ? 'active' : '' }}">
@@ -129,10 +129,10 @@
                             <div data-i18n="Basic" class="larger-text">Profil</div>
                         </a>
                     </li>
-                    <div class="koi-image-container">
+                    <!-- <div class="koi-image-container">
                         <img src="{{ asset('assets/images/koi1.png') }}"
                             style="opacity: 0.5; margin-top: 70px; width: 230px; height: auto;" />
-                    </div>
+                    </div> -->
                 </ul>
                 <style>
                     /* Mengubah warna teks menu menjadi putih terang dan bold */
