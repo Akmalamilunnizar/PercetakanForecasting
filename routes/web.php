@@ -30,6 +30,8 @@ use App\Http\Controllers\Api\V1\TokoController;
 use App\Models\Produk;
 use App\Models\Supplier;
 use App\Http\Controllers\Api\V1\ProdukController;
+use App\Http\Controllers\Api\V1\LaporanController;
+use App\Http\Controllers\Api\V1\LaporanTransaksiController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -85,6 +87,17 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::post('/admin/update-item', 'UpdateItem')->name('updateitem');
         Route::get('/admin/delete-item/{id}', 'DeleteItem')->name('deleteitem');
     });
+
+    Route::controller(LaporanController::class)->group(function () {
+        Route::get('/admin/all-laporan', 'Index')->name('alllaporan');
+    });
+
+    Route::controller(LaporanTransaksiController::class)->group(function () {
+        Route::get('/admin/laporan-transaksi', 'index')->name('laporan-transaksi');
+    });
+
+    Route::get('generate-pdf', [App\Http\Controllers\Api\V1\PdfController::class, 'generatePdf']);
+
 
     Route::controller(SatuanController::class)->group(function () {
         Route::get('/admin/all-satuan', 'Index')->name('allsatuan');
@@ -143,16 +156,22 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     });
 
     Route::controller(TokoController::class)->group(function () {
-        Route::get('/tokodashboard', function () {return view('toko.dashboardToko');})->name('tokodashboard');
+        Route::get('/tokodashboard', function () {
+            return view('toko.dashboardToko'); })->name('tokodashboard');
         Route::get('/tokodashboard', [TokoController::class, 'tokodashboard'])->name('tokodashboard');
         Route::get('/search', [ProductController::class, 'search'])->name('searchProduct');
 
 
-        Route::get('/shop', function () {return view('toko.dashboardToko');})->name('shop');
-        Route::get('/keranjang', function () {return view('toko.dashboardToko');})->name('keranjang');
-        Route::get('/faq', function () {return view('toko.dashboardToko');})->name('faq');
-        Route::get('/lacak', function () {return view('toko.dashboardToko');})->name('lacak');
-        Route::get('/kontak', function () {return view('toko.dashboardToko');})->name('kontak');
+        Route::get('/shop', function () {
+            return view('toko.dashboardToko'); })->name('shop');
+        Route::get('/keranjang', function () {
+            return view('toko.dashboardToko'); })->name('keranjang');
+        Route::get('/faq', function () {
+            return view('toko.dashboardToko'); })->name('faq');
+        Route::get('/lacak', function () {
+            return view('toko.dashboardToko'); })->name('lacak');
+        Route::get('/kontak', function () {
+            return view('toko.dashboardToko'); })->name('kontak');
 
     });
 

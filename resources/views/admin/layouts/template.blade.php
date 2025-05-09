@@ -59,7 +59,7 @@
                             <img src="{{ asset('dashboard2/assets/img/icons/logocime.png') }}"
                                 style="width: 200px; height: auto; margin-top: 20px; margin-left: 30px;" />
                             <hr>
-                            
+
                         </span>
                     </a>
                     <div style="margin-top: 30px;"></div>
@@ -116,13 +116,15 @@
                             <div data-i18n="Basic" class="larger-text">Daftar Customer</div>
                         </a>
                     </li>
-                    
-                    <li class="menu-item {{ request()->is('admin/all-pcv*') ? 'active' : '' }}">
-                        <a href="{{ route('pcv') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-collection"></i>
-                            <div data-i18n="Basic" class="larger-text">Deteksi Penyakit</div>
+
+                    <li
+                        class="menu-item {{ request()->is('admin/all-laporan*') || request()->is('admin/laporan-transaksi') ? 'active' : '' }}">
+                        <a href="{{ route('alllaporan') }}" class="menu-link">
+                            <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
+                            <div data-i18n="Basic" class="larger-text">Laporan</div>
                         </a>
                     </li>
+
                     <li class="menu-item {{ request()->is('admin/admin-profile*') ? 'active' : '' }}">
                         <a href="{{ route('profile') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-user"></i>
@@ -222,7 +224,8 @@
                                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);"
                                     data-bs-toggle="dropdown">
                                     <div class="avatar avatar-online">
-                                    <img src="{{ asset('uploads/users/' . Auth::user()->img) }}" alt="user-avatar" class="d-block rounded" height="100" width="100" id="uploadedAvatar" />
+                                        <img src="{{ asset('uploads/users/' . Auth::user()->img) }}" alt="user-avatar"
+                                            class="d-block rounded" height="100" width="100" id="uploadedAvatar" />
                                     </div>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
@@ -231,7 +234,9 @@
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0 me-3">
                                                     <div class="avatar avatar-online">
-                                                    <img src="{{ asset('uploads/users/' . Auth::user()->img) }}" alt="user-avatar" class="d-block rounded" height="100" width="100" id="uploadedAvatar" />
+                                                        <img src="{{ asset('uploads/users/' . Auth::user()->img) }}"
+                                                            alt="user-avatar" class="d-block rounded" height="100"
+                                                            width="100" id="uploadedAvatar" />
                                                     </div>
                                                 </div>
                                                 <div class="flex-grow-1">
