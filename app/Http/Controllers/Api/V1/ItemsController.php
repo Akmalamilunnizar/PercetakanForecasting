@@ -171,39 +171,6 @@ class ItemsController extends Controller
 
 
 
-    public function get_item_list()
-    {
-        $item = Items::get(); // Retrieve all records from the 'item' table
-
-        return response()->json($item, 200);
-    }
-
-    public function updateRelayCondition(Request $request)
-    {
-        $request->validate([
-            'item_id' => 'required|integer',
-            'relay_condition' => 'required|boolean',
-        ]);
-
-        $item = Items::find($request->item_id);
-
-        if ($item) {
-            $item->relay_condition = $request->relay_condition;
-            $item->save();
-
-            return response()->json([
-                'message' => 'Relay condition updated successfully.',
-                'item' => $item,
-            ], 200);
-        }
-
-        return response()->json([
-            'message' => 'Items not found.',
-        ], 404);
-    }
-
-
-
     /**
      * Title for current resource.
      *
