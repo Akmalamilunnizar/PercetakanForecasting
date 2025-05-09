@@ -79,4 +79,19 @@ class SupplierController extends Controller
         $supplier = Supplier::all();
         return response()->json($supplier, 200);
     }
+
+    public function destroy($id)
+    {
+        $supplier = Supplier::find($id);
+
+        if (!$supplier) {
+            return redirect()->back()->with('error', 'Supplier tidak ditemukan.');
+        }
+
+
+        $supplier->delete();
+        return redirect()->back()->with('message', 'Supplier berhasil dihapus.');
+
+    }
+
 }
