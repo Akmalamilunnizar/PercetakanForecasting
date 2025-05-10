@@ -87,6 +87,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/admin/edit-item/{id}', 'EditItem')->name('edititem');
         Route::post('/admin/update-item', 'UpdateItem')->name('updateitem');
         Route::get('/admin/delete-item/{id}', 'DeleteItem')->name('deleteitem');
+        Route::get('/admin/keluar-barang', 'KeluarBarang')->name('exititems');
+        Route::post('/admin/store-keluar-barang', 'StoreKeluarBarang')->name('store-exititems');
     });
 
     Route::post('/predict', [ForecastController::class, 'predict']);

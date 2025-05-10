@@ -36,4 +36,9 @@ class Items extends Model
         return $this->hasOne(DetailMasuk::class, 'IdBarang', 'IdBarang');
     }
 
+    public function detailBarangKeluar()
+    {
+        return $this->hasOne(DetailKeluar::class, 'IdBarang', 'IdBarang');
+    }
+
 }
