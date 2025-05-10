@@ -13,69 +13,33 @@ class DashboardController extends Controller
 
     public function Index()
     {
+        // Get all items
         $items = Items::all();
 
-        // Kirim data ke view
-        return view("admin.dashboard", compact('items'));
-        }
-    // public function Index()
-    // {
-    //     // Data terbaru per bulan untuk setiap sensor
-    //     $dataSensorPH = Sensor::selectRaw('MONTH(created_at) as bulan, ph as nilai')
-    //         ->whereIn('id_sensor', function ($query) {
-    //             $query->select(DB::raw('MAX(id_sensor)'))
-    //                 ->from('sensor')
-    //                 ->groupBy(DB::raw('MONTH(created_at)'));
-    //         })
-    //         ->orderBy('bulan')
-    //         ->pluck('nilai');
+        // Get items count by type (using IdJenisBarang)
+        $itemsByType = Items::select('IdJenisBarang', DB::raw('count(*) as total'))
+            ->groupBy('IdJenisBarang')
+            ->get();
 
+        // Get items with low stock (less than 10)
+        $lowStockItems = Items::where('JumlahStok', '<', 10)->get();
 
-    //     $dataSensorTemperature = Sensor::selectRaw('MONTH(created_at) as bulan, temperature as nilai')
-    //         ->whereIn('id_sensor', function ($query) {
-    //             $query->select(DB::raw('MAX(id_sensor)'))
-    //                 ->from('sensor')
-    //                 ->groupBy(DB::raw('MONTH(created_at)'));
-    //         })
-    //         ->orderBy('bulan')
-    //         ->pluck('nilai');
+        // Get total items count
+        $totalItems = Items::count();
 
-    //     $dataSensorTDS = Sensor::selectRaw('MONTH(created_at) as bulan, tds as nilai')
-    //         ->whereIn('id_sensor', function ($query) {
-    //             $query->select(DB::raw('MAX(id_sensor)'))
-    //                 ->from('sensor')
-    //                 ->groupBy(DB::raw('MONTH(created_at)'));
-    //         })
-    //         ->orderBy('bulan')
-    //         ->pluck('nilai');
+        // Get items with highest stock
+        $topStockItems = Items::orderBy('JumlahStok', 'desc')
+            ->take(5)
+            ->get();
 
-    //     $dataBulan = Sensor::selectRaw('MONTH(created_at) as bulan')
-    //         ->whereIn('id_sensor', function ($query) {
-    //             $query->select(DB::raw('MAX(id_sensor)'))
-    //                 ->from('sensor')
-    //                 ->groupBy(DB::raw('MONTH(created_at)'));
-    //         })
-    //         ->orderBy('bulan')
-    //         ->pluck('bulan');
-
-    //     // Nilai terbaru dari setiap sensor
-    //     $latestSensorData = Sensor::latest()->first();
-    //     $phValue = $latestSensorData->ph ?? 0; // Default ke 0 jika tidak ada data
-    //     $temperatureValue = $latestSensorData->temperature ?? 0;
-    //     $tdsValue = $latestSensorData->tds ?? 0;
-
-    //     return view('admin.dashboard', compact(
-    //         'dataBulan',
-    //         'dataSensorPH',
-    //         'dataSensorTemperature',
-    //         'dataSensorTDS',
-    //         'phValue',
-    //         'temperatureValue',
-    //         'tdsValue'
-    //     ));
-    // }
-
-    
+        return view("admin.dashboard", compact(
+            'items',
+            'itemsByType',
+            'lowStockItems',
+            'totalItems',
+            'topStockItems'
+        ));
+    }
 
     public function AdminLogout(Request $request)
     {
