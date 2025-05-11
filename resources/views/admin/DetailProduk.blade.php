@@ -29,7 +29,7 @@
                     </div>
                     <div class="thumbnail-scroll-wrapper mt-3" id="thumbnailScrollWrapper">
                         <div class="thumbnail-scroll" id="thumbnail-scroll">
-                            @foreach (['banner.jpg', 'banner.jpg', 'banner.jpg', 'banner.jpg', 'banner.jpg', 'banner.jpg', 'banner.jpg', 'banner.jpg', 'banner.jpg',] as $img)
+                            @foreach (['banner.jpg', 'banner.jpg', 'banner.jpg', 'banner.jpg', 'banner.jpg', 'banner.jpg',  'banner.jpg', 'banner.jpg', 'banner.jpg',] as $img)
                                 <a href="#">
                                     <div class="img-thumb-wrapper" style="margin-right: 5px;">
                                         <img src="{{ asset('assets/images/' . $img) }}" alt="Gambar"
@@ -235,221 +235,6 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <div>
-                        <h1> <b style="font-size: 2em; color: black;">
-                                {{ $produk->NamaProduk ?? 'Detail Produk' }}
-                            </b></h1>
-                        <p><b style="color: black;">Terjual</b> 10rb+ <span class="star" style="color: gold;">&#9733;</span>
-                            <b style="color: black;">5 </b>(5.089 rating)
-                        </p>
-                        <h4 class="jarakHarga">
-                            <b style="font-size: 2em; color: black; position: relative; top: 5px;">
-                                Rp {{ number_format($produk->HargaProduk, 0, ',', '.') }}
-                            </b>
-                        </h4>
-
-                        <div class="mt-3">
-                            <h5 style="margin-top: 25px;"><b
-                                    style="font-size: 1.5em; color: black; color:rgb(104, 59, 187)  ">
-                                    Deskripsi Produk </b></h5>
-                            <p style="margin-top: 20px;">Custom Spanduk / Mmt / Baliho / Banner - Citra Media Digital
-                                Printing
-                            </p>
-                            <p style="margin-top: 10px;">Cetak Spanduk Custom: Kunci Sukses Branding kamu! 🚀
-                            </p>
-                            <p style="margin-top: 10px;">Tersedia Ukuran Besar Mulai dari 3x4, 4x6, 10x5 dan hingga ukuran
-                                kecil 1x1, 2x1, 100x50cm, 50x50 cm dan ukuran lainnya.
-                                Jadikan setiap spanduk sebagai alat branding untuk memperkuat identitas merek kamu! Dengan
-                                desain yang menarik dan kualitas cetak terbaik Bersama Citra Media.
-                            </p>
-                            <p style="margin-top: 10px;">Custom Banner Dengan Harga Start 13 Ribu/m (Untuk Pemesanan Banyak)
-                                Harga di atas adalah harga Per meter (19.500) Sudah FREE Finishing
-                            </p>
-                            <p style="margin-top: 10px;"> ☑️Tanpa Minimal Order (1 meter Bisa)
-                            </p>
-                            <p style="margin-top: 10px;"> ☑️ Deskripsi
-                                Area Cetak Max : 3 Meter ( Lebar )
-                                Bahan :
-                                - Bahan China 280gsm (Permukaan Bahan Glossy)
-                                Format File : PDF.TIFF
-                            </p>
-                            <p style="margin-top: 10px;"> ☑️ Cara pemesanan
-                                Silahkan Pilih Bahan & Input PANJANG Spanduk (kesamping) dan input Lebar Spanduk (keatas)
-                                misal 2x1 berarti input 2(Panjang) + 1 (Lebar)
-                            </p>
-                            <p style="margin-top: 10px;">Cetak Spanduk Custom: Kunci Sukses Branding kamu! 🚀
-                            </p>
-                            <p style="margin-top: 10px;">Tersedia Ukuran Besar Mulai dari 3x4, 4x6, 10x5 dan hingga ukuran
-                                kecil 1x1, 2x1, 100x50cm, 50x50 cm dan ukuran lainnya.
-                                Jadikan setiap spanduk sebagai alat branding untuk memperkuat identitas merek kamu! Dengan
-                                desain yang menarik dan kualitas cetak terbaik Bersama Citra Media.
-                            </p>
-                            <p style="margin-top: 10px;">Custom Banner Dengan Harga Start 13 Ribu/m (Untuk Pemesanan Banyak)
-                                Harga di atas adalah harga Per meter (19.500) Sudah FREE Finishing
-                            </p>
-
-
-                            <h5 class="mt-4">Pemesanan</h5>
-                            <div class="card mt-3">
-                                <div class="card-body">
-                                    <div class="row mb-3 align-items-center">
-                                        <div class="col-md-4">
-                                            <label for="panjangMeter" class="form-label fw-bold">
-                                                <i class="bx bx-ruler-horizontal me-2"></i> Ukuran</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <div class="input-group">
-                                                <input type="number" class="form-control" id="panjang" readonly>
-                                                <select class="form-select" id="satuanPanjang">
-                                                    <option value="meter" selected>Sesuaikan</option>
-                                                    <option value="milimeter">Milimeter</option>
-                                                    <option value="sentimeter">Centimeter</option>
-                                                    <option value="inci">Inci</option>
-                                                    <option value="Sesuaikan">Meter</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3 align-items-center">
-                                        <div class="col-md-4">
-                                            <label class="form-label fw-bold"><i class="bx bx-tag me-2"></i> Promo</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <div class="text-muted">Potongan :
-                                                {{ $produk->diskon ? $produk->diskon . '%' : '0%' }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3 align-items-center">
-                                        <div class="col-md-4">
-                                            <label class="form-label fw-bold"><i class="bx bx-label me-2"></i>
-                                                Catatan</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <textarea class="form-control" id="catatan" rows="1"
-                                                placeholder="Opsional"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3 align-items-center">
-                                        <div class="col-md-4">
-                                            <label for="jumlahOrder" class="form-label fw-bold"><i
-                                                    class="bx bx-plus-minus me-2"></i> Jumlah</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <div class="input-group">
-                                                <button class="btn btn-outline-secondary" type="button"><i
-                                                        class="bx bx-minus"></i></button>
-                                                <input type="number" class="form-control text-center" id="jumlahOrder"
-                                                    value="1" min="1">
-                                                <button class="btn btn-outline-secondary" type="button"><i
-                                                        class="bx bx-plus"></i></button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3 align-items-center">
-                                        <div class="col-md-4">
-                                            <label for="uploadFile" class="form-label fw-bold"><i
-                                                    class="bx bx-upload me-2"></i> Upload File</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input class="form-control form-control-sm" type="file" id="uploadFile">
-                                            <small class="text-muted">nb : jpg, png, jpeg, webp, pdf, rar, zip. max
-                                                10mb</small>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3 align-items-center">
-                                        <div class="col-md-4">
-                                            <label for="nomorHP" class="form-label fw-bold"><i class="bx bx-phone me-2"></i>
-                                                Nomor HP</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <input type="tel" class="form-control" id="nomorHP" placeholder="Nomor Telepon">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card mt-3">
-                                <div class="card-body">
-                                    <h6 class="card-title fw-bold"><i class="bx bx-receipt me-2"></i> Rincian Harga</h6>
-                                    <hr>
-                                    <div class="row mb-2 fw-bold" style="margin-top: 10px;">
-                                        <div class="col-6">Total Harga Satuan</div>
-                                        <div class="col-6 text-end">Rp
-                                            {{ number_format($hargaSetelahDiskon, 0, ',', '.') }}
-                                            @if ($produk->diskon > 0)
-                                                <span class="text-decoration-line-through ms-2 text-muted">
-                                                    Rp {{ number_format($produk->HargaProduk, 0, ',', '.') }}
-                                                </span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="row mb-2">
-                                        <div class="col-6">Potongan</div>
-                                        <div class="col-6 text-end">{{ $produk->diskon ? $produk->diskon . '%' : '0%' }}
-                                        </div>
-                                    </div>
-                                    <div class="row mb-2">
-                                        <div class="col-6">Jumlah Order</div>
-                                        <div class="col-6 text-end">1</div>
-                                    </div>
-                                    <hr>
-                                    <div class="row fw-bold text-primary">
-                                        <div class="col-6" style="margin-top: 10px;">Total Pembayaran</div>
-                                        <div class="col-6 text-end" style="margin-top: 10px;">Rp
-                                            {{ number_format($hargaSetelahDiskon, 0, ',', '.') }}</div>
-                                    </div>
-                                    <div class="d-grid gap-2" style="margin-top: 20px;">
-                                        <button class="btn btn-warning shadow-sm" type="button"><i
-                                                class="bx bx-cart-alt me-2"></i> Masukkan Keranjang</button>
-                                        <button class="btn btn-primary shadow-sm" type="button" id="beliSekarangBtn"><i
-                                                class="bx bx-credit-card me-2"></i> Beli Sekarang</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="beliSekarangModal" class="modal">
-                <div class="modal-content">
-                    <span class="close-button">&times;</span>
-                    <h2>Konfirmasi Pembelian</h2>
-                    <div class="konfirmasi-detail">
-                        <div class="konfirmasi-produk">
-                            <img src="{{ asset('storage/' . $produk->Img) }}" alt="{{ $produk->NamaProduk }}"
-                                class="product-image" id="main-image">
-                            <div class="produk-info">
-                                <h6 class="produk-nama" style="margin-left: 20px;">
-                                    {{ $produk->NamaProduk ?? 'Detail Produk' }}
-                                </h6>
-                                <small style="margin-left: 20px;">Ukuran 1 x 1 meter</small><br>
-                                <small style="margin-left: 20px;">Bahan China 280gsm</small>
-                            </div>
-                        </div>
-                        <div class="konfirmasi-harga">
-                            <div class="harga-item">
-                                <span>Harga Satuan:</span>
-                                <span>Rp {{ number_format($produk->HargaProduk, 0, ',', '.') }}</span>
-                            </div>
-                            <div class="harga-item">
-                                <span>Jumlah:</span>
-                                <span>1</span>
-                            </div>
-                            <div class="harga-item diskon">
-                                <span>Diskon:</span>
-                                <span>22% OFF (Rp 25.000)</span>
-                            </div>
-                            <div class="harga-item total">
-                                <span>Subtotal:</span>
-                                <span>Rp 19.500</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-actions">
-                        <button class="btn btn-secondary" id="batalBeliBtn">Batal</button>
-                        <button class="btn btn-primary">Beli Sekarang</button>
-                    </div>
                 </div>
             </div>
         </div>
@@ -503,10 +288,30 @@
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(150px, auto));
         gap: 15px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, auto));
+        gap: 15px;
         padding: 15px;
         background-color: #f8f9fa;
         border-radius: 8px;
         margin-top: 20px;
+        border: 1px solid #ced4da;
+    }
+
+    .form-label {
+        font-size: 0.9em;
+        color: #495057;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .form-select,
+    .form-control {
+        font-size: 0.9em;
+    }
+
+    .input-group-text {
+        font-size: 0.9em;
         border: 1px solid #ced4da;
     }
 
@@ -644,6 +449,56 @@
     }
 
     /*--------------------------*/
+    /* CSS Tambahan untuk Desain Pemesanan yang Lebih Menarik */
+    .card {
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        margin-bottom: 15px;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+        border: 1px solid #555;
+        border-radius: 8px;
+    }
+
+    .form-label {
+        font-size: 0.95rem;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control,
+    .form-select {
+        font-size: 0.9rem;
+        border-radius: 5px;
+        border: 1px solid #ced4da;
+    }
+
+    .input-group-text {
+        font-size: 0.9rem;
+        background-color: #f8f9fa;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+    }
+
+    .btn-outline-secondary {
+        border-radius: 5px;
+    }
+
+    .card-title {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+    }
+
+    .text-primary {
+        font-size: 1.05rem;
+    }
+
+    .shadow-sm {
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+    }
     /* CSS Tambahan untuk Desain Pemesanan yang Lebih Menarik */
     .card {
         border: 1px solid #e0e0e0;
@@ -1147,6 +1002,8 @@
 
 
 
+
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const mainImage = document.getElementById('main-image');
@@ -1159,6 +1016,45 @@
         if (mainImage && thumbnailScrollWrapper) {
             const mainImageWidth = mainImage.offsetWidth;
             thumbnailScrollWrapper.style.maxWidth = mainImageWidth + 'px';
+            thumbnailScrollWrapper.style.overflowX = 'auto';
+        }
+
+        // Ubah display modal dengan menambah/menghapus class "show"
+        beliSekarangBtn.addEventListener('click', function () {
+            beliSekarangModal.classList.add("show");
+        });
+
+        closeButton.addEventListener('click', function () {
+            beliSekarangModal.classList.remove("show");
+        });
+
+        batalBeliBtn.addEventListener('click', function () {
+            beliSekarangModal.classList.remove("show");
+        });
+
+        window.addEventListener('click', function (event) {
+            if (event.target === beliSekarangModal) {
+                beliSekarangModal.classList.remove("show");
+            }
+        });
+    });
+
+</script>
+
+<script>
+    function highlightStars(selectedStar) {
+        const stars = document.querySelectorAll('.star-filter');
+        const rating = parseInt(selectedStar.getAttribute('data-rating'));
+
+        stars.forEach(star => {
+            const starRating = parseInt(star.getAttribute('data-rating'));
+            if (starRating <= rating) {
+                star.style.color = 'gold'; // Warna emas yang lebih pekat adalah default
+            } else {
+                star.style.color = '#ccc';
+            }
+        });
+    }
             thumbnailScrollWrapper.style.overflowX = 'auto';
         }
 
