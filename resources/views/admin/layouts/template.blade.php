@@ -110,19 +110,12 @@
                             <div data-i18n="Basic" class="larger-text">Data Supplier</div>
                         </a>
                     </li>
-                    <li class="menu-item {{ request()->is('admin/all-customer*') ? 'active' : '' }}">
-                        <a href="{{ route('allcustomer') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-table"></i>
-                            <div data-i18n="Basic" class="larger-text">Daftar Customer</div>
-                        </a>
-                    </li>
-                    
+
                     <li class="menu-item {{ request()->is('admin/all-transaksi*') ? 'active' : '' }}">
                         <a href="{{ route('alltransaksi') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-collection"></i>
-                            <div data-i18n="Basic" class="larger-text">Data Transaksi</div>
-                        </a>
-                    </li>
+                            <i class="menu-icon tf-icons bx bx-shopping-bag"></i>
+                            <div data-i18n="Basic" class="larger-text">Daftar Transaksi</div>                                        
+                    
                     <li class="menu-item {{ request()->is('admin/admin-profile*') ? 'active' : '' }}">
                         <a href="{{ route('profile') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-user"></i>
@@ -300,6 +293,7 @@
 
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
+    @stack('scripts')
 </body>
 
 </html>
