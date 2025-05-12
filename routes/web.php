@@ -31,8 +31,6 @@ use App\Http\Controllers\Api\V1\TokoController;
 use App\Models\Produk;
 use App\Models\Supplier;
 use App\Http\Controllers\Api\V1\ProdukController;
-use App\Http\Controllers\Api\V1\LaporanController;
-use App\Http\Controllers\Api\V1\LaporanTransaksiController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -87,18 +85,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/admin/edit-item/{id}', 'EditItem')->name('edititem');
         Route::post('/admin/update-item', 'UpdateItem')->name('updateitem');
         Route::get('/admin/delete-item/{id}', 'DeleteItem')->name('deleteitem');
+        Route::get('/admin/keluar-barang', 'KeluarBarang')->name('exititems');
+        Route::post('/admin/store-keluar-barang', 'StoreKeluarBarang')->name('store-exititems');
     });
-
-    Route::controller(LaporanController::class)->group(function () {
-        Route::get('/admin/all-laporan', 'Index')->name('alllaporan');
-    });
-
-    Route::controller(LaporanTransaksiController::class)->group(function () {
-        Route::get('/admin/laporan-transaksi', 'index')->name('laporan-transaksi');
-    });
-
-    Route::get('generate-pdf', [App\Http\Controllers\Api\V1\PdfController::class, 'generatePdf']);
-
 
     Route::controller(SatuanController::class)->group(function () {
         Route::get('/admin/all-satuan', 'Index')->name('allsatuan');
@@ -110,6 +99,19 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::post('/admin/update-satuan', 'UpdateSatuan')->name('updatesatuan');
         Route::get('/admin/delete-satuan/{id}', 'DeleteSatuan')->name('deletesatuan');
     });
+
+    Route::controller(TransaksiController::class)->group(function () {
+        Route::get('/admin/all-transaksi', 'Index')->name('alltransaksi');
+        Route::get('/admin/manage-transaksi', 'ManageTransaksi')->name('managetransaksi');
+        Route::get('/admin/all-transaksi/search', 'SearchTransaksi')->name('searchtransaksi');
+        Route::get('/admin/add-transaksi', 'AddTransaksi')->name('addtransaksi');
+        Route::post('/admin/store-transaksi', 'StoreTransaksi')->name('store-transaksi');
+        Route::get('/admin/edit-transaksi/{id}', 'EditTransaksi')->name('edittransaksi');
+        Route::post('/admin/update-transaksi', 'UpdateTransaksi')->name('updatetransaksi');
+        Route::get('/admin/delete-transaksi/{id}', 'DeleteTransaksi')->name('deletetransaksi');
+    });
+
+
 
     Route::controller(TypeItemsController::class)->group(function () {
         Route::get('/admin/all-type', 'Index')->name('alltype');
@@ -160,7 +162,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/tokodashboard', function () {
             return view('toko.dashboardToko'); })->name('tokodashboard');
         Route::get('/tokodashboard', [TokoController::class, 'tokodashboard'])->name('tokodashboard');
-        Route::get('/search', [ProductController::class, 'search'])->name('searchProduct');
 
 
         Route::get('/shop', function () {
@@ -316,8 +317,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/admin/update-order/{id}', 'UpdateOrder')->name('updateorder');
         Route::get('/admin/delete-order/{id}', 'DeleteOrder')->name('deleteorder');
         Route::post('/admin/profile', [AdminProfileController::class, 'StoreProfile'])->name('storeprofile');
-
     });
+
+
 
     Route::controller(PcvController::class)->group(function () {
         Route::get('/admin/pcv-page', 'Index')->name('pcv');
@@ -330,6 +332,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/admin/delete-order/{id}', 'DeleteOrder')->name('deleteorder');
     });
 
+    // Forecast routes
+    Route::get('/admin/forecast', [ForecastController::class, 'showForm'])->name('forecast.form');
+    Route::post('/admin/forecast/predict', [ForecastController::class, 'predict'])->name('predict');
 
     Route::get('/routes', function () {
         $routeCollection = Route::getRoutes();
@@ -396,3 +401,5 @@ Route::get('password/reset/{token}', [App\Http\Controllers\Auth\ResetPasswordCon
 Auth::routes();
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/checkout', [DeliveryShoppingController::class, 'index'])->name('checkout');

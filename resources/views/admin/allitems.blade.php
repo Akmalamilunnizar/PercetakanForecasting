@@ -21,6 +21,10 @@
             style="background: linear-gradient(45deg, #28a745, #34d058);">
             + Tambah Barang
         </a>
+        <a href="{{ route('exititems') }}" class="btn btn-success ms-auto mb-3"
+            style="background: linear-gradient(45deg,rgb(167, 40, 40),rgb(208, 52, 52));">
+            + Keluar Barang
+        </a>
         @if (session()->has('message'))
             <div class="alert alert-success">
                 {{ session()->get('message') }}
@@ -41,6 +45,7 @@
                             <th>Nama Barang</th>
                             <th>JenisBarang</th>
                             <th>Jumlah Stok</th>
+                            <th>Id Keluar</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -58,6 +63,7 @@
                                 <td>{{ $item->jenisBarang->JenisBarang }}</td>
                                 {{-- <td>{{ $jml_ikan }}</td> --}}
                                 <td>{{ $item->JumlahStok }} {{ $item->satuan->Satuan }}</td>
+                                <td>{{ $item->detailBarangKeluar?->IdKeluar ?? '-' }}</td>
                                 {{-- <td>{{ $item->updated_at }}</td> --}}
                                 <td>
                                     <a href="{{ route('edititem', $item->IdBarang) }}" class="btn btn-primary">Edit</a>
