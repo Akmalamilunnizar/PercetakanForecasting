@@ -19,7 +19,6 @@ class Items extends Model
     ];
 
 
-
     public $timestamps = false;  // Karena tabel jenis_koi tidak menggunakan created_at dan updated_at
     public function jenisBarang()
     {
