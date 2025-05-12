@@ -30,6 +30,8 @@ use App\Http\Controllers\Api\V1\TokoController;
 use App\Models\Produk;
 use App\Models\Supplier;
 use App\Http\Controllers\Api\V1\ProdukController;
+use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\Api\V1\CartController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -143,35 +145,83 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     });
 
     Route::controller(TokoController::class)->group(function () {
-        Route::get('/tokodashboard', function () {return view('toko.dashboardToko');})->name('tokodashboard');
+        // Route::get('/tokodashboard', function () {return view('toko.dashboardToko');})->name('tokodashboard');
         Route::get('/tokodashboard', [TokoController::class, 'tokodashboard'])->name('tokodashboard');
         Route::get('/search', [ProductController::class, 'search'])->name('searchProduct');
 
 
         Route::get('/shop', function () {return view('toko.dashboardToko');})->name('shop');
-        Route::get('/keranjang', function () {return view('toko.dashboardToko');})->name('keranjang');
+        Route::get('/cart', function () {return view('toko.cart');})->name('cart');
         Route::get('/faq', function () {return view('toko.dashboardToko');})->name('faq');
         Route::get('/lacak', function () {return view('toko.dashboardToko');})->name('lacak');
         Route::get('/kontak', function () {return view('toko.dashboardToko');})->name('kontak');
 
     });
 
+
+    Route::controller(CartController::class)->group(function () {
+        // Halaman tampilan toko
+        Route::get('/cart', 'index')->name('cart');
+        Route::get('/details', fn () => view('toko.details'))->name('details');
+        Route::get('/shipping', fn () => view('toko.shipping'))->name('shipping');
+        Route::get('/payment', fn () => view('toko.payment'))->name('payment');
+        Route::get('/review', fn () => view('toko.review'))->name('review');
+
+        // API Cart
+        Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+        Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
+        Route::post('/cart/decrease', 'decrease')->name('cart.decrease');
+    });
+    // Route::controller(CartController::class)->group(function () {
+    //     Route::get('/cart', function () {return view('toko.cart');})->name('cart');
+    //     Route::get('/details', function () {return view('toko.details');})->name('details');
+    //     Route::get('/shipping', function () {return view('toko.shipping');})->name('shipping');
+    //     Route::get('/payment', function () {return view('toko.payment');})->name('payment');
+    //     Route::get('/review', function () {return view('toko.review');})->name('review');
+
+    //     Route::post('/add-to-cart', [CartController::class, 'add'])->name('cart.add');
+    //     Route::get('/cart', [CartController::class, 'index'])->name('cart');
+    //     Route::post('/cart/add', [CartController::class, 'add']);
+    //     Route::get('/cart', [CartController::class, 'index']);
+    //     Route::post('/cart/remove', [CartController::class, 'remove']);
+    //     Route::post('/cart/decrease', [CartController::class, 'decrease']);
+
+
+    // });
+
+    // Route::controller(CartController::class)->group(function () {
+    //     // Menampilkan halaman cart
+    //     Route::get('/cart', 'index')->name('cart');
+
+    //     // AJAX untuk menambahkan produk ke cart
+    //     Route::post('/add-to-cart', 'add')->name('cart.add');
+
+    //     // Halaman checkout lainnya
+    //     Route::get('/details', function () {
+    //         return view('toko.details');
+    //     })->name('details');
+
+    //     Route::get('/shipping', function () {
+    //         return view('toko.shipping');
+    //     })->name('shipping');
+
+    //     Route::get('/payment', function () {
+    //         return view('toko.payment');
+    //     })->name('payment');
+
+    //     Route::get('/review', function () {
+    //         return view('toko.review');
+    //     })->name('review');
+    // });
+
     Route::controller(ProdukController::class)->group(function () {
-        // Tampilkan semua produk
         Route::get('/admin/all-produk', 'index')->name('allproduk');
-        // Tampilkan form tambah produk
         Route::get('/admin/add-produk', 'addProduk')->name('addproduk');
-        // Proses form tambah produk
         Route::post('/admin/store-produk', 'storeProduk')->name('storeproduk');
-        // Form edit produk
         Route::get('/admin/all-produk/{id}/edit', 'editProduk')->name('editproduk');
-        // Update produk
         Route::put('/admin/all-produk/{id}/update', 'updateProduk')->name('updateproduk');
-        // Hapus produk
         Route::delete('/admin/all-produk/{id}', 'deleteProduk')->name('deleteproduk');
-        // Cari produk
         Route::get('/admin/search-produk', 'searchProduk')->name('searchproduk');
-        // API get list produk (JSON)
         Route::get('/api/produk', 'get_produk_list')->name('getproduk');
     });
 
