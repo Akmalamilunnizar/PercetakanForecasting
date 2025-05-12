@@ -123,6 +123,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/admin/delete-type/{id}', 'DeleteType')->name('deletetype');
     });
 
+    Route::get('/admin/all-laporan', [LaporanController::class, 'index'])->name('alllaporan');
+
+
     Route::controller(ParameterReportController::class)->group(function () {
         Route::get('/admin/parameter-report', 'Index')->name('parameterreport');
     });
