@@ -9,43 +9,56 @@ app = Flask(__name__)
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    # Ambil data dari request (asumsikan data dikirim dalam JSON)
-    data = request.get_json()
+    try:
+        # Ambil data dari request (asumsikan data dikirim dalam JSON)
+        data = request.get_json()
 
-    # Data input
-    bulan = data['bulan']
-    terjual = data['terjual']
+        # Data input
+        bulan = data['bulan']
+        terjual = data['terjual']
 
-    # Membuat DataFrame
-    df = pd.DataFrame({'Bulan': bulan, 'Terjual': terjual})
-    df['Tanggal'] = pd.to_datetime(df['Bulan'])
-    df['Jumlah'] = df['Terjual']
-    df = df[['Tanggal', 'Jumlah']].set_index('Tanggal').resample('M').sum()
+        # Membuat DataFrame
+        df = pd.DataFrame({
+            'Tanggal': pd.to_datetime(bulan),
+            'Jumlah': terjual
+        })
+        
+        # Set index dan resample
+        df = df.set_index('Tanggal')
+        df = df.resample('ME').sum()  # Changed from 'M' to 'ME'
 
-    # Train-test split (10 bulan train, 2 bulan test)
-    train = df.iloc[:-2]
-    test = df.iloc[-2:]
+        # Convert to numeric type explicitly
+        df['Jumlah'] = pd.to_numeric(df['Jumlah'], errors='coerce')
 
-    # Fit SARIMA (non-seasonal)
-    model = SARIMAX(train, order=(1, 1, 1), seasonal_order=(0, 0, 0, 0))  # non-seasonal
-    results = model.fit(disp=False)
+        # Train-test split (10 bulan train, 2 bulan test)
+        train = df.iloc[:-2]
+        test = df.iloc[-2:]
 
-    # Forecast 2 bulan ke depan
-    forecast = results.get_forecast(steps=2)
-    pred = forecast.predicted_mean
+        # Fit SARIMA (non-seasonal)
+        model = SARIMAX(train['Jumlah'], 
+                       order=(1, 1, 1), 
+                       seasonal_order=(0, 0, 0, 0))  # non-seasonal
+        results = model.fit(disp=False)
 
-    # Evaluasi
-    mae = mean_absolute_error(test, pred)
-    rmse = np.sqrt(mean_squared_error(test, pred))
+        # Forecast 2 bulan ke depan
+        forecast = results.get_forecast(steps=2)
+        pred = forecast.predicted_mean
 
-    # Hasil evaluasi dan prediksi
-    result = {
-        'forecast': pred.tolist(),
-        'mae': mae,
-        'rmse': rmse
-    }
+        # Evaluasi
+        mae = mean_absolute_error(test['Jumlah'], pred)
+        rmse = np.sqrt(mean_squared_error(test['Jumlah'], pred))
 
-    return jsonify(result)
+        # Hasil evaluasi dan prediksi
+        result = {
+            'forecast': pred.tolist(),
+            'mae': float(mae),
+            'rmse': float(rmse)
+        }
+
+        return jsonify(result)
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

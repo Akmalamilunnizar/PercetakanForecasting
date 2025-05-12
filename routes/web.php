@@ -33,6 +33,7 @@ use App\Models\Supplier;
 use App\Http\Controllers\Api\V1\ProdukController;
 use App\Http\Controllers\Api\V1\LaporanController;
 use App\Http\Controllers\Api\V1\LaporanTransaksiController;
+use App\Http\Controllers\Api\V1\ForecastController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -342,6 +343,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // Forecast routes
     Route::get('/admin/forecast', [ForecastController::class, 'showForm'])->name('forecast.form');
     Route::post('/admin/forecast/predict', [ForecastController::class, 'predict'])->name('predict');
+    Route::get('/admin/forecast/get-sales-data', [ForecastController::class, 'getSalesData'])->name('forecast.get-sales-data');
 
     Route::get('/routes', function () {
         $routeCollection = Route::getRoutes();

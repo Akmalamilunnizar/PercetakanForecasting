@@ -14,20 +14,46 @@
                     <h5 class="mb-0">Input Data Forecasting</h5>
                 </div>
                 <div class="card-body">
-                    <form method="POST" action="{{ route('predict') }}">
-                        @csrf
-                        <div class="mb-3">
-                            <label class="form-label" for="bulan">Bulan (format: YYYY-MM)</label>
-                            <input type="text" class="form-control" id="bulan" name="bulan[]" placeholder="2024-01" required>
-                            <small class="text-muted">Masukkan minimal 12 bulan data</small>
+                    @if(session('error'))
+                        <div class="alert alert-danger">
+                            {{ session('error') }}
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="terjual">Jumlah Terjual</label>
-                            <input type="number" class="form-control" id="terjual" name="terjual[]" required>
+                    @endif
+
+                    <div class="mb-4">
+                        <div class="btn-group" role="group">
+                            <!-- <button type="button" class="btn btn-primary" onclick="loadFromDatabase()">Load from Database</button> -->
+                            <button type="button" class="btn btn-secondary" onclick="generateSampleData()">Generate Sample Data</button>
+                            <button type="button" class="btn btn-info" onclick="clearForm()">Clear Form</button>
+                        </div>
+                    </div>
+
+                    <form method="POST" action="{{ route('predict') }}" id="forecastForm">
+                        @csrf
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Bulan (YYYY-MM)</th>
+                                        <th>Jumlah Terjual</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dataTableBody">
+                                    @for ($i = 0; $i < 12; $i++)
+                                        <tr>
+                                            <td>
+                                                <input type="text" class="form-control" name="bulan[]" placeholder="YYYY-MM" required>
+                                            </td>
+                                            <td>
+                                                <input type="number" class="form-control" name="terjual[]" required>
+                                            </td>
+                                        </tr>
+                                    @endfor
+                                </tbody>
+                            </table>
                         </div>
                         
-                        <div id="additionalInputs"></div>                        
-                        <button type="button" class="btn btn-secondary mb-3" onclick="addInput()">Tambah Data</button>
                         <button type="submit" class="btn btn-primary">Prediksi</button>
                     </form>
                 </div>
@@ -37,24 +63,114 @@
 </div>
 
 <script>
-let inputCount = 1;
+let rowCount = 1;
 
-function addInput() {
-    if (inputCount < 12) {
-        const container = document.getElementById('additionalInputs');
-        const newRow = document.createElement('div');
-        newRow.className = 'row mb-3';
+function addRow() {
+    if (rowCount < 12) {
+        const tbody = document.getElementById('dataTableBody');
+        const newRow = document.createElement('tr');
         newRow.innerHTML = `
-            <div class="col-md-6">
-                <input type="text" class="form-control" name="bulan[]" placeholder="YYYY-MM" required>
-            </div>
-            <div class="col-md-6">
-                <input type="number" class="form-control" name="terjual[]" required>
-            </div>
+            <td><input type="text" class="form-control" name="bulan[]" placeholder="YYYY-MM" required></td>
+            <td><input type="number" class="form-control" name="terjual[]" required></td>
+            <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Delete</button></td>
         `;
-        container.appendChild(newRow);
-        inputCount++;
+        tbody.appendChild(newRow);
+        rowCount++;
     }
+}
+
+function removeRow(button) {
+    if (rowCount > 1) {
+        button.closest('tr').remove();
+        rowCount--;
+    }
+}
+
+function clearForm() {
+    const tbody = document.getElementById('dataTableBody');
+    tbody.innerHTML = `
+        <tr>
+            <td><input type="text" class="form-control" name="bulan[]" placeholder="2024-01" required></td>
+            <td><input type="number" class="form-control" name="terjual[]" required></td>
+            <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Delete</button></td>
+        </tr>
+    `;
+    rowCount = 1;
+}
+
+function generateSampleData() {
+    const tbody = document.getElementById('dataTableBody');
+    tbody.innerHTML = '';
+    rowCount = 0;
+    
+    const today = new Date();
+    for (let i = 0; i < 12; i++) {
+        const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const sales = Math.floor(Math.random() * 100) + 50; // Random sales between 50-150
+        
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td><input type="text" class="form-control" name="bulan[]" value="${year}-${month}" required></td>
+            <td><input type="number" class="form-control" name="terjual[]" value="${sales}" required></td>
+            <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Delete</button></td>
+        `;
+        tbody.appendChild(newRow);
+        rowCount++;
+    }
+}
+
+function loadFromDatabase() {
+    // Show loading state
+    const loadButton = event.target;
+    const originalText = loadButton.innerHTML;
+    loadButton.innerHTML = 'Loading...';
+    loadButton.disabled = true;
+
+    // Fetch data from your database using AJAX
+    fetch('/admin/forecast/get-sales-data', {
+    method: 'GET',
+    headers: {
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
+    }
+})
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(response => {
+        if (response.status !== 'success') {
+            throw new Error(response.message || 'Unknown error');
+        }
+        const data = response.data;
+        const tbody = document.getElementById('dataTableBody');
+        tbody.innerHTML = '';
+        rowCount = 0;
+
+        data.forEach(item => {
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `
+                <td><input type="text" class="form-control" name="bulan[]" value="${item.bulan}" required></td>
+                <td><input type="number" class="form-control" name="terjual[]" value="${item.terjual}" required></td>
+                <td><button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Delete</button></td>
+            `;
+            tbody.appendChild(newRow);
+            rowCount++;
+        });
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error loading data from database: ' + error.message);
+    })
+    .finally(() => {
+        // Reset button state
+        loadButton.innerHTML = originalText;
+        loadButton.disabled = false;
+    });
 }
 </script>
 @endsection 
