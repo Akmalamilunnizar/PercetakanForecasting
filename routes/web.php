@@ -31,6 +31,8 @@ use App\Http\Controllers\Api\V1\TokoController;
 use App\Models\Produk;
 use App\Models\Supplier;
 use App\Http\Controllers\Api\V1\ProdukController;
+use App\Http\Controllers\Api\V1\LaporanController;
+use App\Http\Controllers\Api\V1\LaporanTransaksiController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -124,6 +126,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     });
 
     Route::get('/admin/all-laporan', [LaporanController::class, 'index'])->name('alllaporan');
+
+    Route::get('/admin/laporantransaksi', [LaporanTransaksiController::class, 'index'])->name('laporan-transaksi');
 
 
     Route::controller(ParameterReportController::class)->group(function () {
