@@ -31,4 +31,10 @@ class Supplier extends Model
         'NoTelp',
         'Alamat',
     ];
+
+    public function laporan()
+    {
+        return $this->hasMany(Laporan::class, 'IdSupplier', 'IdSupplier');
+    }
+
 }

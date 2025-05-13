@@ -20,24 +20,53 @@
         <!-- Judul Laporan -->
         <h4 class="py-3 mb-4"><span class="text-muted fw-light">Halaman /</span> Laporan Transaksi</h4>
 
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <!-- KIRI: Dropdown Pilihan Halaman -->
-            <div class="dropdown">
-                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    Pilih Laporan
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <li><a class="dropdown-item" href="{{ route('alllaporan') }}">📄 Laporan Barang</a></li>
-                    <li><a class="dropdown-item" href="{{ route('laporan-transaksi') }}">📊 Laporan Transaksi</a></li>
-                </ul>
-            </div>
+       <div class="d-flex justify-content-between align-items-center mb-4">
+    <!-- KIRI: Dropdown Pilihan Halaman -->
+    <div class="dropdown">
+        <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton"
+            data-bs-toggle="dropdown" aria-expanded="false">
+            Pilih Laporan
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li><a class="dropdown-item" href="{{ route('alllaporan') }}">📄 Laporan Barang</a></li>
+            <li><a class="dropdown-item" href="{{ route('laporan-transaksi') }}">📊 Laporan Transaksi</a></li>
+        </ul>
+    </div>
 
-            <!-- KANAN: Export PDF -->
-            <a href="" class="btn btn-danger" style="background: linear-gradient(45deg, #dc3545, #ff6b6b);">
-                <i class='bx bxs-file-pdf'></i> Export PDF
-            </a>
+        <!-- KANAN: Semua Filter & Export PDF -->
+        <div class="d-flex align-items-center gap-2">
+                <form method="GET" action="{{ route('alllaporan') }}" class="d-flex align-items-center gap-2">
+                    <!-- Pilih Bulan -->
+                    <select name="bulan" class="form-select" style="width: 140px;">
+                        <option value="">Pilih Bulan</option>
+                        @foreach ([
+                            '01' => 'Januari', '02' => 'Februari', '03' => 'Maret', '04' => 'April',
+                            '05' => 'Mei', '06' => 'Juni', '07' => 'Juli', '08' => 'Agustus',
+                            '09' => 'September', '10' => 'Oktober', '11' => 'November', '12' => 'Desember'
+                        ] as $key => $value)
+                            <option value="{{ $key }}" {{ request('bulan') == $key ? 'selected' : '' }}>{{ $value }}</option>
+                        @endforeach
+                    </select>
+
+                    <!-- Pilih Tahun -->
+                    <select name="tahun" class="form-select" style="width: 100px;">
+                        <option value="">Tahun</option>
+                        @for ($tahun = 2020; $tahun <= date('Y'); $tahun++)
+                            <option value="{{ $tahun }}" {{ request('tahun') == $tahun ? 'selected' : '' }}>{{ $tahun }}</option>
+                        @endfor
+                    </select>
+
+                    <!-- Tombol Filter -->
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                </form>
+
+                <!-- Tombol Export PDF -->
+                <a href="" class="btn btn-danger" style="background: linear-gradient(45deg, #dc3545, #ff6b6b);">
+                    <i class='bx bxs-file-pdf'></i> Export PDF
+                </a>
+            </div>
         </div>
+
 
         @if (session()->has('message'))
             <div class="alert alert-success">
