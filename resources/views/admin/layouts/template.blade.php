@@ -122,7 +122,8 @@
                         <a href="{{ route('laporanbarang') }}" class="menu-link">
                             <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
                             <div data-i18n="Basic" class="larger-text">Laporan</div>
-                    
+                        </a>
+                    </li>
                     <li class="menu-item {{ request()->is('admin/all-transaksi*') ? 'active' : '' }}">
                         <a href="{{ route('alltransaksi') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-collection"></i>
@@ -310,6 +311,7 @@
 
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
+    @stack('scripts')
 </body>
 
 </html>
