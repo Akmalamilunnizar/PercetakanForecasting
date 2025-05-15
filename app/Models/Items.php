@@ -9,7 +9,7 @@ class Items extends Model
 {
     use HasFactory;
     protected $table = 'databarang';
-    protected $primaryKey = 'IdBarang'; 
+    protected $primaryKey = 'IdBarang';
     protected $fillable = [
         'IdBarang', // ini buat id
         'NamaBarang',
@@ -17,7 +17,6 @@ class Items extends Model
         'JumlahStok',
         'IdSatuan'
     ];
-
 
 
     public $timestamps = false;  // Karena tabel jenis_koi tidak menggunakan created_at dan updated_at
@@ -32,8 +31,13 @@ class Items extends Model
     }
 
     public function detailBarangMasuk()
-{
-    return $this->hasOne(DetailMasuk::class, 'IdBarang', 'IdBarang');
-}
+    {
+        return $this->hasOne(DetailMasuk::class, 'IdBarang', 'IdBarang');
+    }
+
+    public function detailBarangKeluar()
+    {
+        return $this->hasOne(DetailKeluar::class, 'IdBarang', 'IdBarang');
+    }
 
 }

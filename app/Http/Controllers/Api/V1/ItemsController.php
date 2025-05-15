@@ -21,7 +21,7 @@ class ItemsController extends Controller
 {
     public function Index()
     {
-        $items = Items::with('detailBarangMasuk')->get();
+        $items = Items::with(['detailBarangMasuk', 'jenisBarang', 'satuan', 'detailBarangKeluar'])->get();
 
 
         // Kirim data ke view
@@ -168,41 +168,56 @@ class ItemsController extends Controller
         return redirect()->route('allitems')->with('message', 'Penghapusan Barang ');
     }
 
-
-
-
-    public function get_item_list()
+    public function KeluarBarang()
     {
-        $item = Items::get(); // Retrieve all records from the 'item' table
-
-        return response()->json($item, 200);
+        $username = Auth::user()->username;
+        $lastKeluar = DB::table('barangkeluar')->orderBy('IdKeluar', 'desc')->first();
+        $newIdKeluar = $lastKeluar ? 'BK' . str_pad((int) substr($lastKeluar->IdKeluar, 2) + 1, 4, '0', STR_PAD_LEFT) : 'BK0001';
+        
+        $items = Items::with('jenisBarang', 'satuan')->get();
+        
+        return view('admin.keluaritems', compact('items', 'newIdKeluar', 'username'));
     }
 
-    public function updateRelayCondition(Request $request)
+    public function StoreKeluarBarang(Request $request)
     {
         $request->validate([
-            'item_id' => 'required|integer',
-            'relay_condition' => 'required|boolean',
+            'IdKeluar' => 'required',
+            'username' => 'required',
+            'IdBarang' => 'required',
+            'QtyKeluar' => 'required|numeric|min:1',
         ]);
 
-        $item = Items::find($request->item_id);
-
-        if ($item) {
-            $item->relay_condition = $request->relay_condition;
-            $item->save();
-
-            return response()->json([
-                'message' => 'Relay condition updated successfully.',
-                'item' => $item,
-            ], 200);
+        // Check if stock is sufficient
+        $item = Items::findOrFail($request->IdBarang);
+        if ($item->JumlahStok < $request->QtyKeluar) {
+            return redirect()->back()->with('error', 'Stok tidak mencukupi!');
         }
 
-        return response()->json([
-            'message' => 'Items not found.',
-        ], 404);
+        // Begin transaction
+        DB::beginTransaction();
+        try {
+            // Insert into barangkeluar
+            DB::table('barangkeluar')->insert([
+                'IdKeluar' => $request->IdKeluar,
+                'username' => $request->username,
+                'tglKeluar' => Carbon::now(),
+            ]);
+
+            // Insert into detail_barangkeluar
+            DB::table('detail_barangkeluar')->insert([
+                'IdKeluar' => $request->IdKeluar,
+                'IdBarang' => $request->IdBarang,
+                'QtyKeluar' => $request->QtyKeluar,
+            ]);
+
+            DB::commit();
+            return redirect()->route('allitems')->with('message', 'Barang berhasil keluar!');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
-
-
 
     /**
      * Title for current resource.

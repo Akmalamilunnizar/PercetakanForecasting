@@ -19,25 +19,54 @@
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
 
-        <div class="mb-3">
-            <a href="{{ url('/barang-masuk/tambah') }}" class="btn btn-success custom-dropdown">
-                Tambah Barang Masuk
+        <div class="mb-3 d-flex">
+            <!-- Tombol Export PDF -->
+            <a href="{{ url('/barang-masuk/tambah') }}" class="btn btn-success custom-dropdown me-2">
+                Export PDF
             </a>
+
+            <!-- Dropdown Bulan -->
+            <select class="form-select w-auto custom-dropdown me-2" name="bulan" id="bulan">
+                <option value="">Pilih Bulan</option>
+                <option value="1">Januari</option>
+                <option value="2">Februari</option>
+                <option value="3">Maret</option>
+                <option value="4">April</option>
+                <option value="5">Mei</option>
+                <option value="6">Juni</option>
+                <option value="7">Juli</option>
+                <option value="8">Agustus</option>
+                <option value="9">September</option>
+                <option value="10">Oktober</option>
+                <option value="11">November</option>
+                <option value="12">Desember</option>
+            </select>
+
+            <!-- Dropdown Tahun -->
+            <select class="form-select w-auto custom-dropdown" name="tahun" id="tahun">
+                <option value="">Pilih Tahun</option>
+                @for ($i = 2020; $i <= date('Y'); $i++)
+                    <option value="{{ $i }}">{{ $i }}</option>
+                @endfor
+            </select>
         </div>
 
 
+
+
+
         <!-- <div class="btn-group mb-3">
-                <button type="button" class="btn btn-outline-success dropdown-toggle custom-dropdown" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    Tambah Barang Masuk
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="javascript:void(0);"></a></li>
-                    <li><a class="dropdown-item" href="javascript:void(0);">Kolam 2</a></li>
-                </ul>
-            </div> -->
+                            <button type="button" class="btn btn-outline-success dropdown-toggle custom-dropdown" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                Tambah Barang Masuk
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="javascript:void(0);"></a></li>
+                                <li><a class="dropdown-item" href="javascript:void(0);">Kolam 2</a></li>
+                            </ul>
+                        </div> -->
         <div class="card">
-            <h5 class="card-header">Daftar Barang Masuk</h5>
+            <h5 class="card-header">Laporan Barang Masuk</h5>
 
             @if (session()->has('message'))
                 <div class="alert alert-success">
@@ -52,8 +81,8 @@
                             <th>Nama Petugas</th>
                             <th>Tanggal Masuk</th>
                             <!-- <th>Gambar Koi Terdiagnosa</th>
-                            <th>Tanggal</th>
-                            <th>Aksi</th> -->
+                                        <th>Tanggal</th>
+                                        <th>Aksi</th> -->
                         </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">

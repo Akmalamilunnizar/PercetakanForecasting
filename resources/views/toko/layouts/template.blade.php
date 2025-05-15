@@ -71,7 +71,7 @@
     <div class="d-none d-lg-block me-4">
       <ul class="navbar-nav flex-row gap-3">
         <li class="nav-item"><a class="nav-link text-primary fw-semibold" href="{{ route('tokodashboard') }}">Beranda</a></li>
-        <li class="nav-item"><a class="nav-link text-primary fw-semibold" href="{{ route('keranjang') }}">Keranjang</a></li>
+        <li class="nav-item"><a class="nav-link text-primary fw-semibold" href="{{ route('cart') }}">Cart</a></li>
         <li class="nav-item"><a class="nav-link text-primary fw-semibold" href="{{ route('faq') }}">FAQ</a></li>
         <li class="nav-item"><a class="nav-link text-primary fw-semibold" href="{{ route('lacak') }}">Lacak Pesanan</a></li>
         <li class="nav-item"><a class="nav-link text-primary fw-semibold" href="{{ route('kontak') }}">Kontak Kami</a></li>
@@ -80,13 +80,18 @@
 
     <!-- Icons -->
     <div class="d-flex align-items-center gap-3" style="margin-right: 40px;">
-      <!-- <a href="#" class="text-muted fs-5"><i class="bi bi-bell"></i></a>
-      <a href="#" class="text-muted fs-5"><i class="bi bi-envelope"></i></a>
-      <a href="#" class="text-muted fs-5"><i class="bi bi-heart"></i></a> -->
+      <!-- Keranjang belanja dengan badge jumlah produk -->
+      <a href="{{ route('cart') }}" class="text-muted position-relative">
+        <img src="{{ asset('dashboard2/assets/img/imgtoko/cart.svg') }}" alt="cart" width="28" height="28" style="margin-right: 30px;">
+        <!-- Badge jumlah produk di keranjang -->
+        <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" >
+          {{ session()->get('cart') ? array_sum(array_column(session()->get('cart'), 'quantity')) : 0 }}
+        </span>
+      </a>
       <img src="https://i.pravatar.cc/40" alt="Profile" class="rounded-circle" width="40" height="40">
     </div>
 
-  </div>
+
 </nav>
 
 
@@ -97,6 +102,8 @@
     </div>
 
     <!-- JS Bootstrap -->
+     @yield('js')
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

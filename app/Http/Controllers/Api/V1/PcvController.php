@@ -12,6 +12,8 @@ use App\Models\KoiFish;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Schema;
+
 use Carbon\Carbon;
 
 class PcvController extends Controller
@@ -21,9 +23,19 @@ class PcvController extends Controller
      */
     public function Index()
     {
-        $koi = KoiFish::latest()->get();
+        if (Schema::hasTable('koi_fish')) {
+            $koi = KoiFish::latest()->get();
+        } else {
+            $koi = collect(); // kosongin aja
+        }
+
         return view('admin.pcv', compact('koi'));
     }
+    // public function Index()
+    // {
+    //     $koi = KoiFish::latest()->get();
+    //     return view('admin.pcv', compact('koi'));
+    // }
 
 
 
