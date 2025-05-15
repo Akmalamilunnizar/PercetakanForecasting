@@ -12,7 +12,6 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 
 use Laravel\Passport\HasApiTokens;
-use Laratrust\Contracts\LaratrustUser;
 use Laratrust\Traits\HasRolesAndPermissions;
 
 
@@ -27,12 +26,12 @@ class User extends Authenticatable implements CanResetPasswordContract
      */
     protected $fillable = [
         'f_name',
-        'username',
         'email',
-        'nomor_telepon',
-        'alamat',
         'password',
-        'email_verified_at',
+        'nomor_telepon',
+        'username',
+        'user',
+        'alamat',
         'img'
     ];
 
@@ -47,6 +46,34 @@ class User extends Authenticatable implements CanResetPasswordContract
     ];
 
     /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
+    /**
+     * The primary key for the model.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'id';
+
+    /**
+     * The "type" of the primary key ID.
+     *
+     * @var string
+     */
+    protected $keyType = 'int';
+
+    /**
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
+    public $incrementing = true;
+
+    /**
      * The attributes that should be cast.
      *
      * @var array<string, string>
@@ -58,15 +85,26 @@ class User extends Authenticatable implements CanResetPasswordContract
         'password' => 'hashed',
     ];
 
-    public function orderss()
-    {
-        return $this->hasMany(Order::class, 'user_id');
-    }
+
 
     public function role()
     {
-        return $this->hasMany(Role::class, 'user_id');
+        return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id');
     }
+    public function roles()
+    {
+        return $this->morphToMany(
+            config('laratrust.models.role'),
+            'user',
+            config('laratrust.tables.role_user'),
+            'user_id',
+            'role_id'
+        );
+    }
+    // public function roles()
+    // {
+    //     return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id', 'username', 'id');
+    // }
     // public function users()
     // {
     //     return $this->belongsTo(Order::class,'user_id', 'id');

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 10, 2025 at 02:02 PM
+-- Generation Time: May 15, 2025 at 06:24 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -45,7 +45,8 @@ INSERT INTO `barangkeluar` (`IdKeluar`, `username`, `tglKeluar`) VALUES
 ('BK0005', 'tsy24', '2023-06-10'),
 ('BK0006', 'tsy24', '2023-06-13'),
 ('BK0007', 'tsy24', '2023-06-18'),
-('BK0008', 'admin', '2023-06-18');
+('BK0008', 'admin', '2023-06-18'),
+('BK0009', 'tsy24', '2025-05-10');
 
 -- --------------------------------------------------------
 
@@ -117,7 +118,7 @@ CREATE TABLE `databarang` (
 --
 
 INSERT INTO `databarang` (`IdBarang`, `NamaBarang`, `IdJenisBarang`, `JumlahStok`, `IdSatuan`) VALUES
-('3423531787', 'Banner', 'S0001', 50, 'S0006'),
+('3423531787', 'Banner', 'S0001', 30, 'S0006'),
 ('4005401171027', 'F4', 'S0001', 33, 'S0001'),
 ('4970129727514', 'Buffalo', 'S0001', 26, 'S0002'),
 ('4970129759652', 'A4', 'S0001', 45, 'S0001'),
@@ -148,7 +149,8 @@ INSERT INTO `detail_barangkeluar` (`IdKeluar`, `IdBarang`, `QtyKeluar`) VALUES
 ('BK0005', '6923655547512', 15),
 ('BK0006', '4970129759652', 10),
 ('BK0007', '4970129727514', 5),
-('BK0008', '4970129727514', 3);
+('BK0008', '4970129727514', 3),
+('BK0009', '3423531787', 20);
 
 --
 -- Triggers `detail_barangkeluar`
@@ -275,25 +277,84 @@ INSERT INTO `jenisbarang` (`IdJenisBarang`, `JenisBarang`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `laporans`
+--
+
+CREATE TABLE `laporans` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `nama_barang` varchar(255) NOT NULL,
+  `jumlah` int(11) NOT NULL,
+  `tanggal_pengeluaran` date NOT NULL,
+  `keterangan` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `laporan_transaksis`
+--
+
+CREATE TABLE `laporan_transaksis` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `kode_transaksi` varchar(255) NOT NULL,
+  `nama_pelanggan` varchar(255) NOT NULL,
+  `produk` varchar(255) NOT NULL,
+  `jumlah` int(11) NOT NULL,
+  `harga_satuan` decimal(12,2) NOT NULL,
+  `total_harga` decimal(12,2) NOT NULL,
+  `tanggal_transaksi` date NOT NULL,
+  `status_pembayaran` varchar(255) NOT NULL DEFAULT 'Belum Lunas',
+  `keterangan` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `migrations`
+--
+
+CREATE TABLE `migrations` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `migration` varchar(255) NOT NULL,
+  `batch` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `migrations`
+--
+
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
+(1, '2025_05_03_103216_add_img_to_produk_table', 1),
+(2, '2025_05_06_134412_create_laporans_table', 1),
+(3, '2025_05_06_150856_create_laporan_transaksis_table', 1);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `produk`
 --
 
 CREATE TABLE `produk` (
   `IdProduk` varchar(6) NOT NULL,
   `NamaProduk` varchar(25) DEFAULT NULL,
-  `HargaProduk` int(11) DEFAULT NULL
+  `HargaProduk` int(11) DEFAULT NULL,
+  `Img` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `produk`
 --
 
-INSERT INTO `produk` (`IdProduk`, `NamaProduk`, `HargaProduk`) VALUES
-('P0001', 'Kalender', 25000),
-('P0002', 'Brosur', 12000),
-('P0003', 'Kartu Nama', 10500),
-('P0004', 'Buku', 30000),
-('P0005', 'Spanduk', 60000);
+INSERT INTO `produk` (`IdProduk`, `NamaProduk`, `HargaProduk`, `Img`) VALUES
+('P0001', 'Kalender', 25000, NULL),
+('P0002', 'Brosur', 12000, NULL),
+('P0003', 'Kartu Nama', 10500, NULL),
+('P0004', 'Buku', 30000, NULL),
+('P0005', 'Spanduk', 60000, NULL);
 
 -- --------------------------------------------------------
 
@@ -440,10 +501,12 @@ CREATE TABLE `users` (
   `id` bigint(20) NOT NULL,
   `f_name` varchar(30) NOT NULL,
   `email` varchar(255) NOT NULL,
+  `nomor_telepon` varchar(20) NOT NULL,
   `email_verified_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `username` varchar(20) NOT NULL,
   `password` varchar(255) NOT NULL,
   `user` varchar(10) NOT NULL,
+  `alamat` varchar(500) NOT NULL,
   `remember_token` varchar(100) DEFAULT NULL,
   `img` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -452,9 +515,9 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `f_name`, `email`, `email_verified_at`, `username`, `password`, `user`, `remember_token`, `img`) VALUES
-(1, 'Admin', 'admin1@gmail.com', '2025-04-30 08:50:56', 'admin', '$2y$10$a5CeW7r8VeUPy2hQXI5xJuNhnPo8CWfDwJJQhauP0g1BJ/77olWh.', 'Admin', '', 'images/1815883516605523.jpeg'),
-(2, 'Fanidiya Tasya', 'admin@gmail.com', '2025-04-30 08:50:56', 'tsy24', '$2y$10$1MVL2kvJawHkzZ5uqlNeJ.CeTnwkzyaWJaMxI.6A.EE.xOf2L2WDu', 'Admin', '2Kgb3f2zZcQTS6r3BfqxWctEldLkIJYjsIeKH5I3io3VEA6bVLSAYQXNs3z0', 'images/1815883516605523.jpeg');
+INSERT INTO `users` (`id`, `f_name`, `email`, `nomor_telepon`, `email_verified_at`, `username`, `password`, `user`, `alamat`, `remember_token`, `img`) VALUES
+(1, 'Admin', 'admin1@gmail.com', '', '2025-04-30 08:50:56', 'admin', '$2y$10$a5CeW7r8VeUPy2hQXI5xJuNhnPo8CWfDwJJQhauP0g1BJ/77olWh.', 'Admin', '', '', 'images/1815883516605523.jpeg'),
+(2, 'Fanidiya Tasya', 'admin@gmail.com', '', '2025-04-30 08:50:56', 'tsy24', '$2y$10$1MVL2kvJawHkzZ5uqlNeJ.CeTnwkzyaWJaMxI.6A.EE.xOf2L2WDu', 'Admin', '', '2Kgb3f2zZcQTS6r3BfqxWctEldLkIJYjsIeKH5I3io3VEA6bVLSAYQXNs3z0', 'images/1815883516605523.jpeg');
 
 --
 -- Indexes for dumped tables
@@ -517,6 +580,25 @@ ALTER TABLE `jenisbarang`
   ADD PRIMARY KEY (`IdJenisBarang`);
 
 --
+-- Indexes for table `laporans`
+--
+ALTER TABLE `laporans`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `laporan_transaksis`
+--
+ALTER TABLE `laporan_transaksis`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `laporan_transaksis_kode_transaksi_unique` (`kode_transaksi`);
+
+--
+-- Indexes for table `migrations`
+--
+ALTER TABLE `migrations`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `produk`
 --
 ALTER TABLE `produk`
@@ -566,6 +648,24 @@ ALTER TABLE `users`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `laporans`
+--
+ALTER TABLE `laporans`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `laporan_transaksis`
+--
+ALTER TABLE `laporan_transaksis`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `migrations`
+--
+ALTER TABLE `migrations`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `roles`

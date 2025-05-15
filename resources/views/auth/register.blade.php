@@ -125,44 +125,88 @@
 
     <div class="main-container">
         <div class="left-section">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            @if (session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
+
             <form action="{{ url('register') }}" method="POST">
                 @csrf
                 <div class="mb-3">
                     <label for="f_name" class="form-label">Nama Lengkap</label>
-                    <input type="text" class="form-control" id="f_name" name="f_name"
+                    <input type="text" class="form-control @error('f_name') is-invalid @enderror" id="f_name" name="f_name"
                         placeholder="Masukkan nama lengkap" autofocus />
+                    @error('f_name')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
-                    <input type="text" class="form-control" id="email" name="email" placeholder="Masukkan email" />
+                    <input type="text" class="form-control @error('email') is-invalid @enderror" id="email" name="email" placeholder="Masukkan email" />
+                    @error('email')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="mb-3">
-                    <label for="phone" class="form-label">Nomor Telepon</label>
-                    <input type="tel" class="form-control" id="phone" name="phone"
-                        placeholder="Masukkan nomor telepon" />
+                    <label for="nomor_telepon" class="form-label">Nomor Telepon <span class="text-danger">*</span></label>
+                    <input type="tel" class="form-control @error('nomor_telepon') is-invalid @enderror" 
+                        id="nomor_telepon" 
+                        name="nomor_telepon"
+                        placeholder="Masukkan nomor telepon (contoh: 081234567890)" 
+                        required
+                        minlength="10"
+                        maxlength="15"
+                        pattern="[0-9]*"
+                        title="Masukkan nomor telepon yang valid (10-15 digit angka)" />
+                    @error('nomor_telepon')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
 
                 <div class="mb-3 form-password-toggle">
                     <label class="form-label" for="password">Password</label>
                     <div class="input-group input-group-merge">
-                        <input type="password" id="password" class="form-control" name="password"
+                        <input type="password" id="password" class="form-control @error('password') is-invalid @enderror" name="password"
                             placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
                             aria-describedby="password" />
                         <span class="input-group-text cursor-pointer" id="toggle-password">
                             <i class="bx bx-hide" id="icon-password"></i>
                         </span>
+                        @error('password')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
 
                 <div class="mb-3 form-password-toggle">
                     <label class="form-label" for="password_confirmation">Konfirmasi Password</label>
                     <div class="input-group input-group-merge">
-                        <input type="password" id="password_confirmation" class="form-control"
+                        <input type="password" id="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror"
                             name="password_confirmation" placeholder="Konfirmasi password"
                             aria-describedby="password_confirmation" />
                         <span class="input-group-text cursor-pointer" id="toggle-password-confirmation">
                             <i class="bx bx-hide" id="icon-password-confirmation"></i>
                         </span>
+                        @error('password_confirmation')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
                 </div>
                 <button class="btn d-grid w-100" type="submit" style="background-color:rgb(56, 135, 255); color: #fff; border: none;">

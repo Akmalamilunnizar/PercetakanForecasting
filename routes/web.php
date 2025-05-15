@@ -34,6 +34,7 @@ use App\Http\Controllers\Api\V1\ProdukController;
 use App\Http\Controllers\Api\V1\LaporanController;
 use App\Http\Controllers\Api\V1\LaporanTransaksiController;
 use App\Http\Controllers\Api\V1\ForecastController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -168,30 +169,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     });
 
-    Route::controller(TokoController::class)->group(function () {
-        Route::get('/tokodashboard', function () {
-            return view('toko.dashboardToko');
-        })->name('tokodashboard');
-        Route::get('/tokodashboard', [TokoController::class, 'tokodashboard'])->name('tokodashboard');
-
-
-        Route::get('/shop', function () {
-            return view('toko.dashboardToko');
-        })->name('shop');
-        Route::get('/keranjang', function () {
-            return view('toko.dashboardToko');
-        })->name('keranjang');
-        Route::get('/faq', function () {
-            return view('toko.dashboardToko');
-        })->name('faq');
-        Route::get('/lacak', function () {
-            return view('toko.dashboardToko');
-        })->name('lacak');
-        Route::get('/kontak', function () {
-            return view('toko.dashboardToko');
-        })->name('kontak');
-
-    });
+    
 
     Route::controller(ProdukController::class)->group(function () {
         // Tampilkan semua produk
@@ -402,7 +380,24 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // });
 
 });
+Route::controller(TokoController::class)->group(function () {
+    Route::get('/tokodashboard', function () {
+        return view('toko.dashboardToko'); })->name('tokodashboard');
+    Route::get('/tokodashboard', [TokoController::class, 'tokodashboard'])->name('tokodashboard');
 
+
+    Route::get('/shop', function () {
+        return view('toko.dashboardToko'); })->name('shop');
+    Route::get('/keranjang', function () {
+        return view('toko.dashboardToko'); })->name('keranjang');
+    Route::get('/faq', function () {
+        return view('toko.dashboardToko'); })->name('faq');
+    Route::get('/lacak', function () {
+        return view('toko.dashboardToko'); })->name('lacak');
+    Route::get('/kontak', function () {
+        return view('toko.dashboardToko'); })->name('kontak');
+
+});
 Route::get('/userprofile', [DashboardController::class, 'Index']);
 Route::middleware('auth')->group(function () {
     Route::get('resources/admin/logout', [DashboardController::class, 'AdminLogout'])->name('adminlogout');
@@ -415,8 +410,15 @@ Route::middleware('auth')->group(function () {
 
 // require __DIR__.'/auth.php';
 Route::get('password/reset/{token}', [App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+
+// Add registration routes
+Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [App\Http\Controllers\Auth\RegisterController::class, 'register']);
+
 Auth::routes();
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('/checkout', [DeliveryShoppingController::class, 'index'])->name('checkout');
+
+Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login');

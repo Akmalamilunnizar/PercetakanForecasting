@@ -123,7 +123,7 @@
   </a>
   <div class="main-container">
     <div class="left-section">
-      <form action="login" method="POST">
+      <form action="{{ route('login') }}" method="POST">
         @csrf
         <div class="mb-3">
             <i class="fas fa-envelope me-2"></i>
@@ -141,6 +141,7 @@
                 <i class="bx bx-hide" id="icon"></i>
               </span>
             </div>
+<<<<<<< HEAD
           </div>
         <div class="mb-3">
         <div class="d-flex justify-content-between align-items-center">
@@ -150,6 +151,14 @@
           </div> -->
           <div>
             <a href="{{ route('password.request') }}" style="color:rgb(0, 0, 0); text-decoration: none;">Lupa Password?</a>
+=======
+            <!-- <a href="forgotpw"><span>Lupa Password?</span></a> -->
+            @if (Route::has('password.request'))
+                        <a class="text-sm text-blue-500 hover:underline" href="{{ route('password.request') }}">
+                            {{ __('Lupa Password?') }}
+                        </a>
+                    @endif
+>>>>>>> af08a956adf25438556d3e9c50189b3108352ae7
           </div>
         </div>
       </div>
