@@ -115,8 +115,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/admin/delete-transaksi/{id}', 'DeleteTransaksi')->name('deletetransaksi');
     });
 
-
-
     Route::controller(TypeItemsController::class)->group(function () {
         Route::get('/admin/all-type', 'Index')->name('alltype');
         Route::get('/admin/all-type/search', 'SearchType')->name('searchtype');
@@ -127,7 +125,11 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/admin/delete-type/{id}', 'DeleteType')->name('deletetype');
     });
 
-    Route::get('/admin/all-laporan', [LaporanController::class, 'index'])->name('alllaporan');
+    Route::controller(LaporanController::class)->group(function () {
+        Route::get('/admin/laporanbarang', 'index')->name('laporanbarang');
+        Route::get('admin/detaillaporanbarang/{id}', 'show')->name('admin.detaillaporanbarang');
+        Route::delete('admin/detaillaporanbarang/{id}', 'destroy')->name('admin.deletelaporanbarang');
+    });
 
     Route::get('/admin/laporantransaksi', [LaporanTransaksiController::class, 'index'])->name('laporan-transaksi');
 

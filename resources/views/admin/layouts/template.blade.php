@@ -117,8 +117,9 @@
                         </a>
                     </li>
 
-                    <li class="menu-item {{ request()->is('admin/all-laporan*') || request()->is('admin/laporan-transaksi') ? 'active' : '' }}">
-                        <a href="{{ route('alllaporan') }}" class="menu-link">
+                    <li
+                        class="menu-item {{ request()->is('admin/all-laporan*') || request()->is('admin/laporan-transaksi') ? 'active' : '' }}">
+                        <a href="{{ route('laporanbarang') }}" class="menu-link">
                             <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
                             <div data-i18n="Basic" class="larger-text">Laporan</div>
                         </a>

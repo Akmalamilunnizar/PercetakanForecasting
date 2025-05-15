@@ -18,7 +18,6 @@ class Items extends Model
         'IdSatuan'
     ];
 
-
     public $timestamps = false;  // Karena tabel jenis_koi tidak menggunakan created_at dan updated_at
     public function jenisBarang()
     {
@@ -39,5 +38,11 @@ class Items extends Model
     {
         return $this->hasOne(DetailKeluar::class, 'IdBarang', 'IdBarang');
     }
+
+    public function laporan()
+    {
+        return $this->hasMany(Laporan::class, 'IdBarang', 'IdBarang');
+    }
+
 
 }
