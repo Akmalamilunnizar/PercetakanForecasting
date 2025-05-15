@@ -127,8 +127,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     Route::controller(LaporanController::class)->group(function () {
         Route::get('/admin/laporanbarang', 'index')->name('laporanbarang');
-        Route::delete('/admin/laporanbarang{id}', 'destroy')->name('laporanbarang.destroy');
         Route::get('admin/detaillaporanbarang/{id}', 'show')->name('admin.detaillaporanbarang');
+        Route::get('/admin/laporanbarang/export-pdf', 'exportPdf')->name('laporanbarang.exportpdf');
+        Route::get('/admin/laporanbarang/{id}/export-pdf', 'exportPdfDetail')->name('laporanbarang.exportpdf.detail');
+        Route::delete('/admin/laporanbarang/{id}', 'destroy')->name('laporanbarang.destroy');
     });
 
     Route::get('/admin/laporantransaksi', [LaporanTransaksiController::class, 'index'])->name('laporan-transaksi');

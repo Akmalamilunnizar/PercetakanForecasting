@@ -21,7 +21,7 @@
         <!-- Judul & Breadcrumb -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h4 class="py-3 mb-4"><span class="text-muted fw-light">Laporan Barang /</span> Detail Barang</h4>
-            <a href="" class="btn btn-danger d-flex align-items-center"
+            <a href="{{ route('laporanbarang.exportpdf.detail', $laporanbarang->IdLaporan) }}" target="_blank" class="btn btn-danger d-flex align-items-center"
                 style="background: linear-gradient(45deg, #dc3545, #ff6b6b);">
                 <i class='bx bxs-printer me-2'></i> Print
             </a>
@@ -29,39 +29,46 @@
 
         <!-- Card Detail -->
         <div class="card shadow-sm border-0 rounded-3">
-            <div class="card-header bg-primary text-white">
+           <div class="card-header text-white" style="background-color:rgb(123, 171, 254);">
                 <strong class="fs-4">Detail Barang</strong>
             </div>
+
             <div class="card-body pt-3">
                 <div class="row py-3 border-bottom">
-                    <div class="col-md-4 fw-semibold">🆔 Id Barang:</div>
-                    <div class="col-md-8">{{ $laporan->id }}</div>
+                    <div class="col-md-4 fw-semibold">🆔 Id Laporan:</div>
+                    <div class="col-md-8">{{ $laporanbarang->IdLaporan }}</div>
                 </div>
                 <div class="row py-3 border-bottom">
                     <div class="col-md-4 fw-semibold">📦 Nama Barang:</div>
-                    <div class="col-md-8">{{ $laporan->nama_barang }}</div>
+                    <div class="col-md-8">{{ optional($laporanbarang->databarang)->NamaBarang ?? 'N/A' }}</div>
                 </div>
                 <div class="row py-3 border-bottom">
-                    <div class="col-md-4 fw-semibold">🔢 Jumlah:</div>
-                    <div class="col-md-8">{{ $laporan->jumlah }}</div>
+                    <div class="col-md-4 fw-semibold">🧾 Nama Supplier:</div>
+                    <div class="col-md-8">{{ optional($laporanbarang->supplier)->NamaSupplier ?? 'N/A' }}</div>
                 </div>
                 <div class="row py-3 border-bottom">
-                    <div class="col-md-4 fw-semibold">📅 Tanggal Pengeluaran:</div>
-                    <div class="col-md-8">{{ $laporan->tanggal_pengeluaran }}</div>
+                    <div class="col-md-4 fw-semibold">Qty Masuk:</div>
+                    <div class="col-md-8">{{ optional($laporanbarang->detailBarangMasuk)->Jumlah ?? 0 }}</div>
                 </div>
-                <div class="row py-3">
-                    <div class="col-md-4 fw-semibold">📝 Keterangan:</div>
-                    <div class="col-md-8">{{ $laporan->keterangan ?? '-' }}</div>
+                <div class="row py-3 border-bottom">
+                    <div class="col-md-4 fw-semibold">Qty Keluar:</div>
+                    <div class="col-md-8">{{ optional($laporanbarang->detailBarangKeluar)->Jumlah ?? 0 }}</div>
+                </div>
+                <div class="row py-3 border-bottom">
+                    <div class="col-md-4 fw-semibold">Jumlah Masuk:</div>
+                    <div class="col-md-8">{{ optional($laporanbarang->barangmasuk)->Jumlah ?? 0 }}</div>
+                </div>
+                <div class="row py-3 border-bottom">
+                    <div class="col-md-4 fw-semibold">Jumlah Keluar:</div>
+                    <div class="col-md-8">{{ optional($laporanbarang->barangkeluar)->Jumlah ?? 0 }}</div>
                 </div>
             </div>
         </div>
-
         <div class="d-flex justify-content-start mt-3">
-            <a href="{{ route('alllaporan') }}" class="btn btn-secondary">
+            <a href="{{ route('laporanbarang') }}" class="btn btn-secondary">
                 <i class="bx bx-arrow-back me-2"></i> Kembali
             </a>
         </div>
-
 
     </div>
 @endsection

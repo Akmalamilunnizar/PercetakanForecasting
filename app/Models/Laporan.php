@@ -21,6 +21,8 @@ class Laporan extends Model
         'IdSupplier',
         'IdMasuk',
         'IdKeluar',
+        'IdIn',
+        'IdOut',
     ];
 
     // relasi ke barang
@@ -50,13 +52,13 @@ class Laporan extends Model
     // relasi ke barang masuk
     public function barangMasuk()
     {
-        return $this->belongsTo(BarangMasuk::class, 'IdMasuk', 'IdIn');
+        return $this->belongsTo(BarangMasuk::class, 'IdIn', 'idmasuk');
     }
 
     // relasi ke barang keluar
     public function barangKeluar()
     {
-        return $this->belongsTo(BarangKeluar::class, 'IdMasuk', 'IdOut');
+        return $this->belongsTo(BarangKeluar::class, 'IdOut', 'idkeluar');
     }
 
 }
