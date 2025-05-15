@@ -164,6 +164,7 @@
 
   </header>
 
+  <!-- katalog produk bagian landing page -->
   <section id="catalog" class="about-area pt-120">
   <div class="container">
     <div class="row justify-content-center">

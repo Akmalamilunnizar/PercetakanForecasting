@@ -35,6 +35,10 @@ class User extends Authenticatable implements CanResetPasswordContract
         'img'
     ];
 
+    protected $attributes = [
+        'img' => 'default-avatar.png'
+    ];
+
     /**
      * The attributes that should be hidden for serialization.
      *

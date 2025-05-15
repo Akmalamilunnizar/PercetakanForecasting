@@ -97,12 +97,12 @@
                         </a>
                     </li>
 
-                    {{-- <li class="menu-item {{ request()->is('admin/all-produk*') ? 'active' : '' }}">
+                    <li class="menu-item {{ request()->is('admin/all-produk*') ? 'active' : '' }}">
                         <a href="{{ route('allproduk') }}" class="menu-link">
                             <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
                             <div data-i18n="Basic" class="larger-text">Daftar Produk</div>
                         </a>
-                    </li> --}}
+                    </li>
 
                     <li class="menu-item {{ request()->is('admin/daftar-supplier*') ? 'active' : '' }}">
                         <a href="{{ route('allsuppliers') }}" class="menu-link">
