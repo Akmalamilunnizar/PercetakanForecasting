@@ -79,7 +79,6 @@
     @section('content')
         <!-- Content wrapper -->
         <div class="content-wrapper">
-
             <!-- Container Tambahan dengan Background Ungu -->
             <div class="container-fluid py-3"
                 style="background-image: url('{{ asset('dashboard2/assets/img/imgtoko/backgroundimg2.png') }}');
@@ -168,7 +167,5 @@
             </div>
         @endforeach
     </div>
-
-        
-        </div>
+</div>
     @endsection

@@ -12,7 +12,6 @@
 <body>
 
 <!-- Stepper -->
-<!-- Stepper -->
 <div class="stepper-wrapper">
   <div class="stepper-item completed" id="step-1">
     <div class="step-counter">1</div>

@@ -123,19 +123,15 @@
             <i class="bi bi-credit-card me-2"></i> Proses Checkout
         </a>
        <!-- Subtotal Besar di Tengah -->
-<div class="text-center mb-4" style="margin-top: 20px;">
-    <span class="fw-bold" style="font-size: 30px;">Rp {{ number_format($total, 0, ',', '.') }}</span>
-</div>  
+      <div class="text-center mb-4" style="margin-top: 20px;">
+          <span class="fw-bold" style="font-size: 30px;">Rp {{ number_format($total, 0, ',', '.') }}</span>
+      </div>  
       </div>
 
         
+      </div>
     </div>
-</div>
-
-  
-  
   </div>
-</div>
 
 
 
