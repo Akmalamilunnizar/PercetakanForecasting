@@ -110,7 +110,7 @@
   </a>
   <div class="main-container">
     <div class="left-section">
-      <form action="login" method="POST">
+      <form action="{{ route('login') }}" method="POST">
         @csrf
         <div class="mb-3">
           <i class="fas fa-envelope me-2"></i> <!-- Font Awesome Ikon -->
@@ -136,10 +136,10 @@
               <input class="form-check-input" type="checkbox" id="remember-me" />
               <label class="form-check-label" for="remember-me"> Simpan Login </label>
             </div>
-            <a href="forgotpw"><span>Lupa Password?</span></a>
+            <!-- <a href="forgotpw"><span>Lupa Password?</span></a> -->
             @if (Route::has('password.request'))
                         <a class="text-sm text-blue-500 hover:underline" href="{{ route('password.request') }}">
-                            {{ __('Forgot your password?') }}
+                            {{ __('Lupa Password?') }}
                         </a>
                     @endif
           </div>

@@ -32,13 +32,28 @@ class CustomerAuthController extends Controller
 
         if (auth()->attempt($data)) {
             //auth()->user() is coming from laravel auth:api middleware
-            $token = auth()->user()->createToken('KoiCustomerAuth')->accessToken;
+            $token = auth()->user()->createToken('PercetakanCustomerAuth')->accessToken;
             if (!auth()->user()->status) {
                 $errors = [];
                 array_push($errors, ['code' => 'auth-003', 'message' => trans('messages.your_account_is_blocked')]);
                 return response()->json([
                     'errors' => $errors
                 ], 403);
+            }
+
+            // Check user role and set appropriate redirect URL
+            if (auth()->user()->hasRole('user')) {
+                return response()->json([
+                    'token' => $token, 
+                    'is_phone_verified' => auth()->user()->is_phone_verified,
+                    'redirect_url' => '/tokodashboard'
+                ], 200);
+            } elseif (auth()->user()->hasRole('admin')) {
+                return response()->json([
+                    'token' => $token,
+                    'is_phone_verified' => auth()->user()->is_phone_verified,
+                    'redirect_url' => '/admin/dashboard'
+                ], 200);
             }
 
             return response()->json(['token' => $token, 'is_phone_verified' => auth()->user()->is_phone_verified], 200);
