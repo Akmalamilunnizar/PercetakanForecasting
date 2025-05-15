@@ -6,15 +6,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
 use Laravel\Passport\HasApiTokens;
 use Laratrust\Contracts\LaratrustUser;
 use Laratrust\Traits\HasRolesAndPermissions;
 
 
-class RoleUser extends Authenticatable //implements LaratrustUser
+class RoleUser extends Pivot
 {
     use HasApiTokens, HasFactory, Notifiable, HasRolesAndPermissions;
+
+    protected $table = 'role_user';
 
     /**
      * The attributes that are mass assignable.
@@ -48,11 +51,10 @@ class RoleUser extends Authenticatable //implements LaratrustUser
         'user_type' => 'string',
     ];
 
-    public function orderss()
+    public function users()
     {
-        return $this->hasMany(Order::class, 'user_id');
+        return $this->belongsToMany(User::class, 'role_user', 'role_id', 'user_id', 'id', 'username');
     }
-
     public function role()
     {
         return $this->hasMany(Role::class, 'role_id');

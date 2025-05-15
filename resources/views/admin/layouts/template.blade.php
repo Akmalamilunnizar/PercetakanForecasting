@@ -119,10 +119,11 @@
 
                     <li
                         class="menu-item {{ request()->is('admin/all-laporan*') || request()->is('admin/laporan-transaksi') ? 'active' : '' }}">
-                        <a href="{{ route('alllaporan') }}" class="menu-link">
+                        <a href="{{ route('laporanbarang') }}" class="menu-link">
                             <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
                             <div data-i18n="Basic" class="larger-text">Laporan</div>
-                    
+                        </a>
+                    </li>
                     <li class="menu-item {{ request()->is('admin/all-transaksi*') ? 'active' : '' }}">
                         <a href="{{ route('alltransaksi') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-collection"></i>
@@ -214,9 +215,19 @@
                 <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
                     id="layout-navbar" style="background: linear-gradient(135deg, #28a745, #0e6b2f);">
                     <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
-                        <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
-                            <i class="bx bx-menu bx-sm"></i>
-                        </a>
+                        <div class="dropdown">
+                            <a class="nav-item nav-link px-0 me-xl-4 dropdown-toggle" href="javascript:void(0)" data-bs-toggle="dropdown">
+                                <i class="bx bx-menu bx-sm"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item" href="{{ route('adminlogout') }}">
+                                        <i class="bx bx-power-off me-2"></i>
+                                        <span class="align-middle">Log Out</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
 
                     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
@@ -310,6 +321,7 @@
 
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
+    @stack('scripts')
 </body>
 
 </html>

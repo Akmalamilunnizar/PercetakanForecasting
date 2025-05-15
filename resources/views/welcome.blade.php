@@ -86,19 +86,45 @@
                   <li class="nav-item">
                     <a class="page-scroll" href="#location">Location</a>
                   </li>
-                  
                 </ul>
               </div>
-
-              <a href="{{ url('/login')}}" class="main-btn wow fadeInUp" data-wow-duration="1s"
-                style="margin-right: 10px;">
-                Login
-              </a>
-              <div class="navbar-btn d-none d-sm-inline-block">
-                <a href="{{ url('/register')}}" class="main-btn wow fadeInUp" data-wow-duration="1s">
-                  Register
+              @if(Auth::check())
+                  <p class="welcome-text" style="margin: 0; margin-right: 15px; padding: 8px 15px; background-color: #4318FF; color: white; border-radius: 20px; font-size: 14px; display: inline-block;">
+                    <i class="lni lni-user" style="margin-right: 5px;"></i>
+                    Welcome, {{ Auth::user()->f_name ?? Auth::user()->username }}!
+                  </p>
+              @else
+                  <p class="welcome-text" style="margin: 0; margin-right: 15px; padding: 8px 15px; background-color: #4318FF; color: white; border-radius: 20px; font-size: 14px; display: inline-block;">
+                    <i class="lni lni-user" style="margin-right: 5px;"></i>
+                    Welcome, Guest!
+                  </p>
+              @endif
+              @auth
+                @if(auth()->user()->hasRole('admin'))
+                  <a href="{{ url('/admin/dashboard') }}" class="main-btn wow fadeInUp" data-wow-duration="1s" style="margin-right: 10px;">
+                    Dashboard
+                  </a>
+                @else
+                  <a href="{{ url('/tokodashboard') }}" class="main-btn wow fadeInUp" data-wow-duration="1s" style="margin-right: 10px;">
+                    Dashboard
+                  </a>
+                @endif
+                <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                  @csrf
+                  <button type="submit" class="main-btn wow fadeInUp" data-wow-duration="1s">
+                    Logout
+                  </button>
+                </form>
+              @else
+                <a href="{{ url('/login')}}" class="main-btn wow fadeInUp" data-wow-duration="1s" style="margin-right: 10px;">
+                  Login
                 </a>
-              </div>
+                <div class="navbar-btn d-none d-sm-inline-block">
+                  <a href="{{ url('/register')}}" class="main-btn wow fadeInUp" data-wow-duration="1s">
+                    Register
+                  </a>
+                </div>
+              @endauth
             </nav>
           </div>
         </div>
@@ -698,7 +724,11 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-
+@if(Auth::check())
+    <p>Welcome, {{ Auth::user()->f_name ?? Auth::user()->username }}!</p>
+@else
+    <p>Welcome, Guest!</p>
+@endif
 
 </body>
 

@@ -35,6 +35,8 @@ use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Api\V1\CartController;
 use App\Http\Controllers\Api\V1\LaporanController;
 use App\Http\Controllers\Api\V1\LaporanTransaksiController;
+use App\Http\Controllers\Api\V1\ForecastController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -136,15 +138,182 @@ Route::controller(ItemsController::class)->group(function () {
     Route::delete('/delete-jenis-barang/{id}', [ItemsController::class, 'deleteTypeItems'])->name('deleteTypeItems');
     Route::post('/add-kolam', [ItemsController::class, 'addKolam'])->name('addKolam');
 
-});
 
+    Route::controller(LaporanController::class)->group(function () {
+        Route::get('/admin/laporanbarang', 'index')->name('laporanbarang');
+        Route::get('admin/detaillaporanbarang/{id}', 'show')->name('admin.detaillaporanbarang');
+        Route::delete('admin/detaillaporanbarang/{id}', 'destroy')->name('admin.deletelaporanbarang');
+    });
+
+    Route::get('/admin/laporantransaksi', [LaporanTransaksiController::class, 'index'])->name('laporan-transaksi');
+
+
+    Route::controller(ParameterReportController::class)->group(function () {
+        Route::get('/admin/parameter-report', 'Index')->name('parameterreport');
+    });
+
+    Route::controller(DiseaseReportController::class)->group(function () {
+        Route::get('/admin/disease-report', 'Index')->name('diseasereport');
+    });
+
+    Route::controller(ProdukController::class)->group(function () {
+        // Tampilkan semua produk
+        Route::get('/admin/all-produk', 'index')->name('allproduk');
+        // Tampilkan form tambah produk
+        Route::get('/admin/add-produk', 'addProduk')->name('addproduk');
+        // Proses form tambah produk
+        Route::post('/admin/store-produk', 'storeProduk')->name('storeproduk');
+        // Form edit produk
+        Route::get('/admin/all-produk/{id}/edit', 'editProduk')->name('editproduk');
+        // Update produk
+        Route::put('/admin/all-produk/{id}/update', 'updateProduk')->name('updateproduk');
+        // Hapus produk
+        Route::delete('/admin/all-produk/{id}', 'deleteProduk')->name('deleteproduk');
+        // Cari produk
+        Route::get('/admin/search-produk', 'searchProduk')->name('searchproduk');
+        // API get list produk (JSON)
+        Route::get('/api/produk', 'get_produk_list')->name('getproduk');
+    });
+
+    Route::controller(TransaksiController::class)->group(function () {
+        // Tampilkan semua produk
+        Route::get('/admin/all-transaksi', 'index')->name('alltransaksi');
+        // Tampilkan form tambah produk
+        Route::get('/admin/all-transaksi/{id}/terima', 'terimaOrderan')->name('terimaOrderan');
+        // Proses form tambah produk
+        Route::post('/admin/all-transaksi/{id}/tolak', 'tolakOrderan')->name('tolakOrderan');
+        // Form edit produk
+        Route::get('/admin/all-produk/{id}/edit', 'editProduk')->name('editproduk');
+        // Update produk
+        Route::put('/admin/all-produk/{id}/update', 'updateProduk')->name('updateproduk');
+        // Hapus produk
+        Route::delete('/admin/all-produk/{id}', 'deleteProduk')->name('deleteproduk');
+        // Cari produk
+        Route::get('/admin/search-produk', 'searchProduk')->name('searchproduk');
+        // API get list produk (JSON)
+        Route::get('/api/produk', 'get_produk_list')->name('getproduk');
+    });
+    Route::controller(SupplierController::class)->group(function () {
+        // Tampilkan semua supplier
+        Route::get('/admin/daftar-supplier', 'index')->name('allsuppliers');
+        // Tampilkan form tambah supplier
+        Route::get('/admin/daftar-supplier/add', 'addSupplier')->name('addsupplier');
+        // Proses form tambah supplier
+        Route::post('/admin/daftar-supplier/add', 'storeSupplier')->name('storesupplier');
+        // Form edit supplier
+        Route::get('/admin/daftar-supplier/{id}/edit', 'editSupplier')->name('editsupplier');
+        Route::put('/admin/daftar-supplier/{id}/update', 'updateSupplier')->name('updatesupplier');
+        Route::delete('/admin/daftar-supplier/{id}', 'deleteSupplier')->name('deletesupplier');
+        Route::get('/admin/search-supplier', 'searchSupplier')->name('searchsupplier');
+        Route::get('/api/suppliers', 'get_supplier_list')->name('getsuppliers');
+        Route::delete('/supplier/{id}', 'destroy')->name('deletesupplier');
+
+    });
+
+    Route::controller(CustomerController::class)->group(function () {
+        // Tampilkan semua supplier
+        Route::get('/admin/daftar-customer', 'index')->name('allcustomer');
+        // Tampilkan form tambah supplier
+        Route::get('/admin/daftar-supplier/add', 'addSupplier')->name('addsupplier');
+        // Proses form tambah supplier
+        Route::post('/admin/daftar-supplier/add', 'storeSupplier')->name('storesupplier');
+        // Form edit supplier
+        Route::get('/admin/daftar-supplier/{id}/edit', 'editSupplier')->name('editsupplier');
+        // Update supplier
+        Route::put('/admin/daftar-supplier/{id}/update', 'updateSupplier')->name('updatesupplier');
+        // Hapus supplier
+        Route::delete('/admin/daftar-supplier/{id}', 'deleteCustomer')->name('deletecustomer');
+        // Cari supplier
+        Route::get('/admin/search-supplier', 'searchSupplier')->name('searchsupplier');
+        // API get list supplier (JSON)
+        Route::get('/api/suppliers', 'get_supplier_list')->name('getsuppliers');
+    });
+
+
+    Route::controller(UserController::class)->group(function () {
+        Route::get('/admin/all-users', 'Index')->name('allusers');
+        Route::get('/admin/search-users/search', 'SearchUsers')->name('searchusers');
+        Route::get('/admin/add-users', 'AddUsers')->name('add-users');
+        Route::post('/admin/store-users', 'StoreUsers')->name('storeusers');
+        Route::get('/admin/edit-users/{id}', 'EditUsers')->name('editusers');
+        Route::post('/admin/update-users', 'UpdateUsers')->name('update-users');
+        Route::get('/admin/delete-users/{id}', 'DeleteUsers')->name('deleteusers');
+    });
+
+    Route::controller(DiagnosaController::class)->group(function () {
+        Route::get('/admin/all-diagnosa', 'Index')->name('allDiagnosaPenyakit');
+        Route::get('/admin/search-diagnosa', 'SearchDiagnosa')->name('searchdiagnosa');
+        Route::get('/admin/add-diagnosa', 'AddDiagnosa')->name('add-diagnosa');
+        Route::post('/admin/store-diagnosa', 'StoreDiagnosa')->name('storediagnosa');
+        Route::get('/admin/edit-diagnosa/{id}', 'editDiagnosa')->name('editdiagnosa');
+        Route::post('/admin/update-diagnosa/{id}', 'updateDiagnosa')->name('update-diagnosa');
+        Route::get('/admin/delete-diagnosa/{id}', 'deleteDiagnosa')->name('deletediagnosa');
+        Route::get('/admin/show-diagnosa/{id}', 'showDiagnosa')->name('showdiagnosa');
+    });
+
+
+    Route::controller(OrderController::class)->group(function () {
+        Route::get('/admin/pending-order', 'Index')->name('pendingorder');
+        Route::get('/admin/pending-order/search', 'SearchPending')->name('searchorder');
+        Route::get('/admin/history-order', 'IndexHistory')->name('historyorder');
+        Route::get('/admin/view-order/{id}', 'ViewOrder')->name('vieworder');
+        Route::get('/admin/update-order/{id}', 'UpdateOrder')->name('updateorder');
+        Route::get('/admin/delete-order/{id}', 'DeleteOrder')->name('deleteorder');
+    });
+
+    Route::controller(AdminProfileController::class)->group(function () {
+        Route::get('/admin/admin-profile', 'Index')->name('profile');
+        Route::post('/admin/store-profile', 'StoreProfile')->name('storeprofile');
+        Route::get('/admin/pending-order/search', 'SearchPending')->name('searchorder');
+        Route::get('/admin/history-order', 'IndexHistory')->name('historyorder');
+        Route::get('/admin/view-order/{id}', 'ViewOrder')->name('vieworder');
+        Route::get('/admin/update-order/{id}', 'UpdateOrder')->name('updateorder');
+        Route::get('/admin/delete-order/{id}', 'DeleteOrder')->name('deleteorder');
+        Route::post('/admin/profile', [AdminProfileController::class, 'StoreProfile'])->name('storeprofile');
+    });
+
+
+
+    Route::controller(PcvController::class)->group(function () {
+        Route::get('/admin/pcv-page', 'Index')->name('pcv');
+        Route::post('/admin/predict', 'Result')->name('predict');
+        Route::post('/admin/store-profile', 'StoreProfile')->name('storeprofile');
+        Route::get('/admin/pending-order/search', 'SearchPending')->name('searchorder');
+        Route::get('/admin/history-order', 'IndexHistory')->name('historyorder');
+        Route::get('/admin/view-order/{id}', 'ViewOrder')->name('vieworder');
+        Route::get('/admin/update-order/{id}', 'UpdateOrder')->name('updateorder');
+        Route::get('/admin/delete-order/{id}', 'DeleteOrder')->name('deleteorder');
+    });
+
+    // Forecast routes
+    Route::get('/admin/forecast', [ForecastController::class, 'showForm'])->name('forecast.form');
+    Route::post('/admin/forecast/predict', [ForecastController::class, 'predict'])->name('predict');
+    Route::get('/admin/forecast/get-sales-data', [ForecastController::class, 'getSalesData'])->name('forecast.get-sales-data');
+
+    Route::get('/routes', function () {
+        $routeCollection = Route::getRoutes();
+        foreach ($routeCollection as $value) {
+            echo $value->getActionName();
+            echo "<br/>";
+        }
+    });
+
+    Route::group(['prefix' => 'payment-mobile'], function () {
+        Route::get('/', 'PaymentController@payment')->name('payment-mobile');
+        Route::get('set-payment-method/{name}', 'PaymentController@set_payment_method')->name('set-payment-method');
+    });
+    Route::post('pay-paypal', 'PaypalPaymentController@payWithpaypal')->name('pay-paypal');
+    Route::get('paypal-status', 'PaypalPaymentController@getPaymentStatus')->name('paypal-status');
+    Route::get('payment-success', 'PaymentController@success')->name('payment-success');
+    Route::get('payment-fail', 'PaymentController@fail')->name('payment-fail');
+
+
+});
 
 Route::controller(TokoController::class)->group(function () {
     // Route::get('/tokodashboard', function () {return view('toko.dashboardToko');})->name('tokodashboard');
     Route::get('/tokodashboard', [TokoController::class, 'tokodashboard'])->name('tokodashboard');
     Route::get('/search', [ProductController::class, 'search'])->name('searchProduct');
-
-
     Route::get('/shop', function () {return view('toko.dashboardToko');})->name('shop');
     Route::get('/cart', function () {return view('toko.cart');})->name('cart');
     Route::get('/faq', function () {return view('toko.dashboardToko');})->name('faq');
@@ -170,140 +339,6 @@ Route::controller(CartController::class)->group(function () {
 });
 
 
-Route::controller(ProdukController::class)->group(function () {
-    Route::get('/admin/all-produk', 'index')->name('allproduk');
-    Route::get('/admin/add-produk', 'addProduk')->name('addproduk');
-    Route::post('/admin/store-produk', 'storeProduk')->name('storeproduk');
-    Route::get('/admin/all-produk/{id}/edit', 'editProduk')->name('editproduk');
-    Route::put('/admin/all-produk/{id}/update', 'updateProduk')->name('updateproduk');
-    Route::delete('/admin/all-produk/{id}', 'deleteProduk')->name('deleteproduk');
-    Route::get('/admin/search-produk', 'searchProduk')->name('searchproduk');
-    Route::get('/api/produk', 'get_produk_list')->name('getproduk');
-});
-
-Route::controller(TransaksiController::class)->group(function () {
-    // Tampilkan semua produk
-    Route::get('/admin/all-transaksi', 'index')->name('alltransaksi');
-    // Tampilkan form tambah produk
-    Route::get('/admin/all-transaksi/{id}/terima', 'terimaOrderan')->name('terimaOrderan');
-    // Proses form tambah produk
-    Route::post('/admin/all-transaksi/{id}/tolak', 'tolakOrderan')->name('tolakOrderan');
-    // Form edit produk
-    Route::get('/admin/all-produk/{id}/edit', 'editProduk')->name('editproduk');
-    // Update produk
-    Route::put('/admin/all-produk/{id}/update', 'updateProduk')->name('updateproduk');
-    // Hapus produk
-    Route::delete('/admin/all-produk/{id}', 'deleteProduk')->name('deleteproduk');
-    // Cari produk
-    Route::get('/admin/search-produk', 'searchProduk')->name('searchproduk');
-    // API get list produk (JSON)
-    Route::get('/api/produk', 'get_produk_list')->name('getproduk');
-});
-
-
-
-
-Route::controller(SupplierController::class)->group(function () {
-    // Tampilkan semua supplier
-    Route::get('/admin/daftar-supplier', 'index')->name('allsuppliers');
-    // Tampilkan form tambah supplier
-    Route::get('/admin/daftar-supplier/add', 'addSupplier')->name('addsupplier');
-    // Proses form tambah supplier
-    Route::post('/admin/daftar-supplier/add', 'storeSupplier')->name('storesupplier');
-    // Form edit supplier
-    Route::get('/admin/daftar-supplier/{id}/edit', 'editSupplier')->name('editsupplier');
-    Route::put('/admin/daftar-supplier/{id}/update', 'updateSupplier')->name('updatesupplier');
-    Route::delete('/admin/daftar-supplier/{id}', 'deleteSupplier')->name('deletesupplier');
-    Route::get('/admin/search-supplier', 'searchSupplier')->name('searchsupplier');
-    Route::get('/api/suppliers', 'get_supplier_list')->name('getsuppliers');
-    Route::delete('/supplier/{id}', 'destroy')->name('deletesupplier');
-
-});
-
-Route::controller(CustomerController::class)->group(function () {
-    // Tampilkan semua supplier
-    Route::get('/admin/daftar-customer', 'index')->name('allcustomer');
-    // Tampilkan form tambah supplier
-    Route::get('/admin/daftar-supplier/add', 'addSupplier')->name('addsupplier');
-    // Proses form tambah supplier
-    Route::post('/admin/daftar-supplier/add', 'storeSupplier')->name('storesupplier');
-    // Form edit supplier
-    Route::get('/admin/daftar-supplier/{id}/edit', 'editSupplier')->name('editsupplier');
-    // Update supplier
-    Route::put('/admin/daftar-supplier/{id}/update', 'updateSupplier')->name('updatesupplier');
-    // Hapus supplier
-    Route::delete('/admin/daftar-supplier/{id}', 'deleteCustomer')->name('deletecustomer');
-    // Cari supplier
-    Route::get('/admin/search-supplier', 'searchSupplier')->name('searchsupplier');
-    // API get list supplier (JSON)
-    Route::get('/api/suppliers', 'get_supplier_list')->name('getsuppliers');
-});
-
-
-Route::controller(FoodTypeController::class)->group(function () {
-    Route::get('/admin/all-fo od-type', 'Index')->name('allfoodtype');
-    // Route::get('/admin/food-type/search', 'SearchFoodType')->name('searchfoodtype');
-    Route::get('/admin/add-food-type', 'AddFoodType')->name('addfoodtype');
-    Route::post('/admin/store-food-type', 'StoreFoodType')->name('storefoodtype');
-    Route::get('/admin/edit-food-type/{id}', 'EditFoodType')->name('editfoodtype');
-    Route::post('/admin/update-food-type', 'UpdateFoodType')->name('updatefoodtype');
-    Route::get('/admin/delete-food-type/{id}', 'DeleteFoodType')->name('deletefoodtype');
-});
-
-Route::controller(UserController::class)->group(function () {
-    Route::get('/admin/all-users', 'Index')->name('allusers');
-    Route::get('/admin/search-users/search', 'SearchUsers')->name('searchusers');
-    Route::get('/admin/add-users', 'AddUsers')->name('add-users');
-    Route::post('/admin/store-users', 'StoreUsers')->name('storeusers');
-    Route::get('/admin/edit-users/{id}', 'EditUsers')->name('editusers');
-    Route::post('/admin/update-users', 'UpdateUsers')->name('update-users');
-    Route::get('/admin/delete-users/{id}', 'DeleteUsers')->name('deleteusers');
-});
-
-Route::controller(DiagnosaController::class)->group(function () {
-    Route::get('/admin/all-diagnosa', 'Index')->name('allDiagnosaPenyakit');
-    Route::get('/admin/search-diagnosa', 'SearchDiagnosa')->name('searchdiagnosa');
-    Route::get('/admin/add-diagnosa', 'AddDiagnosa')->name('add-diagnosa');
-    Route::post('/admin/store-diagnosa', 'StoreDiagnosa')->name('storediagnosa');
-    Route::get('/admin/edit-diagnosa/{id}', 'editDiagnosa')->name('editdiagnosa');
-    Route::post('/admin/update-diagnosa/{id}', 'updateDiagnosa')->name('update-diagnosa');
-    Route::get('/admin/delete-diagnosa/{id}', 'deleteDiagnosa')->name('deletediagnosa');
-    Route::get('/admin/show-diagnosa/{id}', 'showDiagnosa')->name('showdiagnosa');
-});
-
-
-Route::controller(OrderController::class)->group(function () {
-    Route::get('/admin/pending-order', 'Index')->name('pendingorder');
-    Route::get('/admin/pending-order/search', 'SearchPending')->name('searchorder');
-    Route::get('/admin/history-order', 'IndexHistory')->name('historyorder');
-    Route::get('/admin/view-order/{id}', 'ViewOrder')->name('vieworder');
-    Route::get('/admin/update-order/{id}', 'UpdateOrder')->name('updateorder');
-    Route::get('/admin/delete-order/{id}', 'DeleteOrder')->name('deleteorder');
-});
-
-Route::controller(AdminProfileController::class)->group(function () {
-    Route::get('/admin/admin-profile', 'Index')->name('profile');
-    Route::post('/admin/store-profile', 'StoreProfile')->name('storeprofile');
-    Route::get('/admin/pending-order/search', 'SearchPending')->name('searchorder');
-    Route::get('/admin/history-order', 'IndexHistory')->name('historyorder');
-    Route::get('/admin/view-order/{id}', 'ViewOrder')->name('vieworder');
-    Route::get('/admin/update-order/{id}', 'UpdateOrder')->name('updateorder');
-    Route::get('/admin/delete-order/{id}', 'DeleteOrder')->name('deleteorder');
-    Route::post('/admin/profile', [AdminProfileController::class, 'StoreProfile'])->name('storeprofile');
-});
-
-
-
-Route::controller(PcvController::class)->group(function () {
-    Route::get('/admin/pcv-page', 'Index')->name('pcv');
-    Route::post('/admin/predict', 'Result')->name('predict');
-    Route::post('/admin/store-profile', 'StoreProfile')->name('storeprofile');
-    Route::get('/admin/pending-order/search', 'SearchPending')->name('searchorder');
-    Route::get('/admin/history-order', 'IndexHistory')->name('historyorder');
-    Route::get('/admin/view-order/{id}', 'ViewOrder')->name('vieworder');
-    Route::get('/admin/update-order/{id}', 'UpdateOrder')->name('updateorder');
-    Route::get('/admin/delete-order/{id}', 'DeleteOrder')->name('deleteorder');
-});
 
 // Forecast routes
 Route::get('/admin/forecast', [ForecastController::class, 'showForm'])->name('forecast.form');
@@ -326,6 +361,8 @@ Route::get('paypal-status', 'PaypalPaymentController@getPaymentStatus')->name('p
 Route::get('payment-success', 'PaymentController@success')->name('payment-success');
 Route::get('payment-fail', 'PaymentController@fail')->name('payment-fail');
 
+
+
 Route::get('/userprofile', [DashboardController::class, 'Index']);
 Route::middleware('auth')->group(function () {
     Route::get('resources/admin/logout', [DashboardController::class, 'AdminLogout'])->name('adminlogout');
@@ -338,8 +375,15 @@ Route::middleware('auth')->group(function () {
 
 // require __DIR__.'/auth.php';
 Route::get('password/reset/{token}', [App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
+
+// Add registration routes
+Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [App\Http\Controllers\Auth\RegisterController::class, 'register']);
+
 Auth::routes();
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('/checkout', [DeliveryShoppingController::class, 'index'])->name('checkout');
+
+Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login');
