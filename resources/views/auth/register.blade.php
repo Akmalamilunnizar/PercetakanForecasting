@@ -8,12 +8,12 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>SANKE | Halaman Register Admin</title>
+    <title>CIME | Halaman Register </title>
 
     <meta name="description" content="" />
 
     <!-- Favicon -->
-    <link rel="shortcut icon" href="{{ asset('assets/images/logo/logo4.png') }}" type="image/png" />
+    <link rel="shortcut icon" href="{{ asset('dashboard2/assets/img/icons/logocime.png') }}" type="image/png" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -34,13 +34,25 @@
     <!-- Custom CSS -->
     <style>
         body {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            background: url('{{ asset('assets/images/baground1.jpg') }}') no-repeat center center fixed;
-            background-size: cover;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+        background: url('{{ asset('assets/images/baground1.jpg') }}') no-repeat center center fixed;
+        background-size: cover;
+        }
+
+        body::after {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4); /* nilai opacity bisa kamu sesuaikan */
+        z-index: -1;
         }
 
         .main-container {
@@ -63,7 +75,7 @@
 
         .right-section {
             flex: 1;
-            background: linear-gradient(135deg, #3AB938, #1A5319);
+            background: linear-gradient(135deg,rgb(88, 93, 255),rgb(227, 224, 255));
             color: white;
             text-align: center;
             display: flex;
@@ -107,9 +119,9 @@
 
 <body>
     <!-- Logo di pojok kiri atas -->
-    <a href="/" class="logo-link">
-        <img src="{{ asset('assets/images/logo/logo.png') }}" alt="Logo" class="logo" />
-    </a>
+     <a href="/" style="position: absolute; top: 20px; left: 20px; z-index: 1000;">
+        <img src="{{ asset('dashboard2/assets/img/icons/logocime.png') }}" alt="Logo" style="width: 120px; height: auto;" />
+     </a>
 
     <div class="main-container">
         <div class="left-section">
@@ -153,12 +165,12 @@
                         </span>
                     </div>
                 </div>
-
-                <button type="submit" class="btn btn-primary d-grid w-100">Daftar</button>
-
+                <button class="btn d-grid w-100" type="submit" style="background-color:rgb(56, 135, 255); color: #fff; border: none;">
+                    Daftar
+                </button>
                 <p class="text-center mt-3">
                     <span>Sudah punya akun?</span>
-                    <a href="login"><span>Login</span></a>
+                    <a href="login" style="color:rgb(0, 0, 0); text-decoration: none;"><span>Login</span></a>
                 </p>
             </form>
         </div>
@@ -206,9 +218,9 @@
 
         <!-- Logo dan Informasi -->
         <div class="right-section">
-            <h1>SANKE</h1>
-            <p>Intelligence System Kontrol Kualitas Air Kolam Ikan Koi Berbasis IoT</p>
-            <img src="{{ asset('assets/images/koilogin.png') }}" alt="" />
+            <h1>CITRA MEDIA</h1>
+            <p>Optimasi Manajemen Stok di Industri Percetakan Menggunakan Prediksi Penjualan</p>
+            <img src="{{ asset('dashboard2/assets/img/imgtoko/print3.png') }}" alt="" />
         </div>
     </div>
 </body>

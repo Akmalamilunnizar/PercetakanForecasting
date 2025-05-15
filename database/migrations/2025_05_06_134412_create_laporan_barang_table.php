@@ -11,16 +11,14 @@ return new class () extends Migration {
     public function up()
     {
         Schema::create('laporanbarang', function (Blueprint $table) {
-            $table->bigIncrements('IdLaporan');
-            $table->string('IdBarang', 13);
-            $table->unsignedBigInteger('IdSupplier')->nullable();
-            $table->integer('QtyMasuk')->default(0);
-            $table->integer('QtyKeluar')->default(0);
+            $table->id('IdLaporan');
+            $table->foreignId('IdBarang')->constrained('databarang')->onDelete('cascade'); 
+            $table->foreignId('IdSupplier')->constrained('supplier')->onDelete('cascade');
+            $table->foreignId('IdMasuk')->constrained('detail_barangmasuk')->onDelete('cascade');
+            $table->foreignId('IdKeluar')->constrained('detail_barangkeluar')->onDelete('cascade');
+            $table->foreignId('IdIn')->constrained('barangmasuk')->onDelete('cascade');
+            $table->foreignId('IdOut')->constrained('barangkeluar')->onDelete('cascade');
             $table->timestamps();
-
-            // Menambahkan foreign key
-            $table->foreign('IdBarang')->references('IdBarang')->on('databarang')->onDelete('cascade');
-            $table->foreign('IdSupplier')->references('IdSupplier')->on('supplier')->onDelete('set null');
         });
     }
 

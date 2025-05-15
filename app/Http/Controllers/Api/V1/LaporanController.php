@@ -3,109 +3,53 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
-use App\Models\Laporan;
 use Illuminate\Http\Request;
+use App\Models\Laporan;
+use App\Models\Items;
+use App\Models\Supplier;
+use App\Models\DetailMasuk;
+use App\Models\DetailKeluar;
+use App\Models\BarangMasuk;
+use App\Models\BarangKeluar;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\File;
 
 class LaporanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $dataLaporan = Laporan::with(['barang', 'supplier'])->get();
+        $laporanbarang = Laporan::with(['databarang', 'supplier', 'detailBarangMasuk', 'detailBarangKeluar', 'barangmasuk', 'barangkeluar'])->get();
+        $databarang = Items::all();
+        $supplier = Supplier::all();
+        $detailBarangMasuk = DetailMasuk::all();
+        $detailBarangKeluar = DetailKeluar::all();
+        $barangmasuk = BarangMasuk::all();
+        $barangkeluar = BarangKeluar::all();
 
-        return view('admin.laporanbarang', compact('dataLaporan'));
+        return view('admin.laporanbarang', [
+            'laporanbarang' => $laporanbarang,
+            'databarang' => $databarang,
+            'supplier' => $supplier,
+            'detailBarangMasuk' => $detailBarangMasuk,
+            'detailBarangKeluar' => $detailBarangKeluar,
+            'barangmasuk' => $barangmasuk,
+            'barangkeluar' => $barangkeluar,
+        ]);
+        // $dataLaporan = Laporan::with(['databarang', 'supplier', 'detailBarangMasuk', 'detailBarangKeluar'])->get();
+
+        // return view('admin.laporanbarang', compact('dataLaporan'));
     }
 
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show($id)
-    {
-        $laporans = [
-            (object) [
-                'id' => 1,
-                'nama_barang' => 'Kertas A4',
-                'jumlah' => 5,
-                'tanggal_pengeluaran' => '2025-05-01',
-                'keterangan' => 'Untuk laporan rapat'
-            ],
-            (object) [
-                'id' => 2,
-                'nama_barang' => 'Pulpen',
-                'jumlah' => 10,
-                'tanggal_pengeluaran' => '2025-05-03',
-                'keterangan' => 'Keperluan kantor'
-            ],
-            (object) [
-                'id' => 3,
-                'nama_barang' => 'Printer Ink',
-                'jumlah' => 2,
-                'tanggal_pengeluaran' => '2025-05-05',
-                'keterangan' => null
-            ],
-        ];
-
-        // Cek apakah data ada
-        if (!isset($laporans[$id])) {
-            abort(404);
-        }
-
-        $laporan = $laporans[$id];
-
-        // Return ke view dengan data laporan
-        return view('admin.detaillaporanbarang', compact('laporan'));
-    }
-
-
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy($id)
     {
         $laporan = Laporan::find($id);
 
         if (!$laporan) {
-            return redirect()->route('alllaporan')->with('error', 'Data tidak ditemukan.');
+            return redirect()->route('laporanbarang.index')->with('Gagal', 'Data tidak ditemukan.');
         }
 
         $laporan->delete();
 
-        return redirect()->route('alllaporan')->with('success', 'Data berhasil dihapus.');
+        return redirect()->route('laporanbarang.index')->with('Sukses', 'Data berhasil dihapus.');
     }
 }

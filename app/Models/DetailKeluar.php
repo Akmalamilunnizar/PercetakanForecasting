@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Laporan;
 
 class DetailKeluar extends Model
 {
@@ -15,5 +16,11 @@ class DetailKeluar extends Model
         'QtyKeluar'
     ];
 
-    public $timestamps = false;  // Karena tabel jenis_koi tidak menggunakan created_at dan updated_at
+    public $timestamps = false;  
+
+    // relasi ke laporan
+    public function laporan()
+    {
+        return $this->hasMany(Laporan::class, 'IdKeluar', 'IdKeluar');
+    }
 }

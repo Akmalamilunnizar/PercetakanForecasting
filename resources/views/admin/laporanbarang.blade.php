@@ -108,32 +108,32 @@
         </tr>
     </thead>
     <tbody class="table-border-bottom-0">
-        @forelse($dataLaporan as $laporan)
-        <tr>
-            <td>{{ $laporan->barang->IdBarang }}</td>
-            <td>{{ $laporan->barang->NamaBarang }}</td>
-            <td>{{ $laporan->supplier->NamaSupplier ?? '-' }}</td>
-            <td>{{ $laporan->QtyMasuk }}</td>
-            <td>{{ $laporan->QtyKeluar }}</td>
-            <td>{{ $laporan->sisa_stok }}</td>
-            <td>
-                <a href="{{ route('admin.detaillaporanbarang', $laporan->id) }}" class="btn btn-sm btn-primary">Detail</a>
-                <form action="{{ route('admin.deletelaporanbarang', $laporan->id) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('Yakin ingin menghapus laporan ini?');">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                </form>
-            </td>
-        </tr>
-        @empty
-        <tr>
-            <td colspan="7" class="text-center">Tidak ada data laporan.</td>
-        </tr>
-        @endforelse
-
+         @if($laporanbarang->count() > 0)
+            @foreach ($laporanbarang as $laporan)
+                <tr>
+                    <td>{{ $laporan->IdLaporan }}</td>
+                    <td>{{ $laporan->databarang->NamaBarang ?? 'N/A' }}</td>
+                    <td>{{ $laporan->supplier->NamaSupplier ?? 'N/A' }}</td>
+                    <td>{{ $laporan->detailBarangMasuk->Jumlah ?? 0 }}</td>
+                    <td>{{ $laporan->detailBarangKeluar->Jumlah ?? 0 }}</td>
+                    <td>{{ $laporan->barangmasuk->Jumlah ?? 0 }}</td>
+                    <td>{{ $laporan->barangkeluar->Jumlah ?? 0 }}</td>
+                    <td>
+                        <form action="{{ route('laporanbarang.destroy', $laporan->IdLaporan) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-danger" onclick="return confirm('Yakin mau hapus?')">Hapus</button>
+                        </form>
+                    </td>
+                </tr>
+            @endforeach
+               @else
+                    <tr>
+                        <td colspan="6" class="text-center">Tidak ada data !</td>
+                    </tr>
+                @endif
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.min.js"></script>
-
     </tbody>
 </table>
 

@@ -4,22 +4,27 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Items;
+use App\Models\Supplier;
+use App\Models\DetailMasuk;
+use App\Models\DetailKeluar;
+use App\Models\BarangMasuk;
+use App\Models\BarangKeluar;
 
 class Laporan extends Model
 {
     use HasFactory;
     protected $table = 'laporanbarang';
     protected $primaryKey = 'IdLaporan';
-    public $timestamps = false;
     protected $fillable = [
         'IdBarang',
         'IdSupplier',
-        'QtyMasuk',
-        'QtyKeluar',
+        'IdMasuk',
+        'IdKeluar',
     ];
 
     // relasi ke barang
-    public function barang()
+    public function databarang()
     {
         return $this->belongsTo(Items::class, 'IdBarang', 'IdBarang');
     }
@@ -31,20 +36,27 @@ class Laporan extends Model
     }
 
     // relasi ke detail barang masuk
-    public function detaiBaranglMasuk()
+    public function detailBarangMasuk()
     {
-        return $this->hasOne(DetailMasuk::class, 'IdBarang', 'IdBarang');
+        return $this->belongsTo(DetailMasuk::class, 'IdMasuk', 'IdMasuk');
     }
 
     // relasi ke detail barang keluar
     public function detailBarangKeluar()
     {
-        return $this->hasOne(DetailKeluar::class, 'IdBarang', 'IdBarang');
+        return $this->belongsTo(DetailKeluar::class, 'IdKeluar', 'IdKeluar');
     }
 
-    // accessor: sisa stok
-    public function getSisaStokAttribute()
+    // relasi ke barang masuk
+    public function barangMasuk()
     {
-        return ($this->QtyMasuk ?? 0) - ($this->QtyKeluar ?? 0);
+        return $this->belongsTo(BarangMasuk::class, 'IdMasuk', 'IdIn');
     }
+
+    // relasi ke barang keluar
+    public function barangKeluar()
+    {
+        return $this->belongsTo(BarangKeluar::class, 'IdMasuk', 'IdOut');
+    }
+
 }
