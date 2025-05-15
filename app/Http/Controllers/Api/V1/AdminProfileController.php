@@ -61,77 +61,110 @@ class AdminProfileController extends Controller
 
     // Mengupdate profil admin
     public function StoreProfile(Request $request)
-{
-    $id = Auth::user()->id;
-    $profile = User::find($id);
+    {
+        // Debug: Log the incoming request data
+        Log::info('Profile Update Request Data:', $request->all());
+        
+        $id = Auth::user()->username;
+        $profile = User::find($id);
 
-        $request->validate(
-            [
-                'f_name' => 'required|string|max:255',
-                'email' => 'required|email|max:255|unique:users,email,' . $id,
-                'currentPassword' => 'nullable|min:6', // Password saat ini opsional
-                'newPassword' => 'nullable|min:6|confirmed', // Validasi konfirmasi password baru
-                'img' => 'nullable|image|mimes:png,jpg,gif,jpeg|max:2048',
-            ],
-            [
-                'f_name.required' => 'Nama depan wajib diisi.',
-                'f_name.string' => 'Nama depan harus berupa teks.',
-                'f_name.max' => 'Nama depan tidak boleh lebih dari 255 karakter.',
-
-                'email.required' => 'Email wajib diisi.',
-                'email.email' => 'Format email tidak valid.',
-                'email.max' => 'Email tidak boleh lebih dari 255 karakter.',
-                'email.unique' => 'Email ini sudah terdaftar.',
-
-                'currentPassword.nullable' => 'Password saat ini opsional.',
-                'currentPassword.min' => 'Password saat ini harus terdiri dari minimal 6 karakter.',
-
-                'newPassword.nullable' => 'Password baru opsional.',
-                'newPassword.min' => 'Password baru harus terdiri dari minimal 6 karakter.',
-                'newPassword.confirmed' => 'Konfirmasi password baru tidak sesuai.',
-
-                'img.nullable' => 'Gambar profil opsional.',
-                'img.image' => 'File yang diunggah harus berupa gambar.',
-                'img.mimes' => 'Gambar harus memiliki format PNG, JPG, GIF, atau JPEG.',
-                'img.max' => 'Ukuran gambar tidak boleh lebih dari 2MB.',
-            ]
-        );
-
-    try {
-        // Update nama dan email
-        $profile->f_name = $request->input('f_name');
-        $profile->email = $request->input('email');
-
-        // Verifikasi dan update password jika ada
-        if ($request->filled('newPassword')) {
-            if (!Hash::check($request->input('currentPassword'), $profile->password)) {
-                return redirect()->back()->withErrors(['currentPassword' => 'Password saat ini tidak valid.']);
-            }
-
-            $profile->password = bcrypt($request->input('newPassword'));
+        if (!$profile) {
+            Log::error('User not found with ID: ' . $id);
+            return redirect()->back()->withErrors(['error' => 'User not found.']);
         }
 
-        // Update gambar profil jika ada
-        if ($request->hasFile('img')) {
-            $del = public_path('uploads/users/' . $profile->img);
-            if (File::exists($del)) {
-                File::delete($del);
+        // Debug: Log the current user data
+        Log::info('Current User Data:', [
+            'id' => $profile->id,
+            'name' => $profile->f_name,
+            'email' => $profile->email
+        ]);
+
+        try {
+            $validated = $request->validate(
+                [
+                    'f_name' => 'required|string|max:255',
+                    'email' => 'required|email|max:255|unique:users,email,' . $id,
+                    'currentPassword' => 'nullable|min:6',
+                    'newPassword' => 'nullable|min:6|confirmed',
+                    'img' => 'nullable|image|mimes:png,jpg,gif,jpeg|max:2048',
+                ],
+                [
+                    'f_name.required' => 'Nama wajib diisi.',
+                    'f_name.string' => 'Nama harus berupa teks.',
+                    'f_name.max' => 'Nama tidak boleh lebih dari 255 karakter.',
+
+                    'email.required' => 'Email wajib diisi.',
+                    'email.email' => 'Format email tidak valid.',
+                    'email.max' => 'Email tidak boleh lebih dari 255 karakter.',
+                    'email.unique' => 'Email ini sudah terdaftar.',
+
+                    'currentPassword.nullable' => 'Password saat ini opsional.',
+                    'currentPassword.min' => 'Password saat ini harus terdiri dari minimal 6 karakter.',
+
+                    'newPassword.nullable' => 'Password baru opsional.',
+                    'newPassword.min' => 'Password baru harus terdiri dari minimal 6 karakter.',
+                    'newPassword.confirmed' => 'Konfirmasi password baru tidak sesuai.',
+
+                    'img.nullable' => 'Gambar profil opsional.',
+                    'img.image' => 'File yang diunggah harus berupa gambar.',
+                    'img.mimes' => 'Gambar harus memiliki format PNG, JPG, GIF, atau JPEG.',
+                    'img.max' => 'Ukuran gambar tidak boleh lebih dari 2MB.',
+                ]
+            );
+
+            // Debug: Log the validated data
+            Log::info('Validated Data:', $validated);
+
+            // Update nama dan email
+            $profile->f_name = $request->input('f_name');
+            $profile->email = $request->input('email');
+
+            // Verifikasi dan update password jika ada
+            if ($request->filled('newPassword')) {
+                if (!Hash::check($request->input('currentPassword'), $profile->password)) {
+                    return redirect()->back()->withErrors(['currentPassword' => 'Password saat ini tidak valid.']);
+                }
+
+                $profile->password = bcrypt($request->input('newPassword'));
             }
 
-            $file = $request->file('img');
-            $filename = '_profile_' . time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('uploads/users/'), $filename);
-            $profile->img = $filename;
+            // Update gambar profil jika ada
+            if ($request->hasFile('img')) {
+                // Delete old image if exists
+                if ($profile->img) {
+                    $del = public_path('uploads/users/' . $profile->img);
+                    if (File::exists($del)) {
+                        File::delete($del);
+                    }
+                }
+
+                $file = $request->file('img');
+                $filename = 'images/' . time() . '.' . $file->getClientOriginalExtension();
+                
+                // Ensure the directory exists
+                $directory = public_path('uploads/users/images');
+                if (!File::exists($directory)) {
+                    File::makeDirectory($directory, 0755, true);
+                }
+                
+                $file->move(public_path('uploads/users/images'), basename($filename));
+                $profile->img = $filename;
+            }
+
+            $profile->save();
+
+            // Debug: Log successful update
+            Log::info('Profile updated successfully for user ID: ' . $id);
+
+            return redirect()->route('profile')->with('success', 'Profil berhasil diperbarui.');
+        } catch (\Exception $e) {
+            // Debug: Log the error
+            Log::error('Error updating profile: ' . $e->getMessage());
+            Log::error('Error trace: ' . $e->getTraceAsString());
+            return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan saat memperbarui profil.']);
         }
-
-        $profile->save();
-
-        return redirect()->route('profile')->with('success', 'Profil berhasil diperbarui.');
-    } catch (\Exception $e) {
-        Log::error('Error updating profile: ' . $e->getMessage());
-        return redirect()->back()->withErrors(['error' => 'Terjadi kesalahan saat memperbarui profil.']);
     }
-}
 
     // Menghapus profil
     public function destroy($id)

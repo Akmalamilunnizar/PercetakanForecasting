@@ -58,6 +58,7 @@ class UserController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => bcrypt($request->password),
+            'img' => 'images/default-avatar.png'
         ]);
         $user->addRole('user');
 

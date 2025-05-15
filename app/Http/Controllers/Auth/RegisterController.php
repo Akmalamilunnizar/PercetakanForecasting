@@ -99,7 +99,7 @@ class RegisterController extends Controller
                 'username' => $username,
                 'user' => 'User', // Default role
                 'alamat' => '', // Default empty address
-                'img' => '' // Default empty image
+                'img' => 'default-avatar.png'
             ]);
 
             // Assign the 'user' role to the newly created user

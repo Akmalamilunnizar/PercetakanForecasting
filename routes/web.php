@@ -50,6 +50,11 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::controller(DashboardController::class)->group(function () {
         Route::get('admin/dashboard', 'Index')->name('admindashboard');
     });
+
+    Route::controller(AdminProfileController::class)->group(function () {
+        Route::get('/admin/admin-profile', 'Index')->name('profile');
+        Route::post('/admin/store-profile', 'StoreProfile')->name('storeprofile');
+    });
 });
 
 
@@ -260,19 +265,6 @@ Route::controller(ItemsController::class)->group(function () {
         Route::get('/admin/update-order/{id}', 'UpdateOrder')->name('updateorder');
         Route::get('/admin/delete-order/{id}', 'DeleteOrder')->name('deleteorder');
     });
-
-    Route::controller(AdminProfileController::class)->group(function () {
-        Route::get('/admin/admin-profile', 'Index')->name('profile');
-        Route::post('/admin/store-profile', 'StoreProfile')->name('storeprofile');
-        Route::get('/admin/pending-order/search', 'SearchPending')->name('searchorder');
-        Route::get('/admin/history-order', 'IndexHistory')->name('historyorder');
-        Route::get('/admin/view-order/{id}', 'ViewOrder')->name('vieworder');
-        Route::get('/admin/update-order/{id}', 'UpdateOrder')->name('updateorder');
-        Route::get('/admin/delete-order/{id}', 'DeleteOrder')->name('deleteorder');
-        Route::post('/admin/profile', [AdminProfileController::class, 'StoreProfile'])->name('storeprofile');
-    });
-
-
 
     Route::controller(PcvController::class)->group(function () {
         Route::get('/admin/pcv-page', 'Index')->name('pcv');
