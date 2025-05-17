@@ -29,7 +29,7 @@
 
         <!-- Card Detail -->
         <div class="card shadow-sm border-0 rounded-3">
-           <div class="card-header text-white" style="background-color:rgb(123, 171, 254);">
+            <div class="card-header text-white" style="background-color:rgb(123, 171, 254);">
                 <strong class="fs-4">Detail Barang</strong>
             </div>
 
@@ -47,23 +47,23 @@
                     <div class="col-md-8">{{ optional($laporanbarang->supplier)->NamaSupplier ?? 'N/A' }}</div>
                 </div>
                 <div class="row py-3 border-bottom">
-                    <div class="col-md-4 fw-semibold">Qty Masuk:</div>
-                    <div class="col-md-8">{{ optional($laporanbarang->detailBarangMasuk)->Jumlah ?? 0 }}</div>
+                    <div class="col-md-4 fw-semibold">📥 Qty Masuk:</div>
+                    <div class="col-md-8">{{ optional($laporanbarang->detailBarangMasuk)->QtyMasuk ?? 0 }}</div>
                 </div>
                 <div class="row py-3 border-bottom">
-                    <div class="col-md-4 fw-semibold">Qty Keluar:</div>
-                    <div class="col-md-8">{{ optional($laporanbarang->detailBarangKeluar)->Jumlah ?? 0 }}</div>
+                    <div class="col-md-4 fw-semibold">📤 Qty Keluar:</div>
+                    <div class="col-md-8">{{ optional($laporanbarang->detailBarangKeluar)->QtyKeluar ?? 0 }}</div>
                 </div>
                 <div class="row py-3 border-bottom">
-                    <div class="col-md-4 fw-semibold">Jumlah Masuk:</div>
-                    <div class="col-md-8">{{ optional($laporanbarang->barangmasuk)->Jumlah ?? 0 }}</div>
-                </div>
-                <div class="row py-3 border-bottom">
-                    <div class="col-md-4 fw-semibold">Jumlah Keluar:</div>
-                    <div class="col-md-8">{{ optional($laporanbarang->barangkeluar)->Jumlah ?? 0 }}</div>
+                    <div class="col-md-4 fw-semibold">📦 Jumlah Stok:</div>
+                    <div class="col-md-8">
+                        {{ optional($laporanbarang->databarang)->JumlahStok ?? 0 }}
+                        {{ optional($laporanbarang->databarang?->satuan)->Satuan ?? '' }}
+                    </div>
                 </div>
             </div>
         </div>
+
         <div class="d-flex justify-content-start mt-3">
             <a href="{{ route('laporanbarang') }}" class="btn btn-secondary">
                 <i class="bx bx-arrow-back me-2"></i> Kembali

@@ -94,27 +94,29 @@
                 <th>Nama Supplier</th>
                 <th>Qty Masuk</th>
                 <th>Qty Keluar</th>
-                <th>Jumlah Masuk</th>
-                <th>Jumlah Keluar</th>
+                <th>Jumlah Stok</th>
             </tr>
         </thead>
         <tbody>
             @forelse($laporanbarang as $index => $laporan)
                 <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>{{ optional($laporan->databarang)->NamaBarang ?? 'N/A' }}</td>
-                    <td>{{ optional($laporan->supplier)->NamaSupplier ?? 'N/A' }}</td>
-                    <td>{{ optional($laporan->detailBarangMasuk)->Jumlah ?? 0 }}</td>
-                    <td>{{ optional($laporan->detailBarangKeluar)->Jumlah ?? 0 }}</td>
-                    <td>{{ optional($laporan->barangmasuk)->Jumlah ?? 0 }}</td>
-                    <td>{{ optional($laporan->barangkeluar)->Jumlah ?? 0 }}</td>
+                    <td style="text-align: center;">{{ $index + 1 }}</td>
+                    <td style="text-align: center;">{{ optional($laporan->databarang)->NamaBarang ?? 'N/A' }}</td>
+                    <td style="text-align: center;">{{ optional($laporan->supplier)->NamaSupplier ?? 'N/A' }}</td>
+                    <td style="text-align: center;">{{ optional($laporan->detailBarangMasuk)->QtyMasuk ?? 0 }}</td>
+                    <td style="text-align: center;">{{ optional($laporan->detailBarangKeluar)->QtyKeluar ?? 0 }}</td>
+                    <td style="text-align: center;">
+                        {{ optional($laporan->databarang)->JumlahStok ?? 0 }}
+                        {{ optional($laporan->databarang?->satuan)->Satuan ?? '' }}
+                    </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7" class="no-data">Tidak ada data</td>
+                    <td colspan="6" style="text-align: center;">Tidak ada data</td>
                 </tr>
             @endforelse
         </tbody>
     </table>
 </body>
+
 </html>

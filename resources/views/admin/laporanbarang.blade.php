@@ -107,8 +107,7 @@
                 <th style="text-align: center;">Nama Supplier</th>
                 <th style="text-align: center;">Qty Masuk</th>
                 <th style="text-align: center;">Qty Keluar</th>
-                <th style="text-align: center;">Jumlah Masuk</th>
-                <th style="text-align: center;">Jumlah Keluar</th>
+                <th style="text-align: center;">Sisa Stok</th>
                 <th style="text-align: center;">Aksi</th>
             </tr>
         </thead>
@@ -120,12 +119,14 @@
                 @foreach ($laporanbarang as $laporan)
                     <tr>
                         <td class="text-center">{{ $loop->iteration }}</td>
-                        <td class="text-center">{{ optional($laporan->databarang)->NamaBarang ?? 'N/A' }}</td>
-                        <td class="text-center">{{ optional($laporan->supplier)->NamaSupplier ?? 'N/A' }}</td>
-                        <td class="text-center">{{ optional($laporan->detailBarangMasuk)->Jumlah ?? 0 }}</td>
-                        <td class="text-center">{{ optional($laporan->detailBarangKeluar)->Jumlah ?? 0 }}</td>
-                        <td class="text-center">{{ optional($laporan->barangmasuk)->Jumlah ?? 0 }}</td>
-                        <td class="text-center">{{ optional($laporan->barangkeluar)->Jumlah ?? 0 }}</td>
+                        <td class="text-center">{{ optional($laporan->databarang)->NamaBarang }}</td>
+                        <td class="text-center">{{ optional($laporan->supplier)->NamaSupplier }}</td>
+                        <td class="text-center">{{ optional($laporan->detailBarangMasuk)->QtyMasuk ?? 0 }}</td>
+                        <td class="text-center">{{ optional($laporan->detailBarangKeluar)->QtyKeluar ?? 0 }}</td>
+                        <td class="text-center">
+                            {{ optional($laporan->databarang)->JumlahStok ?? 0 }}
+                            {{ optional($laporan->databarang?->satuan)->Satuan ?? '' }}
+                        </td>
                         <td class="text-center">
                             <div class="d-flex justify-content-center" role="group" aria-label="Basic example">
                                 <a href="{{ route('admin.detaillaporanbarang', $laporan->IdLaporan) }}"

@@ -57,24 +57,20 @@
         </tr>
         <tr>
             <th class="label">Qty Masuk</th>
-            <td>{{ optional($laporanbarang->detailBarangMasuk)->Jumlah ?? 0 }}</td>
+            <td>{{ optional($laporanbarang->detailBarangMasuk)->QtyMasuk ?? 0 }}</td>
         </tr>
         <tr>
             <th class="label">Qty Keluar</th>
-            <td>{{ optional($laporanbarang->detailBarangKeluar)->Jumlah ?? 0 }}</td>
+            <td>{{ optional($laporanbarang->detailBarangKeluar)->QtyKeluar ?? 0 }}</td>
         </tr>
         <tr>
-            <th class="label">Jumlah Masuk</th>
-            <td>{{ optional($laporanbarang->barangmasuk)->Jumlah ?? 0 }}</td>
-        </tr>
-        <tr>
-            <th class="label">Jumlah Keluar</th>
-            <td>{{ optional($laporanbarang->barangkeluar)->Jumlah ?? 0 }}</td>
+            <th class="label">Jumlah Stok</th>
+            <td>
+                {{ optional($laporanbarang->databarang)->JumlahStok ?? 0 }}
+                {{ optional($laporanbarang->databarang?->satuan)->Satuan ?? '' }}
+            </td>
         </tr>
     </table>
-
-    <br><br>
-    <p style="text-align: right; font-size: 12px;">Dicetak pada: {{ \Carbon\Carbon::now()->format('d-m-Y H:i') }}</p>
-
 </body>
+
 </html>
