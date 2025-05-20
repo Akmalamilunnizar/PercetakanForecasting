@@ -15,7 +15,6 @@ use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\SubCategoryController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\TransaksiController;
-use App\Http\Controllers\Api\V1\TransaksiController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Items;
@@ -32,6 +31,7 @@ use App\Http\Controllers\Api\V1\TokoController;
 use App\Models\Produk;
 use App\Models\Supplier;
 use App\Http\Controllers\Api\V1\ProdukController;
+use App\Http\Controllers\Api\V1\DeliveryShoppingController;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Api\V1\CartController;
 use App\Http\Controllers\Api\V1\LaporanController;
@@ -41,10 +41,6 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Api\V1\AddressController;
 
 use App\Http\Controllers\Api\V1\DetailProdukController;
-
-
-use App\Http\Controllers\Api\V1\ForecastController;
-use App\Http\Controllers\DeliveryShoppingController;
 
 
 // Route::get('/', function () {
@@ -66,21 +62,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     });
 });
 
-
-    
-
-
-    //     Route::controller(ProfileController::class)->group(function () {
-    //         Route::get('logout', function ()
-    // {
-    //     auth()->logout();
-    //     Session()->flush();
-
-    //     return Redirect::to('/login');
-    // })->name('logout');
-    //         // Route::post('/admin/logout', 'AdminLogout')->name('adminlogout');
-    //     });
-    // Route::get('resources/admin/logout', 'App\Http\Controllers\Auth\AuthenticatedSessionController@logout');
 
     Route::controller(DetailProdukController::class)->group(function () {
         Route::get('/admin/detail-produk', 'index')->name('detail.produk');
@@ -145,13 +126,6 @@ Route::get('/admin/all-laporan', [LaporanController::class, 'index'])->name('all
 Route::get('/admin/laporantransaksi', [LaporanTransaksiController::class, 'index'])->name('laporan-transaksi');
 
 
-Route::controller(ParameterReportController::class)->group(function () {
-    Route::get('/admin/parameter-report', 'Index')->name('parameterreport');
-});
-
-Route::controller(DiseaseReportController::class)->group(function () {
-    Route::get('/admin/disease-report', 'Index')->name('diseasereport');
-});
 
 Route::controller(ItemsController::class)->group(function () {
     Route::get('/admin/daftar-barang', 'index')->name('daftarbarang');
@@ -172,12 +146,9 @@ Route::controller(ItemsController::class)->group(function () {
     // Route untuk delete barang
     Route::delete('/admin/daftar-barang/barang/{id}', 'destroy')->name('barang.delete');
 
-    Route::post('/add-penyakit', [ItemsController::class, 'addPenyakit'])->name('addPenyakit');
-
     Route::post('/add-jenis-barang', [ItemsController::class, 'addTypeItems'])->name('addTypeItems');
     Route::delete('/delete-jenis-barang/{id}', [ItemsController::class, 'deleteTypeItems'])->name('deleteTypeItems');
-    Route::post('/add-kolam', [ItemsController::class, 'addKolam'])->name('addKolam');
-
+});
 
     Route::controller(TokoController::class)->group(function () {
         Route::get('/tokodashboard', function () {return view('toko.dashboardToko');})->name('tokodashboard');
@@ -189,7 +160,7 @@ Route::controller(ItemsController::class)->group(function () {
         Route::get('/faq', function () {return view('toko.dashboardToko');})->name('faq');
         Route::get('/lacak', function () {return view('toko.dashboardToko');})->name('lacak');
         Route::get('/kontak', function () {return view('toko.dashboardToko');})->name('kontak');
-
+    });
     Route::controller(LaporanController::class)->group(function () {
         Route::get('/admin/laporanbarang', 'index')->name('laporanbarang');
         Route::get('admin/detaillaporanbarang/{id}', 'show')->name('admin.detaillaporanbarang');
@@ -205,9 +176,6 @@ Route::controller(ItemsController::class)->group(function () {
         Route::get('/admin/parameter-report', 'Index')->name('parameterreport');
     });
 
-    Route::controller(DiseaseReportController::class)->group(function () {
-        Route::get('/admin/disease-report', 'Index')->name('diseasereport');
-    });
 
     Route::controller(ProdukController::class)->group(function () {
         // Tampilkan semua produk
@@ -378,22 +346,10 @@ Route::controller(ItemsController::class)->group(function () {
         }
     });
 
-    Route::group(['prefix' => 'payment-mobile'], function () {
-        Route::get('/', 'PaymentController@payment')->name('payment-mobile');
-        Route::get('set-payment-method/{name}', 'PaymentController@set_payment_method')->name('set-payment-method');
-    });
-    Route::post('pay-paypal', 'PaypalPaymentController@payWithpaypal')->name('pay-paypal');
-    Route::get('paypal-status', 'PaypalPaymentController@getPaymentStatus')->name('paypal-status');
-    Route::get('payment-success', 'PaymentController@success')->name('payment-success');
-    Route::get('payment-fail', 'PaymentController@fail')->name('payment-fail');
-
-
-});
-
 Route::controller(TokoController::class)->group(function () {
     // Route::get('/tokodashboard', function () {return view('toko.dashboardToko');})->name('tokodashboard');
     Route::get('/tokodashboard', [TokoController::class, 'tokodashboard'])->name('tokodashboard');
-    Route::get('/search', [ProductController::class, 'search'])->name('searchProduct');
+    Route::get('/search', [TokoController::class, 'search'])->name('searchProduct');
     Route::get('/shop', function () {return view('toko.dashboardToko');})->name('shop');
     Route::get('/cart', function () {return view('toko.cart');})->name('cart');
     Route::get('/faq', function () {return view('toko.dashboardToko');})->name('faq');
@@ -424,6 +380,13 @@ Route::middleware(['auth'])->group(function () {
     Route::controller(OrderController::class)->group(function () {
         Route::post('/confirm-order', 'confirmOrder')->name('confirm.order');
     });
+
+    Route::controller(AddressController::class)->group(function () {
+        Route::get('/addresses', 'index')->name('addresses.index');
+        Route::post('/addresses', 'store')->name('addresses.store');
+        Route::post('/addresses/{address}/default', 'setDefault')->name('addresses.default');
+        Route::delete('/addresses/{address}', 'destroy')->name('addresses.destroy');
+    });
 });
 
 
@@ -439,15 +402,6 @@ Route::get('/routes', function () {
         echo "<br/>";
     }
 });
-
-Route::group(['prefix' => 'payment-mobile'], function () {
-    Route::get('/', 'PaymentController@payment')->name('payment-mobile');
-    Route::get('set-payment-method/{name}', 'PaymentController@set_payment_method')->name('set-payment-method');
-});
-Route::post('pay-paypal', 'PaypalPaymentController@payWithpaypal')->name('pay-paypal');
-Route::get('paypal-status', 'PaypalPaymentController@getPaymentStatus')->name('paypal-status');
-Route::get('payment-success', 'PaymentController@success')->name('payment-success');
-Route::get('payment-fail', 'PaymentController@fail')->name('payment-fail');
 
 
 
@@ -474,14 +428,5 @@ Auth::routes();
 
 Route::get('/checkout', [DeliveryShoppingController::class, 'index'])->name('checkout');
 
-Route::get('/checkout', [DeliveryShoppingController::class, 'index'])->name('checkout');
 
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login');
-
-// Address routes
-Route::middleware(['auth'])->group(function () {
-    Route::get('/addresses', [AddressController::class, 'index'])->name('addresses.index');
-    Route::post('/addresses', [AddressController::class, 'store'])->name('addresses.store');
-    Route::post('/addresses/{address}/default', [AddressController::class, 'setDefault'])->name('addresses.default');
-    Route::delete('/addresses/{address}', [AddressController::class, 'destroy'])->name('addresses.destroy');
-});
