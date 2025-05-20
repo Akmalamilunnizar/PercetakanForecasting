@@ -1,7 +1,14 @@
+@if(!Auth::check())
+    <script>
+        window.location.href = '{{ route("login") }}';
+    </script>
+@else
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta name="user-authenticated" content="{{ Auth::check() ? 'true' : 'false' }}">
   <title>CIME | Review Pesanan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -10,6 +17,82 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check if user is authenticated
+      const isAuthenticated = document.querySelector('meta[name="user-authenticated"]').content === 'true';
+      if (!isAuthenticated) {
+        window.location.href = '{{ route("login") }}';
+        return;
+      }
+
+      const form = document.getElementById('confirmOrderForm');
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          e.preventDefault();
+          console.log('Form submitted to:', this.action);
+          
+          // Show loading state
+          const submitButton = this.querySelector('button[type="submit"]');
+          const originalText = submitButton.innerHTML;
+          submitButton.disabled = true;
+          submitButton.innerHTML = 'Memproses...';
+
+          fetch(this.action, {
+            method: 'POST',
+            headers: {
+              'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+              'Accept': 'application/json'
+            },
+            body: new FormData(this)
+          })
+          .then(response => {
+            console.log('Response status:', response.status);
+            if (response.status === 401) {
+              // Redirect to login if unauthorized
+              window.location.href = '{{ route("login") }}';
+              return;
+            }
+            return response.json().then(data => {
+              if (data.success) {
+                // Show success message
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-success alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3';
+                alertDiv.style.zIndex = '9999';
+                alertDiv.innerHTML = `
+                  ${data.message}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                `;
+                document.body.appendChild(alertDiv);
+
+                // Redirect after a short delay
+                setTimeout(() => {
+                  window.location.href = data.redirect;
+                }, 1500);
+              } else {
+                throw new Error(data.error || 'Terjadi kesalahan');
+              }
+            });
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            submitButton.disabled = false;
+            submitButton.innerHTML = originalText;
+            
+            // Show error message
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert alert-danger alert-dismissible fade show position-fixed top-0 start-50 translate-middle-x mt-3';
+            alertDiv.style.zIndex = '9999';
+            alertDiv.innerHTML = `
+              ${error.message}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            document.body.appendChild(alertDiv);
+          });
+        });
+      }
+    });
+  </script>
 </head>
 
 <body>
@@ -53,7 +136,14 @@
             @endphp
             <div class="border-bottom pb-4 mb-4 d-flex">
               <div class="me-3">
-                <img src="{{ asset('storage/' . $details['img']) }}" alt="{{ $details['nama'] }}" style="width: 220px; height: auto; border-radius: 10px;" />
+                @php
+                  $imagePath = $details['img'] ?? 'default.jpg';
+                  $fullPath = asset('storage/' . $imagePath);
+                @endphp
+                <img src="{{ $fullPath }}" 
+                     alt="{{ $details['nama'] }}" 
+                     style="width: 220px; height: auto; border-radius: 10px;"
+                     onerror="this.onerror=null; this.src='{{ asset('storage/default.jpg') }}';" />
               </div>
               <div class="flex-grow-1">
                 <h5 class="mb-1" style="font-size: 20px; font-weight: bold;">{{ $details['nama'] }}</h5>
@@ -89,13 +179,19 @@
           <hr />
           <div class="mb-3">
             <span class="badge bg-primary">Note</span>
-            <small class="text-muted">Tambahkan catatan untuk pesananmu</small>
-            <textarea class="form-control mt-2" rows="4" placeholder="Contoh: Mohon dikirim cepat ya..."></textarea>
+            <small class="text-muted">Catatan untuk pesanan</small>
+            <div class="form-control mt-2" style="min-height: 100px;">
+              {{ session('order_notes') ?? 'Tidak ada catatan' }}
+            </div>
           </div>
 
           <div class="d-flex justify-content-between">
             <a href="{{ route('payment') }}" class="btn btn-secondary me-2 w-50">Back</a>
-            <a href="{{ route('tokodashboard') }}" class="btn btn-danger w-50">Konfirmasi Pesanan</a>
+            <form action="{{ route('confirm.order') }}" method="POST" class="w-50" id="confirmOrderForm">
+                @csrf
+                <input type="hidden" name="_method" value="POST">
+                <button type="submit" class="btn btn-danger w-100">Konfirmasi Pesanan</button>
+            </form>
           </div>
         </div>
       </div>
@@ -104,3 +200,4 @@
 
 </body>
 </html>
+@endif

@@ -211,7 +211,6 @@
             <div class="layout-page">
 
                 <!-- Navbar -->
-                <!-- Navbar -->
                 <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
                     id="layout-navbar" style="background: linear-gradient(135deg, #28a745, #0e6b2f);">
                     <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
@@ -302,9 +301,9 @@
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
 
-    <script src="{{ asset('dashboard2/assets/vendor/libs/jquery/jquery.js') }}"></script>
-    <script src="{{ asset('dashboard2/assets/vendor/libs/popper/popper.js') }}"></script>
-    <script src="{{ asset('dashboard2/assets/vendor/js/bootstrap.js') }}"></script>
+    <script src="jquery.js"></script>
+    <script src="popper.js"></script>
+    <script src="bootstrap.js"></script>
     <script src="{{ asset('dashboard2/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
     <script src="{{ asset('dashboard2/assets/vendor/js/menu.js') }}"></script>
     @yield('js')

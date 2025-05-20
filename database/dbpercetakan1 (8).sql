@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 15, 2025 at 06:24 AM
+-- Generation Time: May 18, 2025 at 03:49 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -20,6 +20,33 @@ SET time_zone = "+00:00";
 --
 -- Database: `dbpercetakan1`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `addresses`
+--
+
+CREATE TABLE `addresses` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) NOT NULL,
+  `label` varchar(255) NOT NULL,
+  `recipient_name` varchar(255) NOT NULL,
+  `phone_number` varchar(255) NOT NULL,
+  `city` varchar(255) NOT NULL,
+  `postal_code` varchar(255) NOT NULL,
+  `full_address` text NOT NULL,
+  `is_default` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `addresses`
+--
+
+INSERT INTO `addresses` (`id`, `user_id`, `label`, `recipient_name`, `phone_number`, `city`, `postal_code`, `full_address`, `is_default`, `created_at`, `updated_at`) VALUES
+(1, 4, 'awd', 'Ahmad Muzakki', '19272342', 'jshd', 'asjdb', 'ajshbdw\r\njknasd', 1, '2025-05-18 06:48:43', '2025-05-18 06:48:43');
 
 -- --------------------------------------------------------
 
@@ -74,30 +101,6 @@ INSERT INTO `barangmasuk` (`IdMasuk`, `username`, `tglMasuk`) VALUES
 ('BM0007', 'tsy24', '2023-06-13'),
 ('BM0008', 'tsy24', '2023-06-13'),
 ('BM0009', 'tsy24', '2025-04-30');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `customer`
---
-
-CREATE TABLE `customer` (
-  `IdCust` varchar(6) NOT NULL,
-  `NamaCust` varchar(50) DEFAULT NULL,
-  `NoTelp` char(13) DEFAULT NULL,
-  `Email` varchar(30) NOT NULL,
-  `Alamat` varchar(40) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `customer`
---
-
-INSERT INTO `customer` (`IdCust`, `NamaCust`, `NoTelp`, `Email`, `Alamat`) VALUES
-('C0001', 'gatau', '678765456789', 'gatau@gmail.com', 'sinilo'),
-('C0003', 'Sumiati', '086798743234', 'sumiati@gmail.com', 'Banyuwangi'),
-('C0004', 'Mawar', '087676545423', 'mawarmelati@gmail.com', 'Taman'),
-('C0005', 'Bunga', '087876565643', 'bunga@gmail.com', 'banyuwangi');
 
 -- --------------------------------------------------------
 
@@ -234,20 +237,8 @@ CREATE TABLE `detail_transaksi` (
 --
 
 INSERT INTO `detail_transaksi` (`IdTransaksi`, `IdProduk`, `QtyProduk`, `SubTotal`) VALUES
-('TR0001', 'P0003', 6, 10500),
-('TR0002', 'P0002', 7, 12000),
-('TR0002', 'P0001', 5, 25000),
-('TR0003', 'P0001', 5, 25000),
-('TR0003', 'P0003', 6, 10500),
-('TR0004', 'P0001', 5, 25000),
-('TR0004', 'P0002', 10, 12000),
-('TR0005', 'P0002', 4, 12000),
-('TR0006', 'P0003', 10, 10500),
-('TR0007', 'P0002', 15, 12000),
-('TR0008', 'P0002', 12, 12000),
-('TR0009', 'P0002', 5, 12000),
-('TR0012', 'P0001', 5, 25000),
-('TR0013', 'P0003', 5, 52500);
+('TR0002', 'P0002', 1, 12000),
+('TR0002', 'P0003', 1, 10500);
 
 -- --------------------------------------------------------
 
@@ -273,6 +264,22 @@ INSERT INTO `jenisbarang` (`IdJenisBarang`, `JenisBarang`) VALUES
 ('S0006', 'Plastik'),
 ('S0007', 'Karton'),
 ('S0008', 'Koko');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `laporanbarang`
+--
+
+CREATE TABLE `laporanbarang` (
+  `IdLaporan` bigint(20) UNSIGNED NOT NULL,
+  `IdBarang` varchar(13) NOT NULL,
+  `IdSupplier` bigint(20) UNSIGNED DEFAULT NULL,
+  `QtyMasuk` int(11) NOT NULL DEFAULT 0,
+  `QtyKeluar` int(11) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -311,6 +318,14 @@ CREATE TABLE `laporan_transaksis` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `laporan_transaksis`
+--
+
+INSERT INTO `laporan_transaksis` (`id`, `kode_transaksi`, `nama_pelanggan`, `produk`, `jumlah`, `harga_satuan`, `total_harga`, `tanggal_transaksi`, `status_pembayaran`, `keterangan`, `created_at`, `updated_at`) VALUES
+(3, 'TR0002', 'Ahmad Muzakki', 'Brosur', 1, 12000.00, 12000.00, '2025-05-17', 'Belum Lunas', 'Pesanan baru', '2025-05-17 09:09:13', '2025-05-17 09:09:13'),
+(4, 'TR0002', 'Ahmad Muzakki', 'Kartu Nama', 1, 10500.00, 10500.00, '2025-05-17', 'Belum Lunas', 'Pesanan baru', '2025-05-17 09:09:13', '2025-05-17 09:09:13');
+
 -- --------------------------------------------------------
 
 --
@@ -330,7 +345,28 @@ CREATE TABLE `migrations` (
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (1, '2025_05_03_103216_add_img_to_produk_table', 1),
 (2, '2025_05_06_134412_create_laporans_table', 1),
-(3, '2025_05_06_150856_create_laporan_transaksis_table', 1);
+(3, '2025_05_06_150856_create_laporan_transaksis_table', 1),
+(4, '2025_05_18_131611_create_addresses_table', 2),
+(5, '2025_05_18_131648_create_addresses_table', 3);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `password_reset_tokens`
+--
+
+CREATE TABLE `password_reset_tokens` (
+  `email` varchar(255) NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `password_reset_tokens`
+--
+
+INSERT INTO `password_reset_tokens` (`email`, `token`, `created_at`) VALUES
+('jasjus148@gmail.com', '$2y$12$4Q6l4BNrx8fPE3Dfxt87ge7FQfe2FU85OVS6heZrY/2JUHddvbPNO', '2024-06-10 05:50:08');
 
 -- --------------------------------------------------------
 
@@ -461,7 +497,7 @@ INSERT INTO `supplier` (`IdSupplier`, `NamaSupplier`, `NoTelp`, `Alamat`) VALUES
 CREATE TABLE `transaksi` (
   `IdTransaksi` varchar(8) NOT NULL,
   `username` varchar(20) NOT NULL,
-  `IdCust` varchar(6) NOT NULL,
+  `id` bigint(20) NOT NULL,
   `Bayar` int(11) NOT NULL,
   `SisaBayar` int(11) DEFAULT NULL,
   `Kembali` int(11) DEFAULT NULL,
@@ -476,20 +512,9 @@ CREATE TABLE `transaksi` (
 -- Dumping data for table `transaksi`
 --
 
-INSERT INTO `transaksi` (`IdTransaksi`, `username`, `IdCust`, `Bayar`, `SisaBayar`, `Kembali`, `GrandTotal`, `tglTransaksi`, `StatusPembayaran`, `StatusPesanan`, `tglUpdate`) VALUES
-('TR0001', 'tsy24', 'C0003', 50000, 13000, 0, 63000, '2023-06-02 10:51:58', 'Belum Lunas', NULL, NULL),
-('TR0002', 'tsy24', 'C0004', 210000, 0, 1000, 209000, '2023-06-05 11:59:49', 'Lunas', 'Sedang Proses', NULL),
-('TR0003', 'tsy24', 'C0004', 100000, 88000, 0, 188000, '2023-06-09 14:19:53', 'Belum Lunas', NULL, NULL),
-('TR0004', 'tsy24', 'C0003', 200000, 45000, 0, 245000, '2023-06-11 14:21:15', 'Lunas', 'Selesai', '2023-06-14 19:48:04'),
-('TR0005', 'tsy24', 'C0004', 50000, 0, 2000, 48000, '2023-06-11 14:30:34', 'Lunas', 'Selesai', '2023-06-17 12:31:04'),
-('TR0006', 'tsy24', 'C0004', 100000, 5000, 0, 105000, '2023-06-11 14:31:50', 'Lunas', 'Sedang Proses', '2023-06-14 19:50:35'),
-('TR0007', 'tsy24', 'C0004', 100000, 80000, 0, 180000, '2023-06-11 14:33:08', 'Belum Lunas', NULL, '2023-06-17 13:20:27'),
-('TR0008', 'tsy24', 'C0004', 200000, 0, 56000, 144000, '2023-06-06 14:37:30', 'Lunas', 'Selesai', '2023-06-17 12:45:03'),
-('TR0009', 'tsy24', 'C0003', 60000, 0, 0, 60000, '2023-06-05 14:57:57', 'Lunas', 'Selesai', '2023-06-17 12:56:32'),
-('TR0010', 'tsy24', 'C0005', 150000, 100000, 0, 250000, '2023-06-13 21:56:10', 'Belum Lunas', NULL, NULL),
-('TR0011', 'tsy24', 'C0005', 150000, 0, 25000, 125000, '2023-06-13 22:14:24', 'Lunas', 'Sedang Proses', NULL),
-('TR0012', 'tsy24', 'C0004', 150000, 0, 25000, 125000, '2023-06-13 22:32:12', 'Lunas', 'Sedang Proses', NULL),
-('TR0013', 'tsy24', 'C0005', 55000, 0, 2500, 52500, '2023-06-17 13:29:56', 'Lunas', 'Sedang Proses', NULL);
+INSERT INTO `transaksi` (`IdTransaksi`, `username`, `id`, `Bayar`, `SisaBayar`, `Kembali`, `GrandTotal`, `tglTransaksi`, `StatusPembayaran`, `StatusPesanan`, `tglUpdate`) VALUES
+('T0001', 'tsy24', 1, 1000000, NULL, NULL, 1000000, '2025-05-06 18:43:00', 'Lunas', 'lunas', '2025-05-06 23:43:01'),
+('TR0002', 'jasjus841', 4, 0, 22500, 0, 22500, '2025-05-17 16:09:13', 'Belum Lunas', 'Menunggu Konfirmasi', NULL);
 
 -- --------------------------------------------------------
 
@@ -517,11 +542,19 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `f_name`, `email`, `nomor_telepon`, `email_verified_at`, `username`, `password`, `user`, `alamat`, `remember_token`, `img`) VALUES
 (1, 'Admin', 'admin1@gmail.com', '', '2025-04-30 08:50:56', 'admin', '$2y$10$a5CeW7r8VeUPy2hQXI5xJuNhnPo8CWfDwJJQhauP0g1BJ/77olWh.', 'Admin', '', '', 'images/1815883516605523.jpeg'),
-(2, 'Fanidiya Tasya', 'admin@gmail.com', '', '2025-04-30 08:50:56', 'tsy24', '$2y$10$1MVL2kvJawHkzZ5uqlNeJ.CeTnwkzyaWJaMxI.6A.EE.xOf2L2WDu', 'Admin', '', '2Kgb3f2zZcQTS6r3BfqxWctEldLkIJYjsIeKH5I3io3VEA6bVLSAYQXNs3z0', 'images/1815883516605523.jpeg');
+(4, 'Ahmad Muzakki', 'jasjus841@gmail.com', '0879272342', '2025-05-15 05:45:23', 'jasjus841', '$2y$12$JWa3fqRjlAanqrOJZAOdy.Sr3f7JXn/2sYOwpJoDRhwmIcEb/xUSK', 'User', '', NULL, ''),
+(2, 'Fanidiya Tasya', 'admin@gmail.com', '', '2025-05-15 17:01:28', 'tsy24', '$2y$10$1MVL2kvJawHkzZ5uqlNeJ.CeTnwkzyaWJaMxI.6A.EE.xOf2L2WDu', 'Admin', '', 'b9GaHBMAqVks5ZMEyXqrDfLwLXClqgEykN2FOSRWmhAbH5M9w5dtLUG8lPKL', 'images/1815883516605523.jpeg');
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `addresses`
+--
+ALTER TABLE `addresses`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `addresses_user_id_foreign` (`user_id`);
 
 --
 -- Indexes for table `barangkeluar`
@@ -536,12 +569,6 @@ ALTER TABLE `barangkeluar`
 ALTER TABLE `barangmasuk`
   ADD PRIMARY KEY (`IdMasuk`),
   ADD KEY `username` (`username`);
-
---
--- Indexes for table `customer`
---
-ALTER TABLE `customer`
-  ADD PRIMARY KEY (`IdCust`);
 
 --
 -- Indexes for table `databarang`
@@ -580,6 +607,12 @@ ALTER TABLE `jenisbarang`
   ADD PRIMARY KEY (`IdJenisBarang`);
 
 --
+-- Indexes for table `laporanbarang`
+--
+ALTER TABLE `laporanbarang`
+  ADD PRIMARY KEY (`IdLaporan`);
+
+--
 -- Indexes for table `laporans`
 --
 ALTER TABLE `laporans`
@@ -589,14 +622,19 @@ ALTER TABLE `laporans`
 -- Indexes for table `laporan_transaksis`
 --
 ALTER TABLE `laporan_transaksis`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `laporan_transaksis_kode_transaksi_unique` (`kode_transaksi`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `migrations`
 --
 ALTER TABLE `migrations`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `password_reset_tokens`
+--
+ALTER TABLE `password_reset_tokens`
+  ADD PRIMARY KEY (`email`);
 
 --
 -- Indexes for table `produk`
@@ -636,7 +674,7 @@ ALTER TABLE `supplier`
 ALTER TABLE `transaksi`
   ADD PRIMARY KEY (`IdTransaksi`),
   ADD KEY `username` (`username`),
-  ADD KEY `IdCust` (`IdCust`);
+  ADD KEY `IdCust` (`id`);
 
 --
 -- Indexes for table `users`
@@ -650,6 +688,18 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `addresses`
+--
+ALTER TABLE `addresses`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `laporanbarang`
+--
+ALTER TABLE `laporanbarang`
+  MODIFY `IdLaporan` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `laporans`
 --
 ALTER TABLE `laporans`
@@ -659,13 +709,13 @@ ALTER TABLE `laporans`
 -- AUTO_INCREMENT for table `laporan_transaksis`
 --
 ALTER TABLE `laporan_transaksis`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -677,11 +727,17 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `addresses`
+--
+ALTER TABLE `addresses`
+  ADD CONSTRAINT `addresses_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `barangkeluar`
@@ -734,8 +790,8 @@ ALTER TABLE `role_user`
 -- Constraints for table `transaksi`
 --
 ALTER TABLE `transaksi`
-  ADD CONSTRAINT `transaksi_ibfk_1` FOREIGN KEY (`IdCust`) REFERENCES `customer` (`IdCust`),
-  ADD CONSTRAINT `transaksi_ibfk_2` FOREIGN KEY (`username`) REFERENCES `users` (`username`);
+  ADD CONSTRAINT `transaksi_ibfk_2` FOREIGN KEY (`username`) REFERENCES `users` (`username`),
+  ADD CONSTRAINT `transaksi_ibfk_3` FOREIGN KEY (`id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

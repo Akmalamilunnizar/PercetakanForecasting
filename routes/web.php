@@ -36,6 +36,7 @@ use App\Http\Controllers\Api\V1\CartController;
 use App\Http\Controllers\Api\V1\LaporanController;
 use App\Http\Controllers\Api\V1\ForecastController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Api\V1\AddressController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -311,20 +312,28 @@ Route::controller(TokoController::class)->group(function () {
 
 });
 
-Route::controller(CartController::class)->group(function () {
-    // Halaman tampilan toko
-    Route::get('/cart', 'index')->name('cart');
-    Route::get('/details', fn () => view('toko.details'))->name('details');
-    Route::get('/shipping', fn () => view('toko.shipping'))->name('shipping');
-    Route::get('/payment', fn () => view('toko.payment'))->name('payment');
-    Route::get('/review', fn () => view('toko.review'))->name('review');
+// Cart and Order routes
+Route::middleware(['auth'])->group(function () {
+    Route::controller(CartController::class)->group(function () {
+        Route::get('/cart', 'index')->name('cart');
+        Route::post('/details', 'details')->name('details');
+        Route::post('/save-address', 'saveAddress')->name('save.address');
+        Route::post('/save-shipping', 'saveShipping')->name('save.shipping');
+        Route::get('/shipping', fn () => view('toko.shipping'))->name('shipping');
+        Route::get('/payment', fn () => view('toko.payment'))->name('payment');
+        Route::get('/review', fn () => view('toko.review'))->name('review');
+        
+        // API Cart
+        Route::post('/cart/add', 'add')->name('cart.add');
+        Route::post('/cart/remove/{id}', 'remove')->name('cart.remove');
+        Route::post('/cart/decrease', 'decrease')->name('cart.decrease');
+        Route::post('/cart/update/{id}', 'update')->name('cart.update');
+    });
 
-    // API Cart
-    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
-    Route::post('/cart/remove/{id}', [CartController::class, 'remove'])->name('cart.remove');
-    Route::post('/cart/decrease', 'decrease')->name('cart.decrease');
-    Route::post('/cart/update/{id}', [CartController::class, 'update'])->name('cart.update');
-
+    // Order routes
+    Route::controller(OrderController::class)->group(function () {
+        Route::post('/confirm-order', 'confirmOrder')->name('confirm.order');
+    });
 });
 
 
@@ -376,3 +385,11 @@ Auth::routes();
 Route::get('/checkout', [DeliveryShoppingController::class, 'index'])->name('checkout');
 
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login');
+
+// Address routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/addresses', [AddressController::class, 'index'])->name('addresses.index');
+    Route::post('/addresses', [AddressController::class, 'store'])->name('addresses.store');
+    Route::post('/addresses/{address}/default', [AddressController::class, 'setDefault'])->name('addresses.default');
+    Route::delete('/addresses/{address}', [AddressController::class, 'destroy'])->name('addresses.destroy');
+});

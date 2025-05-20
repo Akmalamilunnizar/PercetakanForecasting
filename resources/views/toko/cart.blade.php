@@ -75,7 +75,14 @@
             <div class="border-bottom pb-4 mb-4 d-flex">
               <!-- Gambar -->
               <div class="me-3">
-                <img src="{{ asset('storage/' . $details['img']) }}" alt="{{ $details['nama'] }}" style="width: 220px; height: auto; border-radius: 10px;">
+                @php
+                  $imagePath = $details['img'] ?? 'default.jpg';
+                  $fullPath = asset('storage/' . $imagePath);
+                @endphp
+                <img src="{{ $fullPath }}" 
+                     alt="{{ $details['nama'] }}" 
+                     style="width: 220px; height: auto; border-radius: 10px;"
+                     onerror="this.onerror=null; this.src='{{ asset('storage/default.jpg') }}';">
               </div>
 
               <!-- Detail Produk -->
@@ -153,11 +160,15 @@
             <hr>
             <div class="mb-3">
               <span class="badge bg-primary">Note</span> <small class="text-muted">Additional comments</small>
-              <textarea class="form-control mt-2 border-danger-subtle" rows="4"></textarea>
+              <textarea name="notes" class="form-control mt-2 border-danger-subtle" rows="4" placeholder="Tambahkan catatan untuk pesanan Anda..."></textarea>
             </div>
-            <a href="{{ route('details') }}" class="btn btn-danger w-100 shadow">
-              <i class="bi bi-credit-card me-2"></i> Proses Checkout
-            </a>
+            <form action="{{ route('details') }}" method="POST">
+                @csrf
+                <input type="hidden" name="notes" id="notes">
+                <button type="submit" class="btn btn-danger w-100 shadow">
+                    <i class="bi bi-credit-card me-2"></i> Proses Checkout
+                </button>
+            </form>
           </div>
         </div>
       </div>
@@ -186,6 +197,14 @@
         nextStep.classList.add('active');
       }
     }
+
+    // Add this new script to handle notes submission
+    document.querySelector('form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const notes = document.querySelector('textarea[name="notes"]').value;
+        document.querySelector('input[name="notes"]').value = notes;
+        this.submit();
+    });
   </script>
 
 </body>

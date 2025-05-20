@@ -113,4 +113,9 @@ class User extends Authenticatable implements CanResetPasswordContract
     // {
     //     return $this->belongsTo(Order::class,'user_id', 'id');
     // }
+
+    public function addresses()
+    {
+        return $this->hasMany(Address::class);
+    }
 }
