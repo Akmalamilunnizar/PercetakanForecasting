@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\SubCategoryController;
 use App\Http\Controllers\Api\V1\UserController;
 use App\Http\Controllers\Api\V1\TransaksiController;
+use App\Http\Controllers\Api\V1\TransaksiController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Items;
@@ -39,6 +40,13 @@ use App\Http\Controllers\Api\V1\ForecastController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Api\V1\AddressController;
 
+use App\Http\Controllers\Api\V1\DetailProdukController;
+
+
+use App\Http\Controllers\Api\V1\ForecastController;
+use App\Http\Controllers\DeliveryShoppingController;
+
+
 // Route::get('/', function () {
 //     return view('welcome');
 // });
@@ -59,6 +67,28 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 });
 
 
+    
+
+
+    //     Route::controller(ProfileController::class)->group(function () {
+    //         Route::get('logout', function ()
+    // {
+    //     auth()->logout();
+    //     Session()->flush();
+
+    //     return Redirect::to('/login');
+    // })->name('logout');
+    //         // Route::post('/admin/logout', 'AdminLogout')->name('adminlogout');
+    //     });
+    // Route::get('resources/admin/logout', 'App\Http\Controllers\Auth\AuthenticatedSessionController@logout');
+
+    Route::controller(DetailProdukController::class)->group(function () {
+        Route::get('/admin/detail-produk', 'index')->name('detail.produk');
+        Route::get('/detail-produk/{id}', [DetailProdukController::class, 'show'])->name('detail.produk');
+        Route::get('/admin/produk', [DetailProdukController::class, 'indexAdmin'])->name('admin.produk.index');
+    });
+
+
 Route::controller(ItemsController::class)->group(function () {
     Route::get('/admin/all-item', 'Index')->name('allitems');
     Route::get('/admin/manage-item', 'ManageItems')->name('manageitems');
@@ -68,9 +98,13 @@ Route::controller(ItemsController::class)->group(function () {
     Route::get('/admin/edit-item/{id}', 'EditItem')->name('edititem');
     Route::post('/admin/update-item', 'UpdateItem')->name('updateitem');
     Route::get('/admin/delete-item/{id}', 'DeleteItem')->name('deleteitem');
+        Route::get('/admin/keluar-barang', 'KeluarBarang')->name('exititems');
+        Route::post('/admin/store-keluar-barang', 'StoreKeluarBarang')->name('store-exititems');
     Route::get('/admin/keluar-barang', 'KeluarBarang')->name('exititems');
     Route::post('/admin/store-keluar-barang', 'StoreKeluarBarang')->name('store-exititems');
 });
+
+    Route::post('/predict', [ForecastController::class, 'predict']);
 
 Route::controller(SatuanController::class)->group(function () {
     Route::get('/admin/all-satuan', 'Index')->name('allsatuan');
@@ -145,6 +179,17 @@ Route::controller(ItemsController::class)->group(function () {
     Route::post('/add-kolam', [ItemsController::class, 'addKolam'])->name('addKolam');
 
 
+    Route::controller(TokoController::class)->group(function () {
+        Route::get('/tokodashboard', function () {return view('toko.dashboardToko');})->name('tokodashboard');
+        Route::get('/tokodashboard', [TokoController::class, 'tokodashboard'])->name('tokodashboard');
+
+
+        Route::get('/shop', function () {return view('toko.dashboardToko');})->name('shop');
+        Route::get('/keranjang', function () {return view('toko.dashboardToko');})->name('keranjang');
+        Route::get('/faq', function () {return view('toko.dashboardToko');})->name('faq');
+        Route::get('/lacak', function () {return view('toko.dashboardToko');})->name('lacak');
+        Route::get('/kontak', function () {return view('toko.dashboardToko');})->name('kontak');
+
     Route::controller(LaporanController::class)->group(function () {
         Route::get('/admin/laporanbarang', 'index')->name('laporanbarang');
         Route::get('admin/detaillaporanbarang/{id}', 'show')->name('admin.detaillaporanbarang');
@@ -201,6 +246,28 @@ Route::controller(ItemsController::class)->group(function () {
         // API get list produk (JSON)
         Route::get('/api/produk', 'get_produk_list')->name('getproduk');
     });
+
+
+
+
+    Route::controller(TransaksiController::class)->group(function () {
+        // Tampilkan semua produk
+        Route::get('/admin/all-transaksi', 'index')->name('alltransaksi');
+        // Tampilkan form tambah produk
+        Route::get('/admin/all-transaksi/{id}/terima', 'terimaOrderan')->name('terimaOrderan');
+        // Proses form tambah produk
+        Route::post('/admin/all-transaksi/{id}/tolak', 'tolakOrderan')->name('tolakOrderan');
+        // Form edit produk
+        Route::get('/admin/all-produk/{id}/edit', 'editProduk')->name('editproduk');
+        // Update produk
+        Route::put('/admin/all-produk/{id}/update', 'updateProduk')->name('updateproduk');
+        // Hapus produk
+        Route::delete('/admin/all-produk/{id}', 'deleteProduk')->name('deleteproduk');
+        // Cari produk
+        Route::get('/admin/search-produk', 'searchProduk')->name('searchproduk');
+        // API get list produk (JSON)
+        Route::get('/api/produk', 'get_produk_list')->name('getproduk');
+    });
     Route::controller(SupplierController::class)->group(function () {
         // Tampilkan semua supplier
         Route::get('/admin/daftar-supplier', 'index')->name('allsuppliers');
@@ -214,6 +281,8 @@ Route::controller(ItemsController::class)->group(function () {
         Route::delete('/admin/daftar-supplier/{id}', 'deleteSupplier')->name('deletesupplier');
         Route::get('/admin/search-supplier', 'searchSupplier')->name('searchsupplier');
         Route::get('/api/suppliers', 'get_supplier_list')->name('getsuppliers');
+        Route::delete('/supplier/{id}', 'destroy')->name('deletesupplier');
+
         Route::delete('/supplier/{id}', 'destroy')->name('deletesupplier');
 
     });
@@ -269,6 +338,19 @@ Route::controller(ItemsController::class)->group(function () {
         Route::get('/admin/delete-order/{id}', 'DeleteOrder')->name('deleteorder');
     });
 
+    Route::controller(AdminProfileController::class)->group(function () {
+        Route::get('/admin/admin-profile', 'Index')->name('profile');
+        Route::post('/admin/store-profile', 'StoreProfile')->name('storeprofile');
+        Route::get('/admin/pending-order/search', 'SearchPending')->name('searchorder');
+        Route::get('/admin/history-order', 'IndexHistory')->name('historyorder');
+        Route::get('/admin/view-order/{id}', 'ViewOrder')->name('vieworder');
+        Route::get('/admin/update-order/{id}', 'UpdateOrder')->name('updateorder');
+        Route::get('/admin/delete-order/{id}', 'DeleteOrder')->name('deleteorder');
+        Route::post('/admin/profile', [AdminProfileController::class, 'StoreProfile'])->name('storeprofile');
+    });
+
+
+
     Route::controller(PcvController::class)->group(function () {
         Route::get('/admin/pcv-page', 'Index')->name('pcv');
         Route::post('/admin/predict', 'Result')->name('predict');
@@ -280,6 +362,9 @@ Route::controller(ItemsController::class)->group(function () {
         Route::get('/admin/delete-order/{id}', 'DeleteOrder')->name('deleteorder');
     });
 
+    // Forecast routes
+    Route::get('/admin/forecast', [ForecastController::class, 'showForm'])->name('forecast.form');
+    Route::post('/admin/forecast/predict', [ForecastController::class, 'predict'])->name('predict');
     // Forecast routes
     Route::get('/admin/forecast', [ForecastController::class, 'showForm'])->name('forecast.form');
     Route::post('/admin/forecast/predict', [ForecastController::class, 'predict'])->name('predict');
@@ -386,6 +471,8 @@ Route::post('/register', [App\Http\Controllers\Auth\RegisterController::class, '
 Auth::routes();
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/checkout', [DeliveryShoppingController::class, 'index'])->name('checkout');
 
 Route::get('/checkout', [DeliveryShoppingController::class, 'index'])->name('checkout');
 
