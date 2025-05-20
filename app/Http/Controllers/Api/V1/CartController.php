@@ -6,9 +6,16 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Produk;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Address;
 
 class CartController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     // Menambahkan item ke keranjang
     public function add(Request $request)
     {
@@ -97,6 +104,62 @@ class CartController extends Controller
         }
 
         return redirect()->back();
+    }
+
+    public function details(Request $request)
+    {
+        // Store notes in session
+        if ($request->has('notes')) {
+            session(['order_notes' => $request->notes]);
+        }
+
+        // Get user's addresses
+        $addresses = Address::where('user_id', Auth::id())->get();
+        
+        return view('toko.details', compact('addresses'));
+    }
+
+    public function saveAddress(Request $request)
+    {
+        $request->validate([
+            'label' => 'required|string|max:255',
+            'recipient_name' => 'required|string|max:255',
+            'phone_number' => 'required|string|max:20',
+            'city' => 'required|string|max:255',
+            'postal_code' => 'required|string|max:10',
+            'full_address' => 'required|string',
+            'is_default' => 'boolean'
+        ]);
+
+        // If this is set as default, unset any existing default
+        if ($request->is_default) {
+            Address::where('user_id', Auth::id())
+                  ->where('is_default', true)
+                  ->update(['is_default' => false]);
+        }
+
+        // Create new address
+        $address = Address::create([
+            'user_id' => Auth::id(),
+            'label' => $request->label,
+            'recipient_name' => $request->recipient_name,
+            'phone_number' => $request->phone_number,
+            'city' => $request->city,
+            'postal_code' => $request->postal_code,
+            'full_address' => $request->full_address,
+            'is_default' => $request->is_default ?? false
+        ]);
+
+        return redirect()->route('shipping')->with('success', 'Alamat berhasil disimpan');
+    }
+
+    public function saveShipping(Request $request)
+    {
+        $shippingData = $request->all();
+        session(['shipping_method' => $shippingData['method']]);
+        session(['shipping_cost' => $shippingData['cost']]);
+
+        return response()->json(['success' => true]);
     }
 
 }

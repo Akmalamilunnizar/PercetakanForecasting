@@ -117,6 +117,9 @@
           <label for="email" class="form-label">Email</label>
           <input type="text" class="form-control" id="email" name="email" placeholder="Harap masukkan email"
             autofocus />
+          @error('email')
+            <span class="text-danger">{{ $message }}</span>
+          @enderror
         </div>
         <div class="mb-3 form-password-toggle">
           <i class="fas fa-lock me-2"></i> <!-- Font Awesome Ikon Password -->
@@ -129,6 +132,9 @@
               <i class="bx bx-hide" id="icon"></i>
             </span>
           </div>
+          @error('password')
+            <span class="text-danger">{{ $message }}</span>
+          @enderror
         </div>
         <div class="mb-3">
           <div class="d-flex justify-content-between">
