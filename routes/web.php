@@ -34,7 +34,6 @@ use App\Http\Controllers\Api\V1\ProdukController;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Api\V1\CartController;
 use App\Http\Controllers\Api\V1\LaporanController;
-use App\Http\Controllers\Api\V1\LaporanTransaksiController;
 use App\Http\Controllers\Api\V1\ForecastController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
@@ -107,8 +106,6 @@ Route::controller(TypeItemsController::class)->group(function () {
 
 Route::get('/admin/all-laporan', [LaporanController::class, 'index'])->name('alllaporan');
 
-Route::get('/admin/laporantransaksi', [LaporanTransaksiController::class, 'index'])->name('laporan-transaksi');
-
 
 Route::controller(ParameterReportController::class)->group(function () {
     Route::get('/admin/parameter-report', 'Index')->name('parameterreport');
@@ -151,8 +148,6 @@ Route::controller(ItemsController::class)->group(function () {
         Route::get('/admin/laporanbarang/{id}/export-pdf', 'exportPdfDetail')->name('laporanbarang.exportpdf.detail');
         Route::delete('/admin/laporanbarang/{id}', 'destroy')->name('laporanbarang.destroy');
     });
-
-    Route::get('/admin/laporantransaksi', [LaporanTransaksiController::class, 'index'])->name('laporan-transaksi');
 
 
     Route::controller(ParameterReportController::class)->group(function () {

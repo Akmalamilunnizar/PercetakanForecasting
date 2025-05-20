@@ -1,9 +1,7 @@
 <?php
 
-namespace App\Http\Controllers\Api\V1;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\LaporanTransaksi;
 use Illuminate\Http\Request;
 
 class LaporanTransaksiController extends Controller
@@ -13,8 +11,7 @@ class LaporanTransaksiController extends Controller
      */
     public function index()
     {
-        $laporantransaksis = LaporanTransaksi::all();
-        return view('admin.laporantransaksi', compact('laporantransaksi'));
+        //
     }
 
     /**

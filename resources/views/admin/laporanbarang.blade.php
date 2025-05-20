@@ -32,7 +32,7 @@
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <li><a class="dropdown-item" href="{{ route('laporanbarang') }}">📄 Laporan Barang</a></li>
-            <li><a class="dropdown-item" href="{{ route('laporan-transaksi') }}">📊 Laporan Transaksi</a></li>
+            <li><a class="dropdown-item" href="">📊 Laporan Transaksi</a></li>
         </ul>
     </div>
 
