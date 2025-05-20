@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Laporan;
 
 class BarangKeluar extends Model
 {
@@ -17,5 +18,10 @@ class BarangKeluar extends Model
     ];
 
     public $timestamps = false;
+
+    public function laporan()
+    {
+        return $this->hasMany(Laporan::class, 'IdOut', 'idkeluar');
+    }
 
 }

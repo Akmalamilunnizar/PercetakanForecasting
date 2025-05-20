@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Laporan;
 
 class DetailMasuk extends Model
 {
@@ -19,5 +20,11 @@ class DetailMasuk extends Model
     ];
 
     public $timestamps = false;
+
+    // relasi ke laporan
+    public function laporan()
+    {
+        return $this->hasMany(Laporan::class, 'IdMasuk', 'IdMasuk');
+    }
 
 }

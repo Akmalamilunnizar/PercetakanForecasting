@@ -14,7 +14,7 @@ class LaporanTransaksiController extends Controller
     public function index()
     {
         $laporantransaksis = LaporanTransaksi::all();
-        return view('admin.laporantransaksi', compact('laporantransaksis'));
+        return view('admin.laporantransaksi', compact('laporantransaksi'));
     }
 
     /**

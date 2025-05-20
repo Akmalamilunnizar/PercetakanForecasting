@@ -8,12 +8,12 @@
   <meta name="viewport"
     content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-  <title>SANKE | Halaman Login Admin</title>
+  <title>CIME | Halaman Login</title>
 
   <meta name="description" content="" />
 
   <!-- Favicon -->
-  <link rel="shortcut icon" href="{{ asset('assets/images/logo/logo4.png') }}" type="image/png" />
+  <link rel="shortcut icon" href="{{ asset('dashboard2/assets/img/icons/logocime.png') }}" type="image/png" />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -34,6 +34,7 @@
   <!-- Custom CSS -->
   <style>
     body {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -42,6 +43,18 @@
       background: url('{{ asset('assets/images/baground1.jpg') }}') no-repeat center center fixed;
       background-size: cover;
     }
+
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4); /* nilai opacity bisa kamu sesuaikan */
+      z-index: -1;
+    }
+
 
     .main-container {
       display: flex;
@@ -63,7 +76,7 @@
 
     .right-section {
       flex: 1;
-      background: linear-gradient(135deg, #3AB938, #1A5319);
+      background: linear-gradient(135deg,rgb(88, 93, 255),rgb(227, 224, 255));
       color: white;
       text-align: center;
       display: flex;
@@ -104,57 +117,58 @@
   </style>
 </head>
 
-<body>
-  <a href="/" class="logo-link">
-    <img src="{{ asset('assets/images/logo/logo.png') }}" alt="Logo" class="logo" />
+  <body>
+    <a href="/" style="position: absolute; top: 20px; left: 20px; z-index: 1000;">
+    <img src="{{ asset('dashboard2/assets/img/icons/logocime.png') }}" alt="Logo" style="width: 120px; height: auto;" />
   </a>
   <div class="main-container">
     <div class="left-section">
       <form action="{{ route('login') }}" method="POST">
         @csrf
         <div class="mb-3">
-          <i class="fas fa-envelope me-2"></i> <!-- Font Awesome Ikon -->
-          <label for="email" class="form-label">Email</label>
-          <input type="text" class="form-control" id="email" name="email" placeholder="Harap masukkan email"
-            autofocus />
+            <i class="fas fa-envelope me-2"></i>
+            <label for="email" class="form-label">Email</label>
+            <input type="text" class="form-control" id="email" name="email" placeholder="Harap masukkan email" autofocus />
           @error('email')
             <span class="text-danger">{{ $message }}</span>
           @enderror
-        </div>
-        <div class="mb-3 form-password-toggle">
-          <i class="fas fa-lock me-2"></i> <!-- Font Awesome Ikon Password -->
-          <label class="form-label" for="password">Password</label>
-          <div class="input-group input-group-merge">
-            <input type="password" id="password" class="form-control" name="password"
-              placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-              aria-describedby="password" />
-            <span class="input-group-text cursor-pointer" id="toggle-password">
-              <i class="bx bx-hide" id="icon"></i>
-            </span>
           </div>
+          <div class="mb-3 form-password-toggle">
+            <i class="fas fa-lock me-2"></i>
+            <label class="form-label" for="password">Password</label>
+            <div class="input-group input-group-merge">
+              <input type="password" id="password" class="form-control" name="password"
+                placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
+                aria-describedby="password" />
+              <span class="input-group-text" id="toggle-password">
+                <i class="bx bx-hide" id="icon"></i>
+              </span>
+            </div>
           @error('password')
             <span class="text-danger">{{ $message }}</span>
           @enderror
-        </div>
+          </div>
         <div class="mb-3">
-          <div class="d-flex justify-content-between">
-            <div class="form-check mb-0">
-              <input class="form-check-input" type="checkbox" id="remember-me" />
-              <label class="form-check-label" for="remember-me"> Simpan Login </label>
-            </div>
-            <!-- <a href="forgotpw"><span>Lupa Password?</span></a> -->
-            @if (Route::has('password.request'))
-                        <a class="text-sm text-blue-500 hover:underline" href="{{ route('password.request') }}">
-                            {{ __('Lupa Password?') }}
-                        </a>
-                    @endif
+        <div class="d-flex justify-content-between align-items-center">
+          <!-- <div class="form-check mb-0">
+            <input class="form-check-input" type="checkbox" id="remember-me" />
+            <label class="form-check-label" for="remember-me"> Simpan Login </label>
+          </div> -->
+          <div>
+            <a href="{{ route('password.request') }}" style="color:rgb(0, 0, 0); text-decoration: none;">Lupa Password?</a>
           </div>
         </div>
-        <button class="btn btn-primary d-grid w-100" type="submit">Login</button>
-        <p class="text-center mt-3">
-          <span>Tidak punya akun?</span>
-          <a href="register">Register</a>
-        </p>
+      </div>
+
+      <button class="btn d-grid w-100" type="submit" style="background-color:rgb(56, 135, 255); color: #fff; border: none;">
+        Login
+      </button>
+
+      <p class="text-center mt-3">
+        <span>Tidak punya akun?</span>
+        <a href="register" style="color:rgb(0, 0, 0); text-decoration: none;">Register</a>
+      </p>
+
       </form>
     </div>
     <script>
@@ -182,9 +196,9 @@
 
     <!-- Logo dan Informasi -->
     <div class="right-section">
-      <h1>SANKE</h1>
-      <p>Intelligence System Kontrol Kualitas Air Kolam Ikan Koi Berbasis IoT</p>
-      <img src="{{ asset('assets/images/koilogin.png') }}" alt="" />
+      <h1>CITRA MEDIA</h1>
+      <p>Optimasi Manajemen Stok di Industri Percetakan Menggunakan Prediksi Penjualan</p>
+      <img src="{{ asset('dashboard2/assets/img/imgtoko/print2.png') }}" alt="" />
     </div>
   </div>
 
