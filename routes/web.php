@@ -111,14 +111,16 @@ Route::controller(TransaksiController::class)->group(function () {
 
 
 
-Route::controller(TypeItemsController::class)->group(function () {
-    Route::get('/admin/all-type', 'Index')->name('alltype');
-    Route::get('/admin/all-type/search', 'SearchType')->name('searchtype');
-    Route::get('/admin/add-type', 'AddType')->name('addtype');
-    Route::post('/admin/store-type', 'StoreType')->name('store-type');
-    Route::get('/admin/edit-type/{id}', 'EditType')->name('edittype');
-    Route::post('/admin/update-type', 'UpdateType')->name('updatetype');
-    Route::get('/admin/delete-type/{id}', 'DeleteType')->name('deletetype');
+Route::middleware(['auth'])->group(function () {
+    Route::controller(TypeItemsController::class)->group(function () {
+        Route::get('/admin/all-type', 'Index')->name('alltype');
+        Route::get('/admin/all-type/search', 'SearchType')->name('searchtype');
+        Route::get('/admin/add-type', 'AddType')->name('addtype');
+        Route::post('/admin/store-type', 'StoreType')->name('store-type');
+        Route::get('/admin/edit-type/{id}', 'EditType')->name('edittype');
+        Route::post('/admin/update-type', 'UpdateType')->name('updatetype');
+        Route::get('/admin/delete-type/{id}', 'DeleteType')->name('deletetype');
+    });
 });
 
 Route::get('/admin/all-laporan', [LaporanController::class, 'index'])->name('alllaporan');
