@@ -1,57 +1,147 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
-use App\Models\Order;
-use App\Models\User;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Midtrans\Config;
+use Midtrans\Snap;
+use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
-    public function payment(Request $request)
+    public function __construct()
     {
+        // Configure Midtrans
+        Config::$serverKey = config('midtrans.server_key');
+        Config::$isProduction = config('midtrans.is_production');
+        Config::$isSanitized = true;
+        Config::$is3ds = true;
 
-        if ($request->has('callback')) {
-            Order::where(['id' => $request->order_id])->update(['callback' => $request['callback']]);
-        }
+        // Log configuration for debugging
+        Log::info('Midtrans Configuration:', [
+            'server_key_length' => strlen(Config::$serverKey),
+            'is_production' => Config::$isProduction,
+            'merchant_id' => config('midtrans.merchant_id'),
+            'client_key' => config('midtrans.client_key'),
+            'snap_url' => config('midtrans.snap_url')
+        ]);
+    }
 
-        session()->put('customer_id', $request['customer_id']);
-        session()->put('order_id', $request->order_id);
+    public function createSnapToken(Request $request)
+    {
+        try {
+            // Validate Midtrans configuration
+            if (empty(config('midtrans.server_key'))) {
+                throw new \Exception('Midtrans server key is not configured');
+            }
 
-        $customer = User::find($request['customer_id']);
+            if (empty(config('midtrans.client_key'))) {
+                throw new \Exception('Midtrans client key is not configured');
+            }
 
-        $order = Order::where(['id' => $request->order_id, 'user_id' => $request['customer_id']])->first();
+            // Get cart data from session
+            $cart = session('cart');
+            if (!$cart || empty($cart)) {
+                Log::error('Cart is empty');
+                return response()->json(['error' => 'Cart is empty'], 400);
+            }
 
-        if (isset($customer) && isset($order)) {
-            $data = [
-                'name' => $customer['f_name'],
-                'email' => $customer['email'],
-                'phone' => $customer['phone'],
+            // Calculate total amount
+            $total = 0;
+            $items = [];
+            foreach ($cart as $id => $details) {
+                $subtotal = $details['harga'] * $details['quantity'];
+                $total += $subtotal;
+                
+                $items[] = [
+                    'id' => $id,
+                    'price' => $details['harga'],
+                    'quantity' => $details['quantity'],
+                    'name' => $details['nama']
+                ];
+            }
+
+            // Add shipping cost if exists
+            $shipping = session('shipping');
+            if ($shipping && isset($shipping['cost'])) {
+                $total += $shipping['cost'];
+                $items[] = [
+                    'id' => 'shipping',
+                    'price' => $shipping['cost'],
+                    'quantity' => 1,
+                    'name' => 'Shipping Cost'
+                ];
+            }
+
+            // Generate unique order ID
+            $orderId = 'ORDER-' . time() . '-' . rand(1000, 9999);
+
+            $params = [
+                'transaction_details' => [
+                    'order_id' => $orderId,
+                    'gross_amount' => $total,
+                ],
+                'customer_details' => [
+                    'first_name' => auth()->user()->name,
+                    'email' => auth()->user()->email,
+                    'phone' => auth()->user()->nomor_telepon ?? '',
+                ],
+                'item_details' => $items,
             ];
-            session()->put('data', $data);
-            return view('payment-view');
-        }
 
-        return response()->json(['errors' => ['code' => 'order-payment', 'message' => 'Data not found']], 403);
+            Log::info('Midtrans params:', $params);
+
+            try {
+                $snapToken = Snap::getSnapToken($params);
+                Log::info('Snap token generated successfully');
+            } catch (\Exception $e) {
+                Log::error('Midtrans Snap Token Error:', [
+                    'message' => $e->getMessage(),
+                    'code' => $e->getCode(),
+                    'trace' => $e->getTraceAsString()
+                ]);
+                throw $e;
+            }
+            
+            // Store order ID in session for later use
+            session(['midtrans_order_id' => $orderId]);
+            
+            return response()->json(['snap_token' => $snapToken]);
+        } catch (\Exception $e) {
+            Log::error('Midtrans error: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString(),
+                'user' => auth()->user() ? auth()->user()->username : 'not authenticated',
+                'request' => $request->all()
+            ]);
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 
-    public function success()
+    public function handleNotification(Request $request)
     {
-        $order = Order::where(['id' => session('order_id'), 'user_id'=>session('customer_id')])->first();
-        /*if ($order->callback != null) {
-            return redirect($order->callback . '&status=success');
-        }
-        return response()->json(['message' => 'Payment succeeded'], 200); */
-         return redirect('&status=success');
-    }
+        $payload = $request->all();
+        Log::info('Midtrans notification:', $payload);
+        
+        $orderId = $payload['order_id'];
+        $transactionStatus = $payload['transaction_status'];
+        $fraudStatus = $payload['fraud_status'];
 
-    public function fail()
-    {
-        $order = Order::where(['id' => session('order_id'), 'user_id'=>session('customer_id')])->first();
-        /*if ($order->callback != null) {
-            return redirect($order->callback . '&status=fail');
+        // Handle the notification based on transaction status
+        if ($transactionStatus == 'capture') {
+            if ($fraudStatus == 'challenge') {
+                // TODO: Handle challenge payment
+            } else if ($fraudStatus == 'accept') {
+                // TODO: Handle successful payment
+            }
+        } else if ($transactionStatus == 'settlement') {
+            // TODO: Handle settlement payment
+        } else if ($transactionStatus == 'cancel' || $transactionStatus == 'deny' || $transactionStatus == 'expire') {
+            // TODO: Handle failed payment
+        } else if ($transactionStatus == 'pending') {
+            // TODO: Handle pending payment
         }
-        return response()->json(['message' => 'Payment failed'], 403);*/
-         return redirect('&status=success');
+
+        return response()->json(['status' => 'success']);
     }
 }

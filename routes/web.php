@@ -39,6 +39,7 @@ use App\Http\Controllers\Api\V1\LaporanTransaksiController;
 use App\Http\Controllers\Api\V1\ForecastController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Api\V1\AddressController;
+use App\Http\Controllers\Api\V1\PaymentController;
 
 use App\Http\Controllers\Api\V1\DetailProdukController;
 
@@ -50,6 +51,11 @@ Route::get('/', function () {
     $produk = Produk::orderBy('IdProduk', 'desc')->take(7)->get();
     return view('welcome', compact('produk'));
 });
+
+// Add dashboard route
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->name('dashboard');
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::controller(DashboardController::class)->group(function () {
@@ -364,7 +370,7 @@ Route::controller(TokoController::class)->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::controller(CartController::class)->group(function () {
         Route::get('/cart', 'index')->name('cart');
-        Route::post('/details', 'details')->name('details');
+        Route::match(['get', 'post'], '/details', 'details')->name('details');
         Route::post('/save-address', 'saveAddress')->name('save.address');
         Route::post('/save-shipping', 'saveShipping')->name('save.shipping');
         Route::get('/shipping', fn () => view('toko.shipping'))->name('shipping');
@@ -432,3 +438,20 @@ Route::get('/checkout', [DeliveryShoppingController::class, 'index'])->name('che
 
 
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])->name('login');
+
+// Midtrans Payment Routes
+Route::controller(PaymentController::class)->group(function () {
+    Route::post('/payment/create-snap-token', 'createSnapToken')->name('payment.create-snap-token');
+    Route::post('/payment/notification', 'handleNotification')->name('payment.notification');
+});
+
+Route::post('/set-midtrans-paid', function (Illuminate\Http\Request $request) {
+    session(['midtrans_paid' => $request->paid]);
+    return response()->json(['success' => true]);
+});
+
+Route::post('/set-payment-method', function (Illuminate\Http\Request $request) {
+    session(['payment_method' => $request->method]);
+    session(['midtrans_paid' => $request->paid]);
+    return response()->json(['success' => true]);
+});
