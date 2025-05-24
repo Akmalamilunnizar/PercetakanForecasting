@@ -38,6 +38,7 @@ use App\Http\Controllers\Api\V1\LaporanTransaksiController;
 use App\Http\Controllers\Api\V1\ForecastController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Api\V1\AddressController;
+use App\Http\Controllers\Api\V1\PesananController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -191,15 +192,15 @@ Route::controller(ItemsController::class)->group(function () {
         // Proses form tambah produk
         Route::post('/admin/all-transaksi/{id}/tolak', 'tolakOrderan')->name('tolakOrderan');
         // Form edit produk
-        Route::get('/admin/all-produk/{id}/edit', 'editProduk')->name('editproduk');
-        // Update produk
-        Route::put('/admin/all-produk/{id}/update', 'updateProduk')->name('updateproduk');
-        // Hapus produk
-        Route::delete('/admin/all-produk/{id}', 'deleteProduk')->name('deleteproduk');
-        // Cari produk
-        Route::get('/admin/search-produk', 'searchProduk')->name('searchproduk');
-        // API get list produk (JSON)
-        Route::get('/api/produk', 'get_produk_list')->name('getproduk');
+        // Route::get('/admin/all-produk/{id}/edit', 'editProduk')->name('editproduk');
+        // // Update produk
+        // Route::put('/admin/all-produk/{id}/update', 'updateProduk')->name('updateproduk');
+        // // Hapus produk
+        // Route::delete('/admin/all-produk/{id}', 'deleteProduk')->name('deleteproduk');
+        // // Cari produk
+        // Route::get('/admin/search-produk', 'searchProduk')->name('searchproduk');
+        // // API get list produk (JSON)
+        // Route::get('/api/produk', 'get_produk_list')->name('getproduk');
     });
     Route::controller(SupplierController::class)->group(function () {
         // Tampilkan semua supplier
@@ -217,6 +218,8 @@ Route::controller(ItemsController::class)->group(function () {
         Route::delete('/supplier/{id}', 'destroy')->name('deletesupplier');
 
     });
+
+
 
     Route::controller(CustomerController::class)->group(function () {
         // Tampilkan semua supplier
@@ -309,13 +312,15 @@ Route::controller(TokoController::class)->group(function () {
     // Route::get('/tokodashboard', function () {return view('toko.dashboardToko');})->name('tokodashboard');
     Route::get('/tokodashboard', [TokoController::class, 'tokodashboard'])->name('tokodashboard');
     Route::get('/search', [ProductController::class, 'search'])->name('searchProduct');
-    Route::get('/shop', function () {return view('toko.dashboardToko');})->name('shop');
-    Route::get('/cart', function () {return view('toko.cart');})->name('cart');
-    Route::get('/faq', function () {return view('toko.dashboardToko');})->name('faq');
-    Route::get('/lacak', function () {return view('toko.dashboardToko');})->name('lacak');
-    Route::get('/kontak', function () {return view('toko.dashboardToko');})->name('kontak');
+    Route::get('/pesanan', [TokoController::class, 'pesanan'])->middleware('auth')->name('pesanan');
+    Route::get('/kontak', function () {return view('toko.kontak');})->name('kontak');
+
 
 });
+
+Route::get('/pesanan/{id}', [PesananController::class, 'detail'])->name('pesanan.detail');
+
+
 
 // Cart and Order routes
 Route::middleware(['auth'])->group(function () {
@@ -327,7 +332,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/shipping', fn () => view('toko.shipping'))->name('shipping');
         Route::get('/payment', fn () => view('toko.payment'))->name('payment');
         Route::get('/review', fn () => view('toko.review'))->name('review');
-        
+
         // API Cart
         Route::post('/cart/add', 'add')->name('cart.add');
         Route::post('/cart/remove/{id}', 'remove')->name('cart.remove');

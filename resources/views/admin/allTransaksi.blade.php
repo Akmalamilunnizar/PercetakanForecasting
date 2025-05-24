@@ -47,8 +47,8 @@
                         <td>{{ $item->detail->alamat }}</td>
                         <td>{{ $item->bayar }}</td>
                         <td>
-                            <a href="{{ route('terimaOrderan', $item->id) }}" class="btn btn-success">Terima</a>
-                            <a href="{{ route('tolakOrderan', $item->id) }}" class="btn btn-danger">Tolak</a>
+                            <a href="{{ route('terimaOrderan', $item->IdTransaksi) }}" class="btn btn-success">Terima</a>
+                            <a href="{{ route('tolakOrderan', $item->IdTransaksi) }}" class="btn btn-danger">Tolak</a>
                         </td>
 
                         <td>{{ $item->StatusPesanan }}</td>

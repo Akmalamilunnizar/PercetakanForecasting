@@ -16,6 +16,25 @@
     
     <!-- Tambah CSS custom jika perlu -->
     <style>
+       /* Tambahkan ini */
+    .page-header {
+        padding: 1.5rem 0;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .page-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #2d3748;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    .page-title svg {
+        width: 1.5rem;
+        height: 1.5rem;
+        color: #4f46e5;
+    }
         .navbar {
             background: linear-gradient(90deg, #f5f8ff);
             border-bottom: 1px solid #828282;
@@ -42,7 +61,8 @@
         
         body {
         background-color: #f5f8ff !important;
-    }
+        }
+        
     </style>
 </head>
 <body>
@@ -72,8 +92,7 @@
       <ul class="navbar-nav flex-row gap-3">
         <li class="nav-item"><a class="nav-link text-primary fw-semibold" href="{{ route('tokodashboard') }}">Beranda</a></li>
         <li class="nav-item"><a class="nav-link text-primary fw-semibold" href="{{ route('cart') }}">Cart</a></li>
-        <li class="nav-item"><a class="nav-link text-primary fw-semibold" href="{{ route('faq') }}">FAQ</a></li>
-        <li class="nav-item"><a class="nav-link text-primary fw-semibold" href="{{ route('lacak') }}">Lacak Pesanan</a></li>
+        <li class="nav-item"><a class="nav-link text-primary fw-semibold" href="{{ route('pesanan') }}">Pesanan</a></li>
         <li class="nav-item"><a class="nav-link text-primary fw-semibold" href="{{ route('kontak') }}">Kontak Kami</a></li>
       </ul>
     </div>
