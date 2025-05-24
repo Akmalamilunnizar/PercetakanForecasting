@@ -1,4 +1,4 @@
-@extends('admin.layouts.template')
+@extends('toko.layouts.template')
 @section('page_title')
     SANKE | Halaman detail produk Admin
 @endsection
@@ -235,6 +235,235 @@
                     </div>
                 </div>
                 <div class="col-md-6">
+<<<<<<< 335e3ccf5a4496ef664d27b0f91c597a15b0f9d4
+=======
+                    <div>
+                        <h1> <b style="font-size: 2em; color: black;">
+                                {{ $produk->NamaProduk ?? 'Detail Produk' }}
+                            </b></h1>
+                        <p><b style="color: black;">Terjual</b> 10rb+ <span class="star" style="color: gold;">&#9733;</span>
+                            <b style="color: black;">5 </b>(5.089 rating)
+                        </p>
+                        <h4 class="jarakHarga">
+                            <b style="font-size: 2em; color: black; position: relative; top: 5px;">
+                                Rp <span id="displayHargaSatuan">{{ number_format($produk->HargaProduk, 0, ',', '.') }}</span>
+                            </b>
+                        </h4>
+
+                        <div class="mt-3">
+                            <h5 style="margin-top: 25px;"><b
+                                    style="font-size: 1.5em; color: black; color:rgb(104, 59, 187)  ">
+                                    Deskripsi Produk </b></h5>
+                            <p style="margin-top: 20px;">Custom Spanduk / Mmt / Baliho / Banner - Citra Media Digital
+                                Printing
+                            </p>
+                            <p style="margin-top: 10px;">Cetak Spanduk Custom: Kunci Sukses Branding kamu! 🚀
+                            </p>
+                            <p style="margin-top: 10px;">Tersedia Ukuran Besar Mulai dari 3x4, 4x6, 10x5 dan hingga ukuran
+                                kecil 1x1, 2x1, 100x50cm, 50x50 cm dan ukuran lainnya.
+                                Jadikan setiap spanduk sebagai alat branding untuk memperkuat identitas merek kamu! Dengan
+                                desain yang menarik dan kualitas cetak terbaik Bersama Citra Media.
+                            </p>
+                            <p style="margin-top: 10px;">Custom Banner Dengan Harga Start 13 Ribu/m (Untuk Pemesanan Banyak)
+                                Harga di atas adalah harga Per meter (19.500) Sudah FREE Finishing
+                            </p>
+                            <p style="margin-top: 10px;"> ☑️Tanpa Minimal Order (1 meter Bisa)
+                            </p>
+                            <p style="margin-top: 10px;"> ☑️ Deskripsi
+                                Area Cetak Max : 3 Meter ( Lebar )
+                                Bahan :
+                                - Bahan China 280gsm (Permukaan Bahan Glossy)
+                                Format File : PDF.TIFF
+                            </p>
+                            <p style="margin-top: 10px;"> ☑️ Cara pemesanan
+                                Silahkan Pilih Bahan & Input PANJANG Spanduk (kesamping) dan input Lebar Spanduk (keatas)
+                                misal 2x1 berarti input 2(Panjang) + 1 (Lebar)
+                            </p>
+                            <p style="margin-top: 10px;">Cetak Spanduk Custom: Kunci Sukses Branding kamu! 🚀
+                            </p>
+                            <p style="margin-top: 10px;">Tersedia Ukuran Besar Mulai dari 3x4, 4x6, 10x5 dan hingga ukuran
+                                kecil 1x1, 2x1, 100x50cm, 50x50 cm dan ukuran lainnya.
+                                Jadikan setiap spanduk sebagai alat branding untuk memperkuat identitas merek kamu! Dengan
+                                desain yang menarik dan kualitas cetak terbaik Bersama Citra Media.
+                            </p>
+                            <p style="margin-top: 10px;">Custom Banner Dengan Harga Start 13 Ribu/m (Untuk Pemesanan Banyak)
+                                Harga di atas adalah harga Per meter (19.500) Sudah FREE Finishing
+                            </p>
+
+
+                            <h5 class="mt-4">Pemesanan</h5>
+                            <div class="card mt-3">
+                                <div class="card-body">
+                                    <div class="row mb-3 align-items-center">
+                                        <div class="row mb-3">
+                                            <label for="ukuran_produk_select" class="form-label fw-bold">
+                                                <i class="bx bx-ruler-horizontal me-2"></i> Ukuran
+                                            </label>
+                                            <div class="col-sm-10">
+                                                <select class="form-select" id="ukuran_produk_select"
+                                                    name="ukuran_produk_selected">
+                                                    <option value="">-- Pilih Ukuran --</option>
+                                                    @foreach ($ukuranList as $ukuran)
+                                                        <option value="{{ $ukuran }}" {{ old('ukuran_produk') == $ukuran ? 'selected' : '' }}>{{ $ukuran }}</option>
+                                                    @endforeach
+                                                    <option value="custom" {{ old('ukuran_produk_is_custom') ? 'selected' : '' }}>Custom</option>
+                                                </select>
+
+                                                <input type="text"
+                                                    class="form-control mt-2 {{ old('ukuran_produk_is_custom') ? '' : 'd-none' }}"
+                                                    id="ukuran_produk_custom"
+                                                    placeholder="Masukkan ukuran custom (contoh: 2x3 meter)"
+                                                    value="{{ old('ukuran_produk_custom_value') }}" />
+
+                                                {{-- Hidden input to store the final selected/custom value for submission
+                                                --}}
+                                                <input type="hidden" name="ukuran_produk" id="ukuran_produk_final"
+                                                    value="{{ old('ukuran_produk') }}">
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="row mb-3 align-items-center">
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold"><i class="bx bx-tag me-2"></i> Promo</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="text-muted">Potongan :
+                                                {{ $produk->diskon ? $produk->diskon . '%' : '0%' }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 align-items-center">
+                                        <div class="col-md-4">
+                                            <label for="catatan" class="form-label fw-bold"><i class="bx bx-label me-2"></i>
+                                                Catatan</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <textarea class="form-control" id="catatan" rows="1"
+                                                placeholder="Opsional"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 align-items-center">
+                                        <div class="col-md-4">
+                                            <label for="jumlahOrderInput" class="form-label fw-bold"><i
+                                                    class="bx bx-plus-minus me-2"></i> Jumlah</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="input-group">
+                                                <button class="btn btn-outline-secondary" type="button" id="minusButton"><i
+                                                        class="bx bx-minus"></i></button>
+                                                <input type="number" class="form-control text-center" id="jumlahOrderInput"
+                                                    value="1" min="1">
+                                                <button class="btn btn-outline-secondary" type="button" id="plusButton"><i
+                                                        class="bx bx-plus"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 align-items-center">
+                                        <div class="col-md-4">
+                                            <label for="uploadFile" class="form-label fw-bold"><i
+                                                    class="bx bx-upload me-2"></i> Upload File</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <input class="form-control form-control-sm" type="file" id="uploadFile">
+                                            <small class="text-muted">nb : jpg, png, jpeg, webp, pdf, rar, zip. max
+                                                10mb</small>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 align-items-center">
+                                        <div class="col-md-4">
+                                            <label for="nomorHP" class="form-label fw-bold"><i class="bx bx-phone me-2"></i>
+                                                Nomor HP</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <input type="tel" class="form-control" id="nomorHP" placeholder="Nomor Telepon">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card mt-3">
+                                <div class="card-body">
+                                    <h6 class="card-title fw-bold"><i class="bx bx-receipt me-2"></i> Rincian Harga</h6>
+                                    <hr>
+                                    <div class="row mb-2 fw-bold" style="margin-top: 10px;">
+                                        <div class="col-6">Total Harga Satuan</div>
+                                        <div class="col-6 text-end">Rp
+                                            <span id="hargaSatuanDisplay">{{ number_format($hargaSetelahDiskon, 0, ',', '.') }}</span>
+                                            @if ($produk->diskon > 0)
+                                                <span class="text-decoration-line-through ms-2 text-muted">
+                                                    Rp {{ number_format($produk->HargaProduk, 0, ',', '.') }}
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-6">Potongan</div>
+                                        <div class="col-6 text-end">{{ $produk->diskon ? $produk->diskon . '%' : '0%' }}
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-6">Jumlah Order</div>
+                                        <div class="col-6 text-end" id="summaryJumlahOrder">1</div>
+                                    </div>
+                                    <hr>
+                                    <div class="row fw-bold text-primary">
+                                        <div class="col-6" style="margin-top: 10px;">Total Pembayaran</div>
+                                        <div class="col-6 text-end" style="margin-top: 10px;">Rp
+                                            <span id="summaryTotalPembayaran">{{ number_format($hargaSetelahDiskon, 0, ',', '.') }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="d-grid gap-2" style="margin-top: 20px;">
+                                        <button class="btn btn-primary shadow-sm" type="button" id="beliSekarangBtn"><i
+                                                class="bx bx-credit-card me-2"></i> Beli Sekarang</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="beliSekarangModal" class="modal">
+                <div class="modal-content">
+                    <span class="close-button">&times;</span>
+                    <h2>Konfirmasi Pembelian</h2>
+                    <div class="konfirmasi-detail">
+                        <div class="konfirmasi-produk">
+                            <img src="{{ asset('storage/' . $produk->Img) }}" alt="{{ $produk->NamaProduk }}"
+                                class="product-image" id="modalProductImage"> <div class="produk-info">
+                                <h6 class="produk-nama" style="margin-left: 20px;">
+                                    {{ $produk->NamaProduk ?? 'Detail Produk' }}
+                                </h6>
+                                <small style="margin-left: 20px;">Ukuran: <span id="modalUkuran"></span></small><br>
+                                <small style="margin-left: 20px;">Catatan: <span id="modalCatatan"></span></small><br>
+                                <small style="margin-left: 20px;">Nomor HP: <span id="modalNomorHP"></span></small>
+                            </div>
+                        </div>
+                        <div class="konfirmasi-harga">
+                            <div class="harga-item">
+                                <span>Harga Satuan:</span>
+                                <span>Rp <span id="modalHargaSatuan"></span></span>
+                            </div>
+                            <div class="harga-item">
+                                <span>Jumlah:</span>
+                                <span><span id="modalJumlah"></span></span>
+                            </div>
+                            <div class="harga-item diskon">
+                                <span>Diskon (<span id="modalDiskonPersen"></span>):</span>
+                                <span>Rp <span id="modalDiskonNominal"></span></span>
+                            </div>
+                            <div class="harga-item total">
+                                <span>Subtotal:</span>
+                                <span>Rp <span id="modalSubtotal"></span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn btn-secondary" id="batalBeliBtn">Batal</button>
+                        <button class="btn btn-primary">Beli Sekarang</button>
+                    </div>
+>>>>>>> fitur eccomerce terbaru
                 </div>
             </div>
         </div>
@@ -1013,6 +1242,87 @@
         const closeButton = document.querySelector('.close-button');
         const batalBeliBtn = document.getElementById('batalBeliBtn');
 
+        // Quantity calculation elements
+        const jumlahOrderInput = document.getElementById('jumlahOrderInput');
+        const plusButton = document.getElementById('plusButton');
+        const minusButton = document.getElementById('minusButton');
+        const summaryJumlahOrder = document.getElementById('summaryJumlahOrder');
+        const summaryTotalPembayaran = document.getElementById('summaryTotalPembayaran');
+        const hargaSatuanDisplay = document.getElementById('hargaSatuanDisplay');
+
+        // Input elements for modal
+        const ukuranProdukSelect = document.getElementById('ukuran_produk_select');
+        const ukuranProdukCustom = document.getElementById('ukuran_produk_custom');
+        const catatanInput = document.getElementById('catatan');
+        const uploadFileInput = document.getElementById('uploadFile');
+        const nomorHPInput = document.getElementById('nomorHP');
+
+        // Modal display elements
+        const modalProductImage = document.getElementById('modalProductImage');
+        const modalUkuran = document.getElementById('modalUkuran');
+        const modalCatatan = document.getElementById('modalCatatan');
+        const modalNomorHP = document.getElementById('modalNomorHP');
+        const modalHargaSatuan = document.getElementById('modalHargaSatuan');
+        const modalJumlah = document.getElementById('modalJumlah');
+        const modalDiskonPersen = document.getElementById('modalDiskonPersen');
+        const modalDiskonNominal = document.getElementById('modalDiskonNominal');
+        const modalSubtotal = document.getElementById('modalSubtotal');
+
+
+        // Get the initial product price and discount from your Blade variables
+        const basePrice = {{ $produk->HargaProduk }};
+        const discountPercentage = {{ $produk->diskon ?? 0 }};
+
+        function formatRupiah(amount) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount).replace('Rp', ''); // Remove 'Rp' as it's added manually
+        }
+
+        function updateTotal() {
+            let quantity = parseInt(jumlahOrderInput.value);
+            if (isNaN(quantity) || quantity < 1) {
+                quantity = 1;
+                jumlahOrderInput.value = 1;
+            }
+
+            // Calculate price after discount
+            let priceAfterDiscount = basePrice;
+            let discountAmount = 0;
+            if (discountPercentage > 0) {
+                discountAmount = basePrice * discountPercentage / 100;
+                priceAfterDiscount = basePrice - discountAmount;
+            }
+
+            const totalPrice = priceAfterDiscount * quantity;
+
+            summaryJumlahOrder.textContent = quantity;
+            summaryTotalPembayaran.textContent = formatRupiah(totalPrice);
+            hargaSatuanDisplay.textContent = formatRupiah(priceAfterDiscount); // Update harga satuan display
+        }
+
+        // Event Listeners for quantity buttons
+        plusButton.addEventListener('click', () => {
+            jumlahOrderInput.value = parseInt(jumlahOrderInput.value) + 1;
+            updateTotal();
+        });
+
+        minusButton.addEventListener('click', () => {
+            if (parseInt(jumlahOrderInput.value) > 1) {
+                jumlahOrderInput.value = parseInt(jumlahOrderInput.value) - 1;
+                updateTotal();
+            }
+        });
+
+        jumlahOrderInput.addEventListener('input', updateTotal);
+
+        // Initial update when the page loads
+        updateTotal();
+
+
         if (mainImage && thumbnailScrollWrapper) {
             const mainImageWidth = mainImage.offsetWidth;
             thumbnailScrollWrapper.style.maxWidth = mainImageWidth + 'px';
@@ -1021,6 +1331,44 @@
 
         // Ubah display modal dengan menambah/menghapus class "show"
         beliSekarangBtn.addEventListener('click', function () {
+            // Populate modal with current values
+            const selectedUkuran = ukuranProdukSelect.value === 'custom' ? ukuranProdukCustom.value : ukuranProdukSelect.value;
+            const catatan = catatanInput.value || '-'; // Display '-' if empty
+            const nomorHP = nomorHPInput.value || '-'; // Display '-' if empty
+            const quantity = parseInt(jumlahOrderInput.value);
+
+            let priceAfterDiscount = basePrice;
+            let discountAmount = 0;
+            if (discountPercentage > 0) {
+                discountAmount = basePrice * discountPercentage / 100;
+                priceAfterDiscount = basePrice - discountAmount;
+            }
+            const totalPrice = priceAfterDiscount * quantity;
+
+
+            modalUkuran.textContent = selectedUkuran;
+            modalCatatan.textContent = catatan;
+            modalNomorHP.textContent = nomorHP;
+            modalHargaSatuan.textContent = formatRupiah(basePrice); // Original base price
+            modalJumlah.textContent = quantity;
+            modalDiskonPersen.textContent = discountPercentage > 0 ? `${discountPercentage}%` : '0%';
+            modalDiskonNominal.textContent = formatRupiah(discountAmount * quantity); // Total diskon
+            modalSubtotal.textContent = formatRupiah(totalPrice);
+
+            // Handle uploaded image
+            if (uploadFileInput.files.length > 0) {
+                const uploadedFile = uploadFileInput.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    modalProductImage.src = e.target.result;
+                };
+                reader.readAsDataURL(uploadedFile);
+            } else {
+                // If no file uploaded, revert to the original product image
+                modalProductImage.src = "{{ asset('storage/' . $produk->Img) }}";
+            }
+
+
             beliSekarangModal.classList.add("show");
         });
 
@@ -1055,6 +1403,7 @@
             }
         });
     }
+<<<<<<< 335e3ccf5a4496ef664d27b0f91c597a15b0f9d4
             thumbnailScrollWrapper.style.overflowX = 'auto';
         }
 
@@ -1094,4 +1443,62 @@
             }
         });
     }
+=======
+</script>
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const select = document.getElementById('ukuran_produk_select');
+            const customInput = document.getElementById('ukuran_produk_custom');
+            const hiddenInput = document.getElementById('ukuran_produk_final');
+
+            function updateFinalValue() {
+                if (select.value === 'custom') {
+                    customInput.classList.remove('d-none');
+                    hiddenInput.value = customInput.value;
+                } else {
+                    customInput.classList.add('d-none');
+                    hiddenInput.value = select.value;
+                }
+            }
+
+            select.addEventListener('change', updateFinalValue);
+            customInput.addEventListener('input', function () {
+                hiddenInput.value = customInput.value;
+            });
+
+            // Panggil saat pertama kali jika old value adalah custom
+            if (select.value === 'custom') {
+                customInput.classList.remove('d-none');
+            }
+        });
+    </script>
+@endpush
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const selectEl = document.getElementById('ukuran_produk_select');
+        const customInput = document.getElementById('ukuran_produk_custom');
+        const hiddenFinal = document.getElementById('ukuran_produk_final');
+
+        function handleChange() {
+            const selectedValue = selectEl.value;
+            if (selectedValue === 'custom') {
+                customInput.classList.remove('d-none');
+                hiddenFinal.value = customInput.value; // Isi sementara
+            } else {
+                customInput.classList.add('d-none');
+                hiddenFinal.value = selectedValue;
+            }
+        }
+
+        selectEl.addEventListener('change', handleChange);
+
+        // Update hidden field saat user mengetik ukuran custom
+        customInput.addEventListener('input', function () {
+            hiddenFinal.value = this.value;
+        });
+    });
+>>>>>>> fitur eccomerce terbaru
 </script>

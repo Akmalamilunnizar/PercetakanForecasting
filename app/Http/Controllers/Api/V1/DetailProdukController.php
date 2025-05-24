@@ -10,23 +10,56 @@ use Illuminate\Support\Facades\DB; // Jika Anda menggunakan Query Builder
 class DetailProdukController extends Controller
 {
     public function show(string $id): View
-{
-    // Asumsi nama tabel produk Anda adalah 'produk'
-    $produk = DB::table('produk')->where('IdProduk', $id)->first();
+    {
+        $produk = DB::table('produk')->where('IdProduk', $id)->first();
 
-    if (!$produk) {
-        // Handle jika produk tidak ditemukan, misalnya redirect atau tampilkan error
-        abort(404);
-    }
+        if (!$produk) {
+            abort(404);
+        }
 
-    $hargaAsli = $produk->HargaProduk;
-        $diskonPersen = $produk->diskon ?? 0; // Gunakan 0 jika diskon null
+        $hargaAsli = $produk->HargaProduk;
+        $diskonPersen = $produk->diskon ?? 0;
         $hargaSetelahDiskon = $hargaAsli - ($hargaAsli * ($diskonPersen / 100));
 
-        // Kirim data produk dan harga setelah diskon ke view
+        // Ambil dan olah ukuran produk dari semua data
+        $ukuranProduk = DB::table('produk')
+            ->whereNotNull('ukuran_produk')
+            ->where('ukuran_produk', '!=', '0')
+            ->pluck('ukuran_produk')
+            ->toArray();
+
+        $ukuranList = collect($ukuranProduk)
+            ->flatMap(fn($item) => explode(',', $item))
+            ->map(fn($item) => trim($item))
+            ->unique()
+            ->values()
+            ->toArray();
+
         return view('admin.DetailProduk', [
             'produk' => $produk,
             'hargaSetelahDiskon' => $hargaSetelahDiskon,
+            'ukuranList' => $ukuranList // <-- KIRIM ke View
         ]);
-}
+    }
+
+
+    public function create()
+    {
+        $ukuranProduk = DB::table('produk')
+            ->whereNotNull('ukuran_produk')
+            ->where('ukuran_produk', '!=', '0')
+            ->pluck('ukuran_produk')
+            ->toArray();
+
+        $ukuranList = collect($ukuranProduk)
+            ->flatMap(function ($item) {
+                return explode(',', $item);
+            })
+            ->map(fn($item) => trim($item))
+            ->unique()
+            ->values()
+            ->toArray();
+
+        return view('admin.addproduk', compact('ukuranList'));
+    }
 }
