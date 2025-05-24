@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\LaporanTransaksi;
 
 class Produk extends Model
 {
@@ -29,4 +30,9 @@ class Produk extends Model
 
     // Kalau tidak pakai timestamps (created_at, updated_at)
     public $timestamps = false;
+
+     public function laporantransaksi()
+    {
+        return $this->hasMany(LaporanTransaksi::class, 'IdProduk', 'IdProduk');
+    }
 }

@@ -1,208 +1,230 @@
 <!doctype html>
-
-<html lang="en" class="light-style layout-wide customizer-hide" dir="ltr" data-theme="theme-default"
-  data-assets-path="../assets/" data-template="vertical-menu-template-free" data-style="light">
+<html lang="en">
 
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport"
-    content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+  <title>CIME | Login</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <title>CIME | Halaman Login</title>
-
-  <meta name="description" content="" />
-
-  <!-- Favicon -->
+   <!-- Favicon -->
   <link rel="shortcut icon" href="{{ asset('dashboard2/assets/img/icons/logocime.png') }}" type="image/png" />
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
-    rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Public+Sans&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="../assets/vendor/fonts/boxicons.css" />
-
-  <!-- Core CSS -->
-  <link rel="stylesheet" href="../assets/vendor/css/core.css" class="template-customizer-core-css" />
-  <link rel="stylesheet" href="../assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
-  <link rel="stylesheet" href="../css/demo.css" />
+  <!-- Font Awesome -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-  <!-- Custom CSS -->
-  <style>
-    body {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-      background: url('{{ asset('assets/images/baground1.jpg') }}') no-repeat center center fixed;
-      background-size: cover;
-    }
-
-    body::after {
-      content: "";
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.4); /* nilai opacity bisa kamu sesuaikan */
-      z-index: -1;
-    }
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Public Sans', sans-serif;
+        background: url('{{ asset('assets/images/baground1.png') }}') no-repeat center center fixed;
+        background-size: cover;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
 
 
-    .main-container {
-      display: flex;
-      width: 90%;
-      max-width: 1200px;
-      background: rgba(255, 255, 255, 0.9);
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-      overflow: hidden;
-    }
+          .logo {
+          margin-bottom: 30px;
+          transform: scale(1.2); /* 20% lebih besar */
+          animation: floatZoom 4s ease-in-out infinite;
+      }
 
-    .left-section {
-      flex: 1;
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
+      .logo img {
+        max-width: 300px;
+        height: auto;
+      }
 
-    .right-section {
-      flex: 1;
-      background: linear-gradient(135deg,rgb(88, 93, 255),rgb(227, 224, 255));
-      color: white;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
+      .login-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 30px 40px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+        min-height: 500px;
+      }
 
-    .right-section img {
-      max-width: 310px;
-      margin-bottom: 1rem;
-    }
+      .login-card h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        font-weight: bold;
+        color: #333;
+        font-family: 'Times New Roman', Times, serif;
+      }
 
-    .right-section h1 {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-      color: white;
-      font-weight: bold;
-      font-family: 'Times New Roman', Times, serif;
-    }
+      .login-card input[type="text"],
+      .login-card input[type="password"] {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+      }
 
-    .right-section p {
-      font-size: 1.6rem;
-      font-family: 'Times New Roman', Times, serif;
-    }
+      .login-card .form-check {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
 
-    .logo-link {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      z-index: 1000;
-    }
+      .login-card .form-check input {
+        margin-right: 8px;
+      }
 
-    .logo {
-      width: 200px;
-      height: auto;
-    }
-  </style>
+      .login-card .actions {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+      }
+
+      .login-card button {
+        width: 100%;
+        padding: 12px;
+        background-color: #3887ff;
+        border: none;
+        color: #fff;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+      }
+
+      .login-card button:hover {
+        background-color: #1e6fe2;
+      }
+
+      .login-card p {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 0.9rem;
+      }
+
+      .login-card a {
+        color: #333;
+        text-decoration: none;
+      }
+
+      .login-card a:hover {
+        text-decoration: underline;
+      }
+
+      @keyframes floatZoom {
+        0% {
+          transform: translateY(0) scale(1);
+        }
+
+        50% {
+          transform: translateY(-10px) scale(1.05);
+        }
+
+        100% {
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      .login-card input[type="text"],
+      .login-card input[type="password"] {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        outline: none;
+      }
+
+      /* Efek animasi saat focus */
+      .login-card input[type="text"]:focus,
+      .login-card input[type="password"]:focus {
+        border-color: #80bdff;
+        box-shadow: 0 0 8px rgba(128, 189, 255, 0.7);
+      }
+    </style>
 </head>
 
-  <body>
-    <a href="/" style="position: absolute; top: 20px; left: 20px; z-index: 1000;">
-    <img src="{{ asset('dashboard2/assets/img/icons/logocime.png') }}" alt="Logo" style="width: 120px; height: auto;" />
-  </a>
-  <div class="main-container">
-    <div class="left-section">
-      <form action="{{ route('login') }}" method="POST">
-        @csrf
-        <div class="mb-3">
-            <i class="fas fa-envelope me-2"></i>
-            <label for="email" class="form-label">Email</label>
-            <input type="text" class="form-control" id="email" name="email" placeholder="Harap masukkan email" autofocus />
-          @error('email')
-            <span class="text-danger">{{ $message }}</span>
-          @enderror
-          </div>
-          <div class="mb-3 form-password-toggle">
-            <i class="fas fa-lock me-2"></i>
-            <label class="form-label" for="password">Password</label>
-            <div class="input-group input-group-merge">
-              <input type="password" id="password" class="form-control" name="password"
-                placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;"
-                aria-describedby="password" />
-              <span class="input-group-text" id="toggle-password">
-                <i class="bx bx-hide" id="icon"></i>
-              </span>
-            </div>
-          @error('password')
-            <span class="text-danger">{{ $message }}</span>
-          @enderror
-          </div>
-        <div class="mb-3">
-        <div class="d-flex justify-content-between align-items-center">
-          <!-- <div class="form-check mb-0">
-            <input class="form-check-input" type="checkbox" id="remember-me" />
-            <label class="form-check-label" for="remember-me"> Simpan Login </label>
-          </div> -->
-          <div>
-            <a href="{{ route('password.request') }}" style="color:rgb(0, 0, 0); text-decoration: none;">Lupa Password?</a>
-          </div>
-        </div>
-      </div>
+<body>
 
-      <button class="btn d-grid w-100" type="submit" style="background-color:rgb(56, 135, 255); color: #fff; border: none;">
-        Login
-      </button>
-
-      <p class="text-center mt-3">
-        <span>Tidak punya akun?</span>
-        <a href="register" style="color:rgb(0, 0, 0); text-decoration: none;">Register</a>
-      </p>
-
-      </form>
-    </div>
-    <script>
-      // Ambil elemen input dan ikon
-      const togglePassword = document.querySelector('#toggle-password');
-      const passwordField = document.querySelector('#password');
-      const icon = document.querySelector('#icon');
-
-      // Fungsi untuk toggle password visibility
-      togglePassword.addEventListener('click', function () {
-        // Cek apakah password sedang ditampilkan atau disembunyikan
-        const type = passwordField.type === 'password' ? 'text' : 'password';
-        passwordField.type = type;
-
-        // Ubah ikon sesuai dengan status visibility password
-        if (type === 'password') {
-          icon.classList.remove('bx-show');
-          icon.classList.add('bx-hide');
-        } else {
-          icon.classList.remove('bx-hide');
-          icon.classList.add('bx-show');
-        }
-      });
-    </script>
-
-    <!-- Logo dan Informasi -->
-    <div class="right-section">
-      <h1>CITRA MEDIA</h1>
-      <p>Optimasi Manajemen Stok di Industri Percetakan Menggunakan Prediksi Penjualan</p>
-      <img src="{{ asset('dashboard2/assets/img/imgtoko/print2.png') }}" alt="" />
-    </div>
+  <!-- Logo Tengah -->
+  <div class="logo">
+    <img src="{{ asset('dashboard2/assets/img/icons/logocime.png') }}" alt="Logo">
   </div>
 
+  <!-- Card Login -->
+  <div class="login-card">
+    <h2>Login</h2>
+    <form action="{{ route('login') }}" method="POST">
+      @csrf
+      <input type="text" name="email" placeholder="Email" required autofocus>
+      @error('email')
+      @enderror
 
+      <input type="password" name="password" placeholder="Password" required>
+      @error('password')
+      @enderror
+
+      <div class="actions">
+        <div class="form-check">
+          <input type="checkbox" id="remember" name="remember">
+          <label for="remember">Ingat saya</label>
+        </div>
+        <a href="{{ route('password.request') }}">Lupa Password?</a>
+      </div>
+
+      <button type="submit">Login</button>
+
+      @if(session('status') || $errors->any())
+                            <script>
+                                const Toast = Swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 9000,
+                                    timerProgressBar: true,
+                                    didOpen: (toast) => {
+                                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                                    }
+                                });
+
+                                @if(session('status'))
+                                    Toast.fire({
+                                        icon: 'success',
+                                        title: 'Berhasil',
+                                        text: '{{ session('status') }}'
+                                    });
+                                @elseif($errors->any())
+                                    @if($errors->has('email') || $errors->has('password'))
+                                        Toast.fire({
+                                            icon: 'error',
+                                            title: 'Login Gagal !',
+                                            text: 'Email atau kata sandi salah !'
+                                        });
+                                    @else
+                                        Toast.fire({
+                                            icon: 'error',
+                                            title: 'Gagal!',
+                                            text: '{{ $errors->first() }}'
+                                        });
+                                    @endif
+                                @endif
+                            </script>
+                        @endif
+
+      <p>
+        Tidak punya akun? <a href="register">Register</a>
+      </p>
+    </form>
+  </div>
 </body>
+
 
 </html>

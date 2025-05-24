@@ -34,6 +34,7 @@ use App\Http\Controllers\Api\V1\ProdukController;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Api\V1\CartController;
 use App\Http\Controllers\Api\V1\LaporanController;
+use App\Http\Controllers\Api\V1\LaporanTransaksiController;
 use App\Http\Controllers\Api\V1\ForecastController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Api\V1\AddressController;
@@ -94,7 +95,6 @@ Route::controller(TransaksiController::class)->group(function () {
 });
 
 
-
 Route::controller(TypeItemsController::class)->group(function () {
     Route::get('/admin/all-type', 'Index')->name('alltype');
     Route::get('/admin/all-type/search', 'SearchType')->name('searchtype');
@@ -150,6 +150,14 @@ Route::controller(ItemsController::class)->group(function () {
         Route::delete('/admin/laporanbarang/{id}', 'destroy')->name('laporanbarang.destroy');
     });
 
+     Route::controller(LaporanTransaksiController::class)->group(function () {
+        Route::get('/admin/laporantransaksi', 'index')->name('laporantransaksi');
+        Route::get('admin/detail-laporantransaksi/{id}', 'show')->name('admin.detail-laporantransaksi');
+        Route::get('/admin/laporantransaksi/export-pdf', 'exportPdf')->name('laporantransaksi.exportpdf');
+        Route::get('/admin/laporantransaksi/{id}/export-pdf', 'exportPdfDetail')->name('laporantransaksi.exportpdf.detail');
+        Route::delete('/admin/laporantransaksi/{id}', 'destroy')->name('laporantransaksi.destroy');
+    });
+
 
     Route::controller(ParameterReportController::class)->group(function () {
         Route::get('/admin/parameter-report', 'Index')->name('parameterreport');
@@ -185,16 +193,7 @@ Route::controller(ItemsController::class)->group(function () {
         Route::get('/admin/all-transaksi/{id}/terima', 'terimaOrderan')->name('terimaOrderan');
         // Proses form tambah produk
         Route::post('/admin/all-transaksi/{id}/tolak', 'tolakOrderan')->name('tolakOrderan');
-        // Form edit produk
-        Route::get('/admin/all-produk/{id}/edit', 'editProduk')->name('editproduk');
-        // Update produk
-        Route::put('/admin/all-produk/{id}/update', 'updateProduk')->name('updateproduk');
-        // Hapus produk
-        Route::delete('/admin/all-produk/{id}', 'deleteProduk')->name('deleteproduk');
-        // Cari produk
-        Route::get('/admin/search-produk', 'searchProduk')->name('searchproduk');
-        // API get list produk (JSON)
-        Route::get('/api/produk', 'get_produk_list')->name('getproduk');
+
     });
     Route::controller(SupplierController::class)->group(function () {
         // Tampilkan semua supplier
@@ -217,19 +216,9 @@ Route::controller(ItemsController::class)->group(function () {
         // Tampilkan semua supplier
         Route::get('/admin/daftar-customer', 'index')->name('allcustomer');
         // Tampilkan form tambah supplier
-        Route::get('/admin/daftar-supplier/add', 'addSupplier')->name('addsupplier');
-        // Proses form tambah supplier
-        Route::post('/admin/daftar-supplier/add', 'storeSupplier')->name('storesupplier');
-        // Form edit supplier
-        Route::get('/admin/daftar-supplier/{id}/edit', 'editSupplier')->name('editsupplier');
-        // Update supplier
-        Route::put('/admin/daftar-supplier/{id}/update', 'updateSupplier')->name('updatesupplier');
         // Hapus supplier
         Route::delete('/admin/daftar-supplier/{id}', 'deleteCustomer')->name('deletecustomer');
         // Cari supplier
-        Route::get('/admin/search-supplier', 'searchSupplier')->name('searchsupplier');
-        // API get list supplier (JSON)
-        Route::get('/api/suppliers', 'get_supplier_list')->name('getsuppliers');
     });
 
 

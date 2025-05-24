@@ -63,12 +63,5 @@
                 </div>
             </div>
         </div>
-
-        <div class="d-flex justify-content-start mt-3">
-            <a href="{{ route('laporanbarang') }}" class="btn btn-secondary">
-                <i class="bx bx-arrow-back me-2"></i> Kembali
-            </a>
-        </div>
-
     </div>
 @endsection

@@ -17,6 +17,7 @@
         "livewire/livewire": "^3.0",
         "livewire/volt": "^1.0",
         "paypal/rest-api-sdk-php": "*",
+        "realrashid/sweet-alert": "^7.3",
         "santigarcor/laratrust": "^8.2"
     },
     "require-dev": {

@@ -1,7 +1,7 @@
 @extends('admin.layouts.template')
 
 @section('page_title')
-SANKE | Halaman Tambah Produk
+CIME | Halaman Tambah Produk
 @endsection
 
 @section('content')
@@ -10,8 +10,7 @@ SANKE | Halaman Tambah Produk
     <div class="col-xxl">
         <div class="card mb-4">
             <div class="card-header d-flex align-items-center justify-content-between">
-                <h5 class="mb-0">Tambah Data Produk</h5>
-                <small class="text-muted float-end">Input Informasi</small>
+                 <h5 class="mb-0 fw-bold fs-4">Tambah Data Produk</h5>
             </div>
             <div class="card-body">
                 @if ($errors->any())
@@ -49,7 +48,7 @@ SANKE | Halaman Tambah Produk
                     </div>
 
                     <div class="row mb-3">
-                        <label class="col-sm-2 col-form-label" for="Img">Image</label>
+                        <label class="col-sm-2 col-form-label" for="Img">Gambar</label>
                         <div class="col-sm-10">
                             <input class="form-control" type="file" id="Img" name="Img" />
                         </div>
@@ -57,8 +56,7 @@ SANKE | Halaman Tambah Produk
 
                     <div class="row justify-content-end">
                         <div class="col-sm-10">
-                            <button type="submit" class="btn"
-                                style="background: linear-gradient(45deg, #007bff, #00bfff); color: white;">
+                            <button type="submit" class="btn btn-outline-primary">
                                 Tambah Produk
                             </button>
                         </div>

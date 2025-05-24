@@ -1,10 +1,11 @@
 @extends('admin.layouts.template')
 
 @section('page_title')
-    Laporan - Citra Media
+CIME | Halaman Laporan Barang
 @endsection
-
 @section('search')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <div class="navbar-nav align-items-center">
         <div class="nav-item d-flex align-items-center">
             <i class="bx bx-search fs-4 lh-0"></i>
@@ -32,7 +33,7 @@
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <li><a class="dropdown-item" href="{{ route('laporanbarang') }}">📄 Laporan Barang</a></li>
-            <li><a class="dropdown-item" href="">📊 Laporan Transaksi</a></li>
+            <li><a class="dropdown-item" href="{{ route('laporantransaksi') }}">📊 Laporan Transaksi</a></li>
         </ul>
     </div>
 
@@ -81,7 +82,7 @@
         @endif
 
         <div class="card">
-    <h5 class="card-header">Data Laporan</h5>
+    <h5 class="card-header fw-bold">Data Laporan</h5>
 
     {{-- Notifikasi --}}
     @if (session('success'))
@@ -98,18 +99,19 @@
         </div>
     @endif
 
-    <div class="table-responsive">
-    <table class="table table-striped">
-        <thead class="table-primary">
-            <tr>
-                <th style="text-align: center;">No</th>
-                <th style="text-align: center;">Nama Barang</th>
-                <th style="text-align: center;">Nama Supplier</th>
-                <th style="text-align: center;">Qty Masuk</th>
-                <th style="text-align: center;">Qty Keluar</th>
-                <th style="text-align: center;">Sisa Stok</th>
-                <th style="text-align: center;">Aksi</th>
+    <div class="table-responsive text-nowrap">
+                <table class="table table-striped">
+                     <thead class="table-primary">
+             <tr>
+                <th style="text-align: center; font-weight: bold;">No</th>
+                <th style="text-align: center; font-weight: bold;">Nama Barang</th>
+                <th style="text-align: center; font-weight: bold;">Nama Supplier</th>
+                <th style="text-align: center; font-weight: bold;">Qty Masuk</th>
+                <th style="text-align: center; font-weight: bold;">Qty Keluar</th>
+                <th style="text-align: center; font-weight: bold;">Sisa Stok</th>
+                <th style="text-align: center; font-weight: bold;">Aksi</th>
             </tr>
+
         </thead>
         @php
             use Carbon\Carbon;
@@ -130,15 +132,14 @@
                         <td class="text-center">
                             <div class="d-flex justify-content-center" role="group" aria-label="Basic example">
                                 <a href="{{ route('admin.detaillaporanbarang', $laporan->IdLaporan) }}"
-                                class="btn btn-sm btn-primary mx-1"
-                                style="min-width: 100px;">
-                                    Detail
-                                </a>
+                               class="btn btn-warning">
+                                        <i class="fas fa-edit me-1"></i> Detail
+                                    </a>
                                 <form action="{{ route('laporanbarang.destroy', $laporan->IdLaporan) }}" method="POST" class="p-0">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
-                                            class="btn btn-sm btn-danger mx-1"
+                                            class="btn btn-danger mx-1"
                                             style="background: linear-gradient(45deg, #dc3545, #ff6b6b); min-width: 100px;">
                                         <i class="fas fa-trash-alt me-2"></i> Delete
                                     </button>

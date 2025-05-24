@@ -1,8 +1,10 @@
 @extends('admin.layouts.template')
 @section('page_title')
-    Daftar Supplier - Sistem Manajemen Percetakan
+CIME | Halaman Daftar Supplier
 @endsection
 @section('search')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <div class="navbar-nav align-items-center">
         <div class="nav-item d-flex align-items-center">
             <i class="bx bx-search fs-4 lh-0"></i>
@@ -14,8 +16,7 @@
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
         <h4 class="py-2 mb-3"><span class="text-muted fw-light">Data Supplier/</span> Daftar Supplier</h4>
-        <a href="{{ route('addsupplier') }}" class="btn btn-primary"
-            style="background: linear-gradient(45deg, #C3A2FF);">
+        <a href="{{ route('addsupplier') }}" class="btn btn-outline-primary mb-3">
             + Tambah Supplier
         </a>
         @if (session()->has('message'))
@@ -26,31 +27,35 @@
         <div class="card mt-3">
             <h5 class="card-header">Supplier Yang Terdaftar</h5>
             <div class="table-responsive text-nowrap">
-                <table class="table">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Id Supplier</th>
-                            <th>Nama Supplier</th>
-                            <th>No Tlp</th>
-                            <th>Alamat</th>
-                            <th>Actions</th>
+                <table class="table table-striped">
+                     <thead class="table-primary">
+                       <tr>
+                            <th class="text-center fw-bold">Id Supplier</th>
+                            <th class="text-center fw-bold">Nama Supplier</th>
+                            <th class="text-center fw-bold">No Tlp</th>
+                            <th class="text-center fw-bold">Alamat</th>
+                            <th class="text-center fw-bold">Actions</th>
                         </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
                         @foreach ($suppliers as $supplier)
                             <tr>
-                                <td>{{ $supplier->IdSupplier }}</td>
-                                <td>{{ $supplier->NamaSupplier }}</td>
-                                <td>{{ $supplier->NoTelp }}</td>
-                                <td>{{ $supplier->Alamat }}</td>
-                                <td>
-                                    <a href="{{ route('editsupplier', $supplier->IdSupplier) }}" class="btn btn-primary">Edit</a>
+                                <td class="text-center">{{ $supplier->IdSupplier }}</td>
+                                <td class="text-center">{{ $supplier->NamaSupplier }}</td>
+                                <td class="text-center">{{ $supplier->NoTelp }}</td>
+                                <td class="text-center">{{ $supplier->Alamat }}</td>
+                                <td class="text-center">
+                                    <a href="{{ route('editsupplier', $supplier->IdSupplier) }}"  class="btn btn-warning">
+                                        <i class="fas fa-edit me-1"></i> Edit
+                                    </a>
                                     <form action="{{ route('deletesupplier', $supplier->IdSupplier) }}" method="POST" style="display:inline;" id="delete-form-{{ $supplier->IdSupplier }}">
-                                @csrf
-                                @method('DELETE')
-                                <a href="#" class="btn btn-warning" onclick="event.preventDefault(); if(confirm('Yakin ingin menghapus supplier ini?')) document.getElementById('delete-form-{{ $supplier->IdSupplier }}').submit();">Delete</a>
-                            </form>
-                            </td>
+                                        @csrf
+                                        @method('DELETE')
+                                        <a href="#" class="btn btn-danger" onclick="event.preventDefault(); if(confirm('Yakin ingin menghapus supplier ini?')) document.getElementById('delete-form-{{ $supplier->IdSupplier }}').submit();">
+                                            <i class="fas fa-trash-alt me-1"></i> Delete
+                                        </a>
+                                    </form>
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>

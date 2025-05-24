@@ -1,14 +1,15 @@
     @extends('toko.layouts.template')
 
     @section('page_title')
-        CIME | Dashboard Toko Online
+CIME | Halaman Dashboard E-Commerce
     @endsection
-
     @section('js')
         <!-- Load jQuery terlebih dahulu -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+         <!-- Favicon -->
+        <link rel="shortcut icon" href="{{ asset('dashboard2/assets/img/icons/logocime.png') }}" type="image/png" />
 
         <!-- Load ApexCharts setelahnya -->
         <script src="{{ asset('assets/apexcharts/dist/apexcharts.js') }}"></script>
@@ -18,6 +19,7 @@
         <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
         <script src="{{ URL('assets/apexcharts/dist/apexcharts.min.js') }}"></script>
         <link href="css/toko.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
         <script>
             // alert("Script jalan!");
             $(document).ready(function () {
