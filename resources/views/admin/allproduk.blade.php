@@ -26,6 +26,7 @@ CIME | Halaman Daftar Produk
                 <div class="alert alert-success mb-2">
                     {{ session()->get('message') }}
                 </div>
+            @endif
 
             <div class="card mt-3">
                 <h5 class="card-header">Produk Yang Terdaftar</h5>
