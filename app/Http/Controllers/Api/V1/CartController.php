@@ -108,14 +108,12 @@ class CartController extends Controller
 
     public function details(Request $request)
     {
-        // Store notes in session
-        if ($request->has('notes')) {
+        // Save notes to session if it's a POST request
+        if ($request->isMethod('post') && $request->has('notes')) {
             session(['order_notes' => $request->notes]);
         }
 
-        // Get user's addresses
-        $addresses = Address::where('user_id', Auth::id())->get();
-        
+        $addresses = \App\Models\Address::where('user_id', auth()->id())->get();
         return view('toko.details', compact('addresses'));
     }
 
@@ -160,6 +158,19 @@ class CartController extends Controller
         session(['shipping_cost' => $shippingData['cost']]);
 
         return response()->json(['success' => true]);
+    }
+
+    public function shipping()
+    {
+        $cart = session('cart');
+        if (!$cart || count($cart) === 0) {
+            // Option 1: Redirect with a message
+            return redirect()->route('tokodashboard')->with('error', 'Keranjang kosong. Silakan pilih produk terlebih dahulu.');
+
+            // Option 2: Show a view with an error message
+            // return view('toko.empty_cart');
+        }
+        return view('toko.shipping', compact('cart'));
     }
 
 }

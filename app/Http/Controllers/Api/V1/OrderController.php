@@ -74,7 +74,9 @@ class OrderController extends Controller
             $transactionId = 'TR' . str_pad(Transaksi::count() + 1, 4, '0', STR_PAD_LEFT);
             Log::info('Generated transaction ID:', ['id' => $transactionId]);
 
-            // Calculate total
+            // Get payment method and calculate total
+            $isPaid = session('midtrans_paid', false);
+            $paymentMethod = session('payment_method', 'cod'); // default to cod
             $total = 0;
             foreach ($cart as $item) {
                 $total += $item['harga'] * $item['quantity'];
@@ -86,12 +88,20 @@ class OrderController extends Controller
             $transaction->IdTransaksi = $transactionId;
             $transaction->username = $user->username;
             $transaction->id = $user->id;
-            $transaction->Bayar = 0;
-            $transaction->SisaBayar = $total;
+
+            if ($paymentMethod === 'midtrans' && $isPaid) {
+                $transaction->Bayar = $total;
+                $transaction->SisaBayar = 0;
+                $transaction->StatusPembayaran = 'Lunas';
+            } else {
+                $transaction->Bayar = 0;
+                $transaction->SisaBayar = $total;
+                $transaction->StatusPembayaran = 'Belum Lunas';
+            }
+
             $transaction->Kembali = 0;
             $transaction->GrandTotal = $total;
             $transaction->tglTransaksi = now();
-            $transaction->StatusPembayaran = 'Belum Lunas';
             $transaction->StatusPesanan = 'Menunggu Konfirmasi';
             $transaction->save();
             
@@ -116,13 +126,15 @@ class OrderController extends Controller
                     'harga_satuan' => $details['harga'],
                     'total_harga' => $details['harga'] * $details['quantity'],
                     'tanggal_transaksi' => now()->toDateString(),
-                    'status_pembayaran' => 'Belum Lunas',
+                    'status_pembayaran' => $transaction->StatusPembayaran,
                     'keterangan' => 'Pesanan baru'
                 ]);
             }
 
-            // Clear cart
+            // Clear cart and payment flags
             session()->forget('cart');
+            session()->forget('midtrans_paid');
+            session()->forget('payment_method');
             Log::info('Cart cleared from session');
 
             DB::commit();

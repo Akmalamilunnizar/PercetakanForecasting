@@ -25,6 +25,10 @@ class Produk extends Model
         'IdProduk',
         'NamaProduk',
         'HargaProduk',
+        'ukuran_produk',       
+        'jenis_bahan_produk',  
+        'custom_produk',       
+        'diskon', 
         'Img',
     ];
 

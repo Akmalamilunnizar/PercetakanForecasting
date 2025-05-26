@@ -1,0 +1,1504 @@
+@extends('toko.layouts.template')
+@section('page_title')
+    SANKE | Halaman detail produk Admin
+@endsection
+
+@section('search')
+    <div class="navbar-nav align-items-center">
+        <div class="nav-item d-flex align-items-center">
+            <i class="bx bx-search fs-4 lh-0"></i>
+            <form method="GET" action="{{ route('searchusers') }}" class="d-inline-block ms-2">
+                <input type="text" name="search" class="form-control border-0 shadow-none ps-2"
+                    placeholder="Pencarian ID atau nama..." value="{{ isset($search) ? $search : '' }}" />
+            </form>
+        </div>
+    </div>
+@endsection
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+</head>
+@section('content')
+    <div class="content-wrapper">
+        <div class="container-xxl flex-grow-1 container-p-y" style="overflow-x: auto;">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="product-image-container">
+                        <img src="{{ asset('storage/' . $produk->Img) }}" alt="{{ $produk->NamaProduk }}"
+                            class="product-image" id="main-image">
+                    </div>
+                    <div class="thumbnail-scroll-wrapper mt-3" id="thumbnailScrollWrapper">
+                        <div class="thumbnail-scroll" id="thumbnail-scroll">
+                            @foreach (['banner.jpg', 'banner.jpg', 'banner.jpg', 'banner.jpg', 'banner.jpg', 'banner.jpg',  'banner.jpg', 'banner.jpg', 'banner.jpg',] as $img)
+                                <a href="#">
+                                    <div class="img-thumb-wrapper" style="margin-right: 5px;">
+                                        <img src="{{ asset('assets/images/' . $img) }}" alt="Gambar"
+                                            class="img-fluid img-thumb">
+                                    </div>
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <div class="d-flex align-items-center">
+                            <h5><b>Pilih Rating</b></h5>
+                            <div class="ms-3">
+                                <span class="star-filter" data-rating="1"
+                                    style="cursor: pointer; font-size: 1.5em; color: #ccc; transition: color 0.2s ease;"
+                                    onclick="highlightStars(this)">&#9733;</span>
+                                <span class="star-filter" data-rating="2"
+                                    style="cursor: pointer; font-size: 1.5em; color: #ccc; transition: color 0.2s ease;"
+                                    onclick="highlightStars(this)">&#9733;</span>
+                                <span class="star-filter" data-rating="3"
+                                    style="cursor: pointer; font-size: 1.5em; color: #ccc; transition: color 0.2s ease;"
+                                    onclick="highlightStars(this)">&#9733;</span>
+                                <span class="star-filter" data-rating="4"
+                                    style="cursor: pointer; font-size: 1.5em; color: #ccc; transition: color 0.2s ease;"
+                                    onclick="highlightStars(this)">&#9733;</span>
+                                <span class="star-filter" data-rating="5"
+                                    style="cursor: pointer; font-size: 1.5em; color: #ccc; transition: color 0.2s ease;"
+                                    onclick="highlightStars(this)">&#9733;</span>
+                            </div>
+                        </div>
+                        <div class="review-summary mt-3 d-flex align-items-start">
+                            <div class="left-column me-3">
+                                <div class="overall-rating">
+                                    <span class="star">&#9733;</span>
+                                    <span class="rating-value">5.0</span> <span class="out-of">/ 5.0</span>
+                                </div>
+                                <div class="satisfaction">
+                                    <span>100%</span> pembeli merasa puas
+                                </div>
+                                <div class="rating-count">
+                                    <span>9</span> rating, <span>3</span> ulasan
+                                </div>
+                            </div>
+                            <div class="right-column d-flex">
+                                <div class="rating-bars-left">
+                                    <div class="rating-bar">
+                                        <span class="star">&#9733;</span> 5
+                                        <div class="bar-container">
+                                            <div class="bar" style="width: 100%; background-color:rgb(0, 151, 50);"></div>
+                                        </div>
+                                        <span class="count">(5)</span>
+                                    </div>
+                                    <div class="rating-bar">
+                                        <span class="star">&#9733;</span> 4
+                                        <div class="bar-container">
+                                            <div class="bar" style="width: 0%; background-color: #6c757d;"></div>
+                                        </div>
+                                        <span class="count">(0)</span>
+                                    </div>
+                                    <div class="rating-bar">
+                                        <span class="star">&#9733;</span> 3
+                                        <div class="bar-container">
+                                            <div class="bar" style="width: 0%; background-color: #6c757d;"></div>
+                                        </div>
+                                        <span class="count">(0)</span>
+                                    </div>
+                                </div>
+                                <div class="rating-bars-right ms-auto">
+                                    <div class="rating-bar">
+                                        <span class="star">&#9733;</span> 2
+                                        <div class="bar-container">
+                                            <div class="bar" style="width: 0%; background-color: #ffc107;"></div>
+                                        </div>
+                                        <span class="count">(2)</span>
+                                    </div>
+                                    <div class="rating-bar">
+                                        <span class="star">&#9733;</span> 1
+                                        <div class="bar-container">
+                                            <div class="bar" style="width: 0%; background-color: #dc3545;"></div>
+                                        </div>
+                                        <span class="count">(2)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="user-reviews mt-3">
+                            <div class="user-review">
+                                <div class="user-info d-flex align-items-center mb-2">
+                                    <img src="{{ asset('assets/images/orang1.jpeg') }}" alt="Foto Profil Sayiful Adham"
+                                        class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;">
+                                    <div class="user-details">
+                                        <span class="fw-bold">Sayiful Adham Gaming</span>
+                                        <div class="rating-stars">
+                                            <span class="star" style="color: gold;">&#9733;</span>
+                                            <span class="star" style="color: gold;">&#9733;</span>
+                                            <span class="star" style="color: gold;">&#9733;</span>
+                                            <span class="star" style="color: gold;">&#9733;</span>
+                                            <span class="star" style="color: gold;">&#9733;</span>
+                                        </div>
+                                    </div>
+                                    <small class="ms-auto text-muted">2 Hari yang lalu</small>
+                                </div>
+                                <div class="review-images mb-2">
+                                    <a href="{{ asset('assets/images/poster1.jpeg') }}" data-lightbox="review-1">
+                                        <img src="{{ asset('assets/images/poster1.jpeg') }}" style="margin-right: 10px;"
+                                            alt="Gambar Ulasan 1" ...>
+                                    </a>
+                                    <a href="{{ asset('assets/images/poster2.jpg') }}" data-lightbox="review-1">
+                                        <img src="{{ asset('assets/images/poster2.jpg') }}" style="margin-right: 10px;"
+                                            alt="Gambar Ulasan 2" ...>
+                                    </a>
+                                    <a href="{{ asset('assets/images/poster3.webp') }}" data-lightbox="review-1">
+                                        <img src="{{ asset('assets/images/poster3.webp') }}" style="margin-right: 10px;"
+                                            alt="Gambar Ulasan 3" ...>
+                                    </a>
+                                </div>
+                                <p class="review-text">merk masker ini sih uda affordable hrgnya, bahannya jg ga bikin engep
+                                    makany
+                                    sukak bgt.. semoga makin bny variant masker lg dr onerneda ya.. utk packaging
+                                    aman bgt krn dil... <a href="#"
+                                        style="color: blue; text-decoration: none;">Selengkapnya</a>
+                                </p>
+                                <hr class="my-2">
+                            </div>
+
+                            <div class="user-review">
+                                <div class="user-info d-flex align-items-center mb-2">
+                                    <img src="{{ asset('assets/images/orang2.jpeg') }}" alt="Foto Profil Adham Syaiful"
+                                        class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;">
+                                    <div class="user-details">
+                                        <span class="fw-bold">Adham Syaiful</span>
+                                        <div class="rating-stars">
+                                            <span class="star" style="color: gold;">&#9733;</span>
+                                            <span class="star" style="color: gold;">&#9733;</span>
+                                            <span class="star" style="color: gold;">&#9733;</span>
+                                            <span class="star" style="color: gold;">&#9733;</span>
+                                            <span class="star" style="color: #ccc;">&#9733;</span>
+                                        </div>
+                                    </div>
+                                    <small class="ms-auto text-muted">2 Hari yang lalu</small>
+                                </div>
+                                <div class="review-images mb-2">
+                                    <a href="{{ asset('assets/images/poster1.jpeg') }}" data-lightbox="review-1">
+                                        <img src="{{ asset('assets/images/poster1.jpeg') }}" style="margin-right: 10px;"
+                                            alt="Gambar Ulasan 1" ...>
+                                    </a>
+                                    <a href="{{ asset('assets/images/poster2.jpg') }}" data-lightbox="review-1">
+                                        <img src="{{ asset('assets/images/poster2.jpg') }}" style="margin-right: 10px;"
+                                            alt="Gambar Ulasan 2" ...>
+                                    </a>
+                                    <a href="{{ asset('assets/images/poster3.webp') }}" data-lightbox="review-1">
+                                        <img src="{{ asset('assets/images/poster3.webp') }}" style="margin-right: 10px;"
+                                            alt="Gambar Ulasan 3" ...>
+                                    </a>
+                                </div>
+                                <p class="review-text">merk masker ini sih uda affordable hrgnya, bahannya jg ga bikin engep
+                                    makany
+                                    sukak bgt.. semoga makin bny variant masker lg dr onerneda ya.. utk packaging
+                                    aman bgt krn dil... <a href="#"
+                                        style="color: blue; text-decoration: none;">Selengkapnya</a>
+                                </p>
+                                <hr class="my-2">
+                            </div>
+                            <div class="user-review">
+                                <div class="user-info d-flex align-items-center mb-2">
+                                    <img src="{{ asset('assets/images/orang2.jpeg') }}" alt="Foto Profil Adham Syaiful"
+                                        class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;">
+                                    <div class="user-details">
+                                        <span class="fw-bold">Adham Syaiful</span>
+                                        <div class="rating-stars">
+                                            <span class="star" style="color: gold;">&#9733;</span>
+                                            <span class="star" style="color: gold;">&#9733;</span>
+                                            <span class="star" style="color: gold;">&#9733;</span>
+                                            <span class="star" style="color: gold;">&#9733;</span>
+                                            <span class="star" style="color: #ccc;">&#9733;</span>
+                                        </div>
+                                    </div>
+                                    <small class="ms-auto text-muted">2 Hari yang lalu</small>
+                                </div>
+                                <div class="review-images mb-2">
+                                    <a href="{{ asset('assets/images/poster1.jpeg') }}" data-lightbox="review-1">
+                                        <img src="{{ asset('assets/images/poster1.jpeg') }}" style="margin-right: 10px;"
+                                            alt="Gambar Ulasan 1" ...>
+                                    </a>
+                                    <a href="{{ asset('assets/images/poster2.jpg') }}" data-lightbox="review-1">
+                                        <img src="{{ asset('assets/images/poster2.jpg') }}" style="margin-right: 10px;"
+                                            alt="Gambar Ulasan 2" ...>
+                                    </a>
+                                    <a href="{{ asset('assets/images/poster3.webp') }}" data-lightbox="review-1">
+                                        <img src="{{ asset('assets/images/poster3.webp') }}" style="margin-right: 10px;"
+                                            alt="Gambar Ulasan 3" ...>
+                                    </a>
+                                </div>
+                                <p class="review-text">merk masker ini sih uda affordable hrgnya, bahannya jg ga bikin engep
+                                    makany
+                                    sukak bgt.. semoga makin bny variant masker lg dr onerneda ya.. utk packaging
+                                    aman bgt krn dil... <a href="#"
+                                        style="color: blue; text-decoration: none;">Selengkapnya</a>
+                                </p>
+                                <hr class="my-2">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+<<<<<<< 335e3ccf5a4496ef664d27b0f91c597a15b0f9d4
+=======
+                    <div>
+                        <h1> <b style="font-size: 2em; color: black;">
+                                {{ $produk->NamaProduk ?? 'Detail Produk' }}
+                            </b></h1>
+                        <p><b style="color: black;">Terjual</b> 10rb+ <span class="star" style="color: gold;">&#9733;</span>
+                            <b style="color: black;">5 </b>(5.089 rating)
+                        </p>
+                        <h4 class="jarakHarga">
+                            <b style="font-size: 2em; color: black; position: relative; top: 5px;">
+                                Rp <span id="displayHargaSatuan">{{ number_format($produk->HargaProduk, 0, ',', '.') }}</span>
+                            </b>
+                        </h4>
+
+                        <div class="mt-3">
+                            <h5 style="margin-top: 25px;"><b
+                                    style="font-size: 1.5em; color: black; color:rgb(104, 59, 187)  ">
+                                    Deskripsi Produk </b></h5>
+                            <p style="margin-top: 20px;">Custom Spanduk / Mmt / Baliho / Banner - Citra Media Digital
+                                Printing
+                            </p>
+                            <p style="margin-top: 10px;">Cetak Spanduk Custom: Kunci Sukses Branding kamu! 🚀
+                            </p>
+                            <p style="margin-top: 10px;">Tersedia Ukuran Besar Mulai dari 3x4, 4x6, 10x5 dan hingga ukuran
+                                kecil 1x1, 2x1, 100x50cm, 50x50 cm dan ukuran lainnya.
+                                Jadikan setiap spanduk sebagai alat branding untuk memperkuat identitas merek kamu! Dengan
+                                desain yang menarik dan kualitas cetak terbaik Bersama Citra Media.
+                            </p>
+                            <p style="margin-top: 10px;">Custom Banner Dengan Harga Start 13 Ribu/m (Untuk Pemesanan Banyak)
+                                Harga di atas adalah harga Per meter (19.500) Sudah FREE Finishing
+                            </p>
+                            <p style="margin-top: 10px;"> ☑️Tanpa Minimal Order (1 meter Bisa)
+                            </p>
+                            <p style="margin-top: 10px;"> ☑️ Deskripsi
+                                Area Cetak Max : 3 Meter ( Lebar )
+                                Bahan :
+                                - Bahan China 280gsm (Permukaan Bahan Glossy)
+                                Format File : PDF.TIFF
+                            </p>
+                            <p style="margin-top: 10px;"> ☑️ Cara pemesanan
+                                Silahkan Pilih Bahan & Input PANJANG Spanduk (kesamping) dan input Lebar Spanduk (keatas)
+                                misal 2x1 berarti input 2(Panjang) + 1 (Lebar)
+                            </p>
+                            <p style="margin-top: 10px;">Cetak Spanduk Custom: Kunci Sukses Branding kamu! 🚀
+                            </p>
+                            <p style="margin-top: 10px;">Tersedia Ukuran Besar Mulai dari 3x4, 4x6, 10x5 dan hingga ukuran
+                                kecil 1x1, 2x1, 100x50cm, 50x50 cm dan ukuran lainnya.
+                                Jadikan setiap spanduk sebagai alat branding untuk memperkuat identitas merek kamu! Dengan
+                                desain yang menarik dan kualitas cetak terbaik Bersama Citra Media.
+                            </p>
+                            <p style="margin-top: 10px;">Custom Banner Dengan Harga Start 13 Ribu/m (Untuk Pemesanan Banyak)
+                                Harga di atas adalah harga Per meter (19.500) Sudah FREE Finishing
+                            </p>
+
+
+                            <h5 class="mt-4">Pemesanan</h5>
+                            <div class="card mt-3">
+                                <div class="card-body">
+                                    <div class="row mb-3 align-items-center">
+                                        <div class="row mb-3">
+                                            <label for="ukuran_produk_select" class="form-label fw-bold">
+                                                <i class="bx bx-ruler-horizontal me-2"></i> Ukuran
+                                            </label>
+                                            <div class="col-sm-10">
+                                                <select class="form-select" id="ukuran_produk_select"
+                                                    name="ukuran_produk_selected">
+                                                    <option value="">-- Pilih Ukuran --</option>
+                                                    @foreach ($ukuranList as $ukuran)
+                                                        <option value="{{ $ukuran }}" {{ old('ukuran_produk') == $ukuran ? 'selected' : '' }}>{{ $ukuran }}</option>
+                                                    @endforeach
+                                                    <option value="custom" {{ old('ukuran_produk_is_custom') ? 'selected' : '' }}>Custom</option>
+                                                </select>
+
+                                                <input type="text"
+                                                    class="form-control mt-2 {{ old('ukuran_produk_is_custom') ? '' : 'd-none' }}"
+                                                    id="ukuran_produk_custom"
+                                                    placeholder="Masukkan ukuran custom (contoh: 2x3 meter)"
+                                                    value="{{ old('ukuran_produk_custom_value') }}" />
+
+                                                {{-- Hidden input to store the final selected/custom value for submission
+                                                --}}
+                                                <input type="hidden" name="ukuran_produk" id="ukuran_produk_final"
+                                                    value="{{ old('ukuran_produk') }}">
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="row mb-3 align-items-center">
+                                        <div class="col-md-4">
+                                            <label class="form-label fw-bold"><i class="bx bx-tag me-2"></i> Promo</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="text-muted">Potongan :
+                                                {{ $produk->diskon ? $produk->diskon . '%' : '0%' }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 align-items-center">
+                                        <div class="col-md-4">
+                                            <label for="catatan" class="form-label fw-bold"><i class="bx bx-label me-2"></i>
+                                                Catatan</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <textarea class="form-control" id="catatan" rows="1"
+                                                placeholder="Opsional"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 align-items-center">
+                                        <div class="col-md-4">
+                                            <label for="jumlahOrderInput" class="form-label fw-bold"><i
+                                                    class="bx bx-plus-minus me-2"></i> Jumlah</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="input-group">
+                                                <button class="btn btn-outline-secondary" type="button" id="minusButton"><i
+                                                        class="bx bx-minus"></i></button>
+                                                <input type="number" class="form-control text-center" id="jumlahOrderInput"
+                                                    value="1" min="1">
+                                                <button class="btn btn-outline-secondary" type="button" id="plusButton"><i
+                                                        class="bx bx-plus"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 align-items-center">
+                                        <div class="col-md-4">
+                                            <label for="uploadFile" class="form-label fw-bold"><i
+                                                    class="bx bx-upload me-2"></i> Upload File</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <input class="form-control form-control-sm" type="file" id="uploadFile">
+                                            <small class="text-muted">nb : jpg, png, jpeg, webp, pdf, rar, zip. max
+                                                10mb</small>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3 align-items-center">
+                                        <div class="col-md-4">
+                                            <label for="nomorHP" class="form-label fw-bold"><i class="bx bx-phone me-2"></i>
+                                                Nomor HP</label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <input type="tel" class="form-control" id="nomorHP" placeholder="Nomor Telepon">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card mt-3">
+                                <div class="card-body">
+                                    <h6 class="card-title fw-bold"><i class="bx bx-receipt me-2"></i> Rincian Harga</h6>
+                                    <hr>
+                                    <div class="row mb-2 fw-bold" style="margin-top: 10px;">
+                                        <div class="col-6">Total Harga Satuan</div>
+                                        <div class="col-6 text-end">Rp
+                                            <span id="hargaSatuanDisplay">{{ number_format($hargaSetelahDiskon, 0, ',', '.') }}</span>
+                                            @if ($produk->diskon > 0)
+                                                <span class="text-decoration-line-through ms-2 text-muted">
+                                                    Rp {{ number_format($produk->HargaProduk, 0, ',', '.') }}
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-6">Potongan</div>
+                                        <div class="col-6 text-end">{{ $produk->diskon ? $produk->diskon . '%' : '0%' }}
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-6">Jumlah Order</div>
+                                        <div class="col-6 text-end" id="summaryJumlahOrder">1</div>
+                                    </div>
+                                    <hr>
+                                    <div class="row fw-bold text-primary">
+                                        <div class="col-6" style="margin-top: 10px;">Total Pembayaran</div>
+                                        <div class="col-6 text-end" style="margin-top: 10px;">Rp
+                                            <span id="summaryTotalPembayaran">{{ number_format($hargaSetelahDiskon, 0, ',', '.') }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="d-grid gap-2" style="margin-top: 20px;">
+                                        <button class="btn btn-primary shadow-sm" type="button" id="beliSekarangBtn"><i
+                                                class="bx bx-credit-card me-2"></i> Beli Sekarang</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="beliSekarangModal" class="modal">
+                <div class="modal-content">
+                    <span class="close-button">&times;</span>
+                    <h2>Konfirmasi Pembelian</h2>
+                    <div class="konfirmasi-detail">
+                        <div class="konfirmasi-produk">
+                            <img src="{{ asset('storage/' . $produk->Img) }}" alt="{{ $produk->NamaProduk }}"
+                                class="product-image" id="modalProductImage"> <div class="produk-info">
+                                <h6 class="produk-nama" style="margin-left: 20px;">
+                                    {{ $produk->NamaProduk ?? 'Detail Produk' }}
+                                </h6>
+                                <small style="margin-left: 20px;">Ukuran: <span id="modalUkuran"></span></small><br>
+                                <small style="margin-left: 20px;">Catatan: <span id="modalCatatan"></span></small><br>
+                                <small style="margin-left: 20px;">Nomor HP: <span id="modalNomorHP"></span></small>
+                            </div>
+                        </div>
+                        <div class="konfirmasi-harga">
+                            <div class="harga-item">
+                                <span>Harga Satuan:</span>
+                                <span>Rp <span id="modalHargaSatuan"></span></span>
+                            </div>
+                            <div class="harga-item">
+                                <span>Jumlah:</span>
+                                <span><span id="modalJumlah"></span></span>
+                            </div>
+                            <div class="harga-item diskon">
+                                <span>Diskon (<span id="modalDiskonPersen"></span>):</span>
+                                <span>Rp <span id="modalDiskonNominal"></span></span>
+                            </div>
+                            <div class="harga-item total">
+                                <span>Subtotal:</span>
+                                <span>Rp <span id="modalSubtotal"></span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn btn-secondary" id="batalBeliBtn">Batal</button>
+                        <button class="btn btn-primary">Beli Sekarang</button>
+                    </div>
+>>>>>>> fitur eccomerce terbaru
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+
+<style>
+    .product-image-container {
+        width: 100%;
+        /* Mengisi lebar parent (misalnya, col-md-4) */
+        height: 550px;
+        /* Tinggi yang Anda inginkan (sesuaikan!) */
+        overflow: hidden;
+        /* Potong gambar jika melebihi container */
+        display: flex;
+        /* Untuk centering gambar */
+        align-items: center;
+        /* Vertikal center gambar */
+        justify-content: center;
+        /* Horizontal center gambar */
+    }
+
+    .product-image {
+        width: 100%;
+        /* Gambar mengisi lebar container */
+        height: 100%;
+        /* Gambar mengisi tinggi container */
+        object-fit: cover;
+        /* Penting: Gambar memotong agar mengisi */
+        display: block;
+        /* Pastikan gambar block-level */
+        border-radius: 8px;
+        /* Jika Anda ingin sudut bulat */
+    }
+
+    /*ukuran bintang di sebelah teks ulasan*/
+    .star-filter {
+        cursor: pointer;
+        font-size: 2em;
+        /* Atau ukuran lain yang Anda inginkan */
+    }
+
+    /* CSS Anda yang sudah ada */
+    .jarakHarga {
+        margin-top: 30px;
+    }
+
+    /*Fitur pemesanan*/
+    .pemesanan-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, auto));
+        gap: 15px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, auto));
+        gap: 15px;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        margin-top: 20px;
+        border: 1px solid #ced4da;
+    }
+
+    .form-label {
+        font-size: 0.9em;
+        color: #495057;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .form-select,
+    .form-control {
+        font-size: 0.9em;
+    }
+
+    .input-group-text {
+        font-size: 0.9em;
+        border: 1px solid #ced4da;
+    }
+
+    .form-label {
+        font-size: 0.9em;
+        color: #495057;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .form-select,
+    .form-control {
+        font-size: 0.9em;
+    }
+
+    .input-group-text {
+        font-size: 0.9em;
+    }
+
+    .jumlah-container {
+        margin-right: 20px;
+    }
+
+    .jumlah-container label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 0.9em;
+        color: #495057;
+    }
+
+    .input-jumlah {
+        display: flex;
+        align-items: center;
+    }
+
+    .btn-jumlah {
+        background: none;
+        border: 1px solid #ced4da;
+        color: #495057;
+        width: 30px;
+        height: 30px;
+        border-radius: 4px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        font-size: 1em;
+        transition: background-color 0.2s ease;
+    }
+
+    .btn-jumlah:hover {
+        background-color: #e9ecef;
+    }
+
+    .input-jumlah input[type="number"] {
+        width: 50px;
+        height: 30px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        text-align: center;
+        margin: 0 5px;
+        -moz-appearance: textfield;
+        /* Firefox */
+    }
+
+    .input-jumlah input[type="number"]::-webkit-outer-spin-button,
+    .input-jumlah input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    .stok-total {
+        display: block;
+        margin-top: 5px;
+        font-size: 0.8em;
+        color: #6c757d;
+    }
+
+    .subtotal-container {
+        margin-right: auto;
+        /* Dorong tombol ke kanan */
+        text-align: right;
+    }
+
+    .subtotal-label {
+        font-size: 0.9em;
+        color: #495057;
+        margin-bottom: 3px;
+    }
+
+    .subtotal-harga {
+        font-size: 1.2em;
+        font-weight: bold;
+        color: #212529;
+    }
+
+    .tombol-container {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-keranjang {
+        background-color: #6f42c1;
+        /* Warna ungu mirip pada gambar */
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.9em;
+        transition: background-color 0.2s ease;
+    }
+
+    .btn-keranjang:hover {
+        background-color: #563d7c;
+    }
+
+    .btn-beli {
+        background-color: #e0f7fa;
+        /* Warna biru muda mirip pada gambar */
+        color: #00bcd4;
+        /* Warna teks biru tosca */
+        border: 1px solid #00bcd4;
+        padding: 10px 15px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.9em;
+        transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .btn-beli:hover {
+        background-color: #b2ebf2;
+        color: #008ba3;
+        border-color: #008ba3;
+    }
+
+    /*--------------------------*/
+    /* CSS Tambahan untuk Desain Pemesanan yang Lebih Menarik */
+    .card {
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        margin-bottom: 15px;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+        border: 1px solid #555;
+        border-radius: 8px;
+    }
+
+    .form-label {
+        font-size: 0.95rem;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control,
+    .form-select {
+        font-size: 0.9rem;
+        border-radius: 5px;
+        border: 1px solid #ced4da;
+    }
+
+    .input-group-text {
+        font-size: 0.9rem;
+        background-color: #f8f9fa;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+    }
+
+    .btn-outline-secondary {
+        border-radius: 5px;
+    }
+
+    .card-title {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+    }
+
+    .text-primary {
+        font-size: 1.05rem;
+    }
+
+    .shadow-sm {
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+    }
+    /* CSS Tambahan untuk Desain Pemesanan yang Lebih Menarik */
+    .card {
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        margin-bottom: 15px;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+        border: 1px solid #555;
+        border-radius: 8px;
+    }
+
+    .form-label {
+        font-size: 0.95rem;
+        color: #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control,
+    .form-select {
+        font-size: 0.9rem;
+        border-radius: 5px;
+        border: 1px solid #ced4da;
+    }
+
+    .input-group-text {
+        font-size: 0.9rem;
+        background-color: #f8f9fa;
+        border: 1px solid #ced4da;
+        border-radius: 5px;
+    }
+
+    .btn-outline-secondary {
+        border-radius: 5px;
+    }
+
+    .card-title {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+    }
+
+    .text-primary {
+        font-size: 1.05rem;
+    }
+
+    .shadow-sm {
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+    }
+
+    /*untuk button detail dan info penting*/
+    .nav-link:hover {
+        background-color: lightpurple;
+        /* Warna latar belakang saat kursor diarahkan */
+        color: black;
+        /* Anda mungkin ingin mengubah warna teks agar tetap terlihat */
+    }
+
+
+    .img-outline {
+        width: 100%;
+        height: auto;
+        border: 10px solid white;
+        padding: 2px;
+        border-radius: 15px;
+        object-fit: contain;
+    }
+
+    .img-outline-thin {
+        border-width: 3px !important;
+        border-radius: 10px;
+    }
+
+    .img-thumb-wrapper {
+        flex: 0 0 auto;
+        width: 70px;
+        height: 70px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        padding: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #fff;
+        margin-left: 10px;
+        cursor: pointer;
+        /* Menambahkan indikasi bahwa elemen bisa diklik */
+        transition: transform 0.3s ease-in-out;
+        /* Animasi transisi */
+        transform-origin: center center;
+        /* Mengatur titik pusat transformasi */
+    }
+
+    .img-thumb-wrapper:hover {
+        transform: scale(1.2);
+        /* Skala 1.2 kali ukuran semula saat dihover */
+    }
+
+    .img-thumb {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+
+    .thumbnail-scroll-wrapper {
+        overflow-x: hidden;
+        /* Sembunyikan konten yang melebihi lebar */
+        padding-bottom: 10px;
+
+    }
+
+    .thumbnail-scroll {
+        display: flex;
+        flex-wrap: nowrap;
+        /* Hitung lebar maksimum untuk 9 thumbnail (lebar thumbnail + margin) */
+        max-width: calc(9 * (70px + 5px));
+        /* Contoh: 70px lebar thumb, 5px margin */
+        margin-top: 10px;
+    }
+
+    /*rate ulasan pembeli*/
+    .review-summary {
+        padding: 15px;
+        border: 1px solid #555;
+        /* Garis outlane warna hitam*/
+        border-radius: 8px;
+        background-color: #f9f9f9;
+    }
+
+    .overall-rating {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+        font-size: 1.2em;
+    }
+
+    .overall-rating .star {
+        color: gold;
+        margin-right: 5px;
+    }
+
+    .rating-value {
+        font-weight: bold;
+    }
+
+    .out-of {
+        color: #777;
+    }
+
+    .satisfaction {
+        color: #28a745;
+        margin-bottom: 5px;
+        font-size: 0.9em;
+    }
+
+    .rating-count {
+        color: #555;
+        font-size: 0.9em;
+        margin-bottom: 10px;
+    }
+
+    .rating-bars {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .rating-bar {
+        display: flex;
+        align-items: center;
+        font-size: 0.9em;
+        margin-right: 25px;
+    }
+
+    .rating-bar .star {
+        color: gold;
+        margin-right: 10px;
+        font-size: 1em;
+    }
+
+    .rating-bar .bar-container {
+        background-color: #ddd;
+        border-radius: 5px;
+        height: 8px;
+        width: 100px;
+        /* Sesuaikan lebar sesuai kebutuhan */
+        margin-left: 10px;
+        margin-right: 10px;
+        overflow: hidden;
+    }
+
+    .rating-bar .bar {
+        background-color: rgb(5, 122, 248);
+        /* Warna bar */
+        height: 100%;
+        border-radius: 5px;
+    }
+
+    .rating-bar .count {
+        color: #777;
+        margin-left: 5px;
+    }
+
+    /* Style untuk Modal */
+    .modal {
+        display: none;
+        /* Tersembunyi secara default */
+        position: fixed;
+        /* Tetap di posisinya meskipun di-scroll */
+        z-index: 1;
+        /* Lapisan di atas elemen lain */
+        left: 0;
+        top: 0;
+        width: 100%;
+        /* Lebar penuh layar */
+        height: 100%;
+        /* Tinggi penuh layar */
+        overflow: auto;
+        /* Aktifkan scroll jika konten modal melebihi layar */
+        background-color: rgba(0, 0, 0, 0.4);
+        /* Latar belakang semi-transparan */
+        display: flex;
+        /* Mengaktifkan flexbox untuk pemosisian anak elemen */
+        justify-content: center;
+        /* Membuat anak elemen berada di tengah horizontal */
+        align-items: center;
+        /* Membuat anak elemen berada di tengah vertikal */
+    }
+
+    /* Style untuk Konten Modal (kotak putih) */
+    .modal-content {
+        background-color: #fefefe;
+        padding: 20px;
+        border: 1px solid #888;
+        border-radius: 8px;
+        position: relative;
+        /* Untuk memposisikan elemen di dalamnya */
+        width: auto;
+        /* Lebar menyesuaikan konten */
+        max-width: 1000px;
+        /* Lebar maksimum agar tidak terlalu lebar */
+    }
+
+    .modal-content .product-image {
+        /* Lebih spesifik */
+        max-width: 150px;
+        /* Sesuaikan dengan lebar yang Anda inginkan */
+        max-height: 150px;
+        /* Sesuaikan dengan tinggi yang Anda inginkan */
+        width: auto;
+        /* Biarkan lebar menyesuaikan proporsi */
+        height: auto;
+        /* Biarkan tinggi menyesuaikan proporsi */
+        object-fit: contain;
+        /* Jaga proporsi gambar */
+    }
+
+    .modal-content #main-image {
+        /* Jika Anda menggunakan ID */
+        max-width: 100px;
+        /* Sesuaikan dengan lebar yang Anda inginkan */
+        max-height: 100px;
+        /* Sesuaikan dengan tinggi yang Anda inginkan */
+        width: auto;
+        /* Biarkan lebar menyesuaikan proporsi */
+        height: auto;
+        /* Biarkan tinggi menyesuaikan proporsi */
+        object-fit: contain;
+        /* Jaga proporsi gambar */
+    }
+
+    .modal.show {
+        display: flex !important;
+    }
+
+
+    .close-button {
+        color: #aaa;
+        font-size: 28px;
+        font-weight: bold;
+        position: absolute;
+        /* Tambahkan properti position */
+        top: 10px;
+        /* Atur jarak dari atas */
+        right: 15px;
+        /* Atur jarak dari kanan */
+        cursor: pointer;
+        /* Tambahkan cursor agar terlihat bisa diklik */
+    }
+
+    .close-button:hover,
+    .close-button:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .modal-actions {
+        margin-top: 20px;
+        text-align: right;
+        /* Atau left jika tombol ingin di kiri */
+        display: flex;
+        /* Agar tombol berdampingan */
+        justify-content: flex-end;
+        /* Atau flex-start jika tombol ingin di kiri */
+        gap: 10px;
+        /* Jarak antar tombol */
+    }
+
+
+    .modal-actions button {
+        /* Style untuk tombol (warna, padding, dll. bisa disesuaikan) */
+    }
+
+    /* Style untuk Konfirmasi Pembelian yang Baru */
+    .konfirmasi-detail {
+        margin-top: 20px;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+    }
+
+    .konfirmasi-produk {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .produk-thumbnail {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 6px;
+        margin-right: 15px;
+        border: 1px solid #eee;
+    }
+
+    .produk-info {
+        flex-grow: 1;
+    }
+
+    .produk-nama {
+        font-size: 1.1em;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    .konfirmasi-harga {
+        margin-top: 10px;
+    }
+
+    .harga-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        font-size: 0.95em;
+        color: #555;
+    }
+
+    .harga-item.total {
+        font-weight: bold;
+        color: #28a745;
+        /* Or any other prominent color */
+        border-top: 1px solid #eee;
+        padding-top: 10px;
+        margin-top: 10px;
+    }
+
+    .harga-item.diskon {
+        color: #dc3545;
+        /* Red color for discount */
+    }
+
+    .modal-actions {
+        margin-top: 25px;
+        text-align: right;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    .modal-actions button {
+        padding: 10px 20px;
+        border-radius: 6px;
+        font-size: 0.95em;
+        cursor: pointer;
+        transition: opacity 0.2s ease-in-out;
+    }
+
+    .modal-actions button:hover {
+        opacity: 0.8;
+    }
+
+    .modal-actions .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+        border: none;
+    }
+
+    .modal-actions .btn-primary {
+        background-color: #007bff;
+        color: white;
+        border: none;
+    }
+
+    .review-images {
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        /* Aktifkan horizontal scroll jika konten meluap */
+        white-space: nowrap;
+        /* Mencegah gambar turun ke baris baru */
+        margin-bottom: 10px;
+        /* Berikan sedikit jarak di bawah area gambar */
+        padding-bottom: 5px;
+        /* Opsional: ruang di bawah gambar untuk scrollbar */
+    }
+
+    .review-images img {
+        width: 70px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 5px;
+        margin-right: 10px;
+        /* Jarak antar gambar */
+        flex-shrink: 0;
+        /* Mencegah gambar mengecil */
+    }
+
+    .review-images img:last-child {
+        margin-right: 0;
+        /* Hilangkan margin kanan pada gambar terakhir */
+    }
+
+    .user-reviews {
+        margin-top: 15px;
+        max-height: 680px;
+        /* Sesuaikan tinggi maksimal sesuai kebutuhan Anda (misalnya, tinggi 3 ulasan + sedikit ruang) */
+        overflow-y: auto;
+        /* Aktifkan vertical scroll jika konten meluap */
+        padding-right: 10px;
+        /* Opsional: ruang untuk scrollbar */
+    }
+
+    .user-review {
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .user-info .rating-stars .star {
+        color: gold;
+        font-size: 1em;
+        margin-right: 2px;
+    }
+
+    .user-info .rating-stars .star-empty {
+        color: #ccc;
+        font-size: 1em;
+        margin-right: 2px;
+    }
+
+    .review-content {
+        display: flex;
+        align-items: flex-start;
+    }
+
+    .review-images {
+        display: flex;
+        flex-direction: row;
+        overflow-x: auto;
+        white-space: nowrap;
+        margin-bottom: 10px;
+        padding-bottom: 5px;
+    }
+
+    .review-images img {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        border-radius: 5px;
+        margin-right: 5px;
+        flex-shrink: 0;
+    }
+
+    .review-images img:last-child {
+        margin-right: 0;
+    }
+
+    .review-text {
+        margin-top: 0;
+    }
+
+    .review-text a {
+        font-weight: bold;
+    }
+</style>
+
+
+
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const mainImage = document.getElementById('main-image');
+        const thumbnailScrollWrapper = document.getElementById('thumbnailScrollWrapper');
+        const beliSekarangBtn = document.getElementById('beliSekarangBtn');
+        const beliSekarangModal = document.getElementById('beliSekarangModal');
+        const closeButton = document.querySelector('.close-button');
+        const batalBeliBtn = document.getElementById('batalBeliBtn');
+
+        // Quantity calculation elements
+        const jumlahOrderInput = document.getElementById('jumlahOrderInput');
+        const plusButton = document.getElementById('plusButton');
+        const minusButton = document.getElementById('minusButton');
+        const summaryJumlahOrder = document.getElementById('summaryJumlahOrder');
+        const summaryTotalPembayaran = document.getElementById('summaryTotalPembayaran');
+        const hargaSatuanDisplay = document.getElementById('hargaSatuanDisplay');
+
+        // Input elements for modal
+        const ukuranProdukSelect = document.getElementById('ukuran_produk_select');
+        const ukuranProdukCustom = document.getElementById('ukuran_produk_custom');
+        const catatanInput = document.getElementById('catatan');
+        const uploadFileInput = document.getElementById('uploadFile');
+        const nomorHPInput = document.getElementById('nomorHP');
+
+        // Modal display elements
+        const modalProductImage = document.getElementById('modalProductImage');
+        const modalUkuran = document.getElementById('modalUkuran');
+        const modalCatatan = document.getElementById('modalCatatan');
+        const modalNomorHP = document.getElementById('modalNomorHP');
+        const modalHargaSatuan = document.getElementById('modalHargaSatuan');
+        const modalJumlah = document.getElementById('modalJumlah');
+        const modalDiskonPersen = document.getElementById('modalDiskonPersen');
+        const modalDiskonNominal = document.getElementById('modalDiskonNominal');
+        const modalSubtotal = document.getElementById('modalSubtotal');
+
+
+        // Get the initial product price and discount from your Blade variables
+        const basePrice = {{ $produk->HargaProduk }};
+        const discountPercentage = {{ $produk->diskon ?? 0 }};
+
+        function formatRupiah(amount) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount).replace('Rp', ''); // Remove 'Rp' as it's added manually
+        }
+
+        function updateTotal() {
+            let quantity = parseInt(jumlahOrderInput.value);
+            if (isNaN(quantity) || quantity < 1) {
+                quantity = 1;
+                jumlahOrderInput.value = 1;
+            }
+
+            // Calculate price after discount
+            let priceAfterDiscount = basePrice;
+            let discountAmount = 0;
+            if (discountPercentage > 0) {
+                discountAmount = basePrice * discountPercentage / 100;
+                priceAfterDiscount = basePrice - discountAmount;
+            }
+
+            const totalPrice = priceAfterDiscount * quantity;
+
+            summaryJumlahOrder.textContent = quantity;
+            summaryTotalPembayaran.textContent = formatRupiah(totalPrice);
+            hargaSatuanDisplay.textContent = formatRupiah(priceAfterDiscount); // Update harga satuan display
+        }
+
+        // Event Listeners for quantity buttons
+        plusButton.addEventListener('click', () => {
+            jumlahOrderInput.value = parseInt(jumlahOrderInput.value) + 1;
+            updateTotal();
+        });
+
+        minusButton.addEventListener('click', () => {
+            if (parseInt(jumlahOrderInput.value) > 1) {
+                jumlahOrderInput.value = parseInt(jumlahOrderInput.value) - 1;
+                updateTotal();
+            }
+        });
+
+        jumlahOrderInput.addEventListener('input', updateTotal);
+
+        // Initial update when the page loads
+        updateTotal();
+
+
+        if (mainImage && thumbnailScrollWrapper) {
+            const mainImageWidth = mainImage.offsetWidth;
+            thumbnailScrollWrapper.style.maxWidth = mainImageWidth + 'px';
+            thumbnailScrollWrapper.style.overflowX = 'auto';
+        }
+
+        // Ubah display modal dengan menambah/menghapus class "show"
+        beliSekarangBtn.addEventListener('click', function () {
+            // Populate modal with current values
+            const selectedUkuran = ukuranProdukSelect.value === 'custom' ? ukuranProdukCustom.value : ukuranProdukSelect.value;
+            const catatan = catatanInput.value || '-'; // Display '-' if empty
+            const nomorHP = nomorHPInput.value || '-'; // Display '-' if empty
+            const quantity = parseInt(jumlahOrderInput.value);
+
+            let priceAfterDiscount = basePrice;
+            let discountAmount = 0;
+            if (discountPercentage > 0) {
+                discountAmount = basePrice * discountPercentage / 100;
+                priceAfterDiscount = basePrice - discountAmount;
+            }
+            const totalPrice = priceAfterDiscount * quantity;
+
+
+            modalUkuran.textContent = selectedUkuran;
+            modalCatatan.textContent = catatan;
+            modalNomorHP.textContent = nomorHP;
+            modalHargaSatuan.textContent = formatRupiah(basePrice); // Original base price
+            modalJumlah.textContent = quantity;
+            modalDiskonPersen.textContent = discountPercentage > 0 ? `${discountPercentage}%` : '0%';
+            modalDiskonNominal.textContent = formatRupiah(discountAmount * quantity); // Total diskon
+            modalSubtotal.textContent = formatRupiah(totalPrice);
+
+            // Handle uploaded image
+            if (uploadFileInput.files.length > 0) {
+                const uploadedFile = uploadFileInput.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    modalProductImage.src = e.target.result;
+                };
+                reader.readAsDataURL(uploadedFile);
+            } else {
+                // If no file uploaded, revert to the original product image
+                modalProductImage.src = "{{ asset('storage/' . $produk->Img) }}";
+            }
+
+
+            beliSekarangModal.classList.add("show");
+        });
+
+        closeButton.addEventListener('click', function () {
+            beliSekarangModal.classList.remove("show");
+        });
+
+        batalBeliBtn.addEventListener('click', function () {
+            beliSekarangModal.classList.remove("show");
+        });
+
+        window.addEventListener('click', function (event) {
+            if (event.target === beliSekarangModal) {
+                beliSekarangModal.classList.remove("show");
+            }
+        });
+    });
+
+</script>
+
+<script>
+    function highlightStars(selectedStar) {
+        const stars = document.querySelectorAll('.star-filter');
+        const rating = parseInt(selectedStar.getAttribute('data-rating'));
+
+        stars.forEach(star => {
+            const starRating = parseInt(star.getAttribute('data-rating'));
+            if (starRating <= rating) {
+                star.style.color = 'gold'; // Warna emas yang lebih pekat adalah default
+            } else {
+                star.style.color = '#ccc';
+            }
+        });
+    }
+<<<<<<< 335e3ccf5a4496ef664d27b0f91c597a15b0f9d4
+            thumbnailScrollWrapper.style.overflowX = 'auto';
+        }
+
+        // Ubah display modal dengan menambah/menghapus class "show"
+        beliSekarangBtn.addEventListener('click', function () {
+            beliSekarangModal.classList.add("show");
+        });
+
+        closeButton.addEventListener('click', function () {
+            beliSekarangModal.classList.remove("show");
+        });
+
+        batalBeliBtn.addEventListener('click', function () {
+            beliSekarangModal.classList.remove("show");
+        });
+
+        window.addEventListener('click', function (event) {
+            if (event.target === beliSekarangModal) {
+                beliSekarangModal.classList.remove("show");
+            }
+        });
+    });
+
+</script>
+
+<script>
+    function highlightStars(selectedStar) {
+        const stars = document.querySelectorAll('.star-filter');
+        const rating = parseInt(selectedStar.getAttribute('data-rating'));
+
+        stars.forEach(star => {
+            const starRating = parseInt(star.getAttribute('data-rating'));
+            if (starRating <= rating) {
+                star.style.color = 'gold'; // Warna emas yang lebih pekat adalah default
+            } else {
+                star.style.color = '#ccc';
+            }
+        });
+    }
+=======
+</script>
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const select = document.getElementById('ukuran_produk_select');
+            const customInput = document.getElementById('ukuran_produk_custom');
+            const hiddenInput = document.getElementById('ukuran_produk_final');
+
+            function updateFinalValue() {
+                if (select.value === 'custom') {
+                    customInput.classList.remove('d-none');
+                    hiddenInput.value = customInput.value;
+                } else {
+                    customInput.classList.add('d-none');
+                    hiddenInput.value = select.value;
+                }
+            }
+
+            select.addEventListener('change', updateFinalValue);
+            customInput.addEventListener('input', function () {
+                hiddenInput.value = customInput.value;
+            });
+
+            // Panggil saat pertama kali jika old value adalah custom
+            if (select.value === 'custom') {
+                customInput.classList.remove('d-none');
+            }
+        });
+    </script>
+@endpush
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const selectEl = document.getElementById('ukuran_produk_select');
+        const customInput = document.getElementById('ukuran_produk_custom');
+        const hiddenFinal = document.getElementById('ukuran_produk_final');
+
+        function handleChange() {
+            const selectedValue = selectEl.value;
+            if (selectedValue === 'custom') {
+                customInput.classList.remove('d-none');
+                hiddenFinal.value = customInput.value; // Isi sementara
+            } else {
+                customInput.classList.add('d-none');
+                hiddenFinal.value = selectedValue;
+            }
+        }
+
+        selectEl.addEventListener('change', handleChange);
+
+        // Update hidden field saat user mengetik ukuran custom
+        customInput.addEventListener('input', function () {
+            hiddenFinal.value = this.value;
+        });
+    });
+>>>>>>> fitur eccomerce terbaru
+</script>

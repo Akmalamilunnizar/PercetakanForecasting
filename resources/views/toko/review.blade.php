@@ -181,7 +181,7 @@
             <span class="badge bg-primary">Note</span>
             <small class="text-muted">Catatan untuk pesanan</small>
             <div class="form-control mt-2" style="min-height: 100px;">
-              {{ session('order_notes') ?? 'Tidak ada catatan' }}
+              {{ session('order_notes') ? session('order_notes') : 'Tidak ada catatan' }}
             </div>
           </div>
 

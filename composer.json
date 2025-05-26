@@ -16,6 +16,7 @@
         "laravel/ui": "^4.5",
         "livewire/livewire": "^3.0",
         "livewire/volt": "^1.0",
+        "midtrans/midtrans-php": "^2.6",
         "paypal/rest-api-sdk-php": "*",
         "realrashid/sweet-alert": "^7.3",
         "santigarcor/laratrust": "^8.2"
