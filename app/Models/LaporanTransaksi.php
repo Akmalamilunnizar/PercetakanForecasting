@@ -4,20 +4,28 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Transaksi;
+use App\Models\Produk;
 
 class LaporanTransaksi extends Model
 {
     use HasFactory;
-
+    protected $table = 'laporantransaksi';
+    protected $primaryKey = 'Idlaporan_transaksi';
     protected $fillable = [
-        'kode_transaksi',
-        'nama_pelanggan',
-        'produk',
-        'jumlah',
-        'harga_satuan',
-        'total_harga',
-        'tanggal_transaksi',
-        'status_pembayaran',
-        'keterangan',
+        'IdTransaksi',
+        'IdProduk',
     ];
+
+     // relasi ke barang
+    public function transaksi()
+    {
+        return $this->belongsTo(Transaksi::class, 'IdTransaksi', 'IdTransaksi');
+    }
+
+    // relasi ke supplier
+    public function produk()
+    {
+        return $this->belongsTo(Produk::class, 'IdProduk', 'IdProduk');
+    }
 }

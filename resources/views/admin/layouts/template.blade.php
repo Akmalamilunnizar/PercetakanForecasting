@@ -13,8 +13,8 @@
     <meta name="description" content="" />
 
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ asset('dashboard2/assets/img/favicon/favicon.ico') }}" />
+   <!-- Favicon -->
+  <link rel="shortcut icon" href="{{ asset('dashboard2/assets/img/icons/logocime.png') }}" type="image/png" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -42,16 +42,6 @@
     <!-- Helpers -->
     <script src="{{ asset('dashboard2/assets/vendor/js/helpers.js') }}"></script>
     <script src="{{ asset('dashboard2/assets/js/config.js') }}"></script>
-    <style>
-        html,
-        body {
-            height: auto;
-            overflow-y: auto;
-            overflow-x: hidden;
-            margin: 0;
-            padding: 0;
-        }
-    </style>
 </head>
 
 <body>
@@ -60,182 +50,183 @@
         <div class="layout-container">
 
             <!-- Menu -->
-            <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme"
-                style="background: linear-gradient(to bottom, #32CD32, #228B22);">
-                <div class="main-sidebar sidebar-style-2">
-                    <a href="{{ url('/') }}" class="app-brand-link">
-                        <span class="app-brand-logo demo"
-                            style="display: flex; flex-direction: column; align-items: center;">
-                            <img src="{{ asset('dashboard2/assets/img/icons/logocime.png') }}"
-                                style="width: 200px; height: auto; margin-top: 20px; margin-left: 30px;" />
-                            <hr>
+            <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme" style="background-color: #f0f4f8; box-shadow: 2px 0 5px rgba(0,0,0,0.05); height: 100vh; overflow-y: auto;">
+            <div class="main-sidebar sidebar-style-2" style="padding: 20px; display: flex; justify-content: center; border-bottom: 1px solid #d1d9e6;">
+                <a href="{{ route('admindashboard') }}" class="app-brand-link" style="display: flex; justify-content: center; width: 100%;">
+            <img
+                src="{{ asset('dashboard2/assets/img/icons/logocime.png') }}"
+                alt="Logo"
+                class="logo-zoom-out"
+                style="width: 140px; height: auto; border-radius: 8px;"
+            />
+            </a>
 
-                        </span>
-                    </a>
-                    <div style="margin-top: 30px;"></div>
+            <style>
+            @keyframes zoomOut {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(0.8);
+            }
+            }
 
-                    <a href="javascript:void(0);"
-                        class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
-                        <i class="bx bx-chevron-left bx-sm align-middle"></i>
-                    </a>
-                </div>
-                {{-- <div class="menu-inner-shadow"></div> --}}
-                <ul class="menu-inner py-1">
-                    <li class="menu-item {{ request()->is('admin/dashboard') ? 'active' : '' }}">
-                        <a href="{{ route('admindashboard') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-home"></i>
-                            <div data-i18n="Analytics" class="larger-text">Dashboard</div>
-                        </a>
-                    </li>
-                    <li class="menu-item {{ request()->is('admin/all-satuan*') ? 'active' : '' }}">
-                        <a href="{{ route('allsatuan') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-table"></i>
-                            <div data-i18n="Basic" class="larger-text">Daftar Satuan</div>
-                        </a>
-                    </li>
-                    <li class="menu-item {{ request()->is('admin/all-type*') ? 'active' : '' }}">
-                        <a href="{{ route('alltype') }}" class="menu-link">
-                            <i class='menu-icon tf-icons bx bx-package'></i>
-                            <div data-i18n="Basic" class="larger-text">Daftar Jenis Barang</div>
-                        </a>
+            .logo-zoom-out {
+            animation: zoomOut 1.5s ease-in-out infinite alternate;
+            }
+            </style>
+     </div>
 
-                    </li>
-                    <li class="menu-item {{ request()->is('admin/all-item*') ? 'active' : '' }}">
-                        <a href="{{ route('allitems') }}" class="menu-link">
-                            <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
-                            <div data-i18n="Basic" class="larger-text">Daftar Barang</div>
-                        </a>
-                    </li>
-
-                     <li class="menu-item {{ request()->is('admin/all-produk*') ? 'active' : '' }}">
-                        <a href="{{ route('allproduk') }}" class="menu-link">
-                            <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
-                            <div data-i18n="Basic" class="larger-text">Daftar Produk</div>
-                        </a>
-                    </li> 
-
-                    <li class="menu-item {{ request()->is('admin/daftar-supplier*') ? 'active' : '' }}">
-                        <a href="{{ route('allsuppliers') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-store"></i>
-                            <div data-i18n="Basic" class="larger-text">Data Supplier</div>
-                        </a>
-                    </li>
-                    <li class="menu-item {{ request()->is('admin/all-customer*') ? 'active' : '' }}">
-                        <a href="{{ route('allcustomer') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-table"></i>
-                            <div data-i18n="Basic" class="larger-text">Daftar Customer</div>
-                        </a>
-                    </li>
-
-                    <li
-                        class="menu-item {{ request()->is('admin/all-laporan*') || request()->is('admin/laporan-transaksi') ? 'active' : '' }}">
-                        <a href="{{ route('laporanbarang') }}" class="menu-link">
-                            <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
-                            <div data-i18n="Basic" class="larger-text">Laporan</div>
-                        </a>
-                    </li>
-                    <li class="menu-item {{ request()->is('admin/all-transaksi*') ? 'active' : '' }}">
-                        <a href="{{ route('alltransaksi') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-collection"></i>
-                            <div data-i18n="Basic" class="larger-text">Data Transaksi</div>
-                        </a>
-                    </li>
-
-                    <li class="menu-item {{ request()->is('admin/admin-profile*') ? 'active' : '' }}">
-                        <a href="{{ route('profile') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-user"></i>
-                            <div data-i18n="Basic" class="larger-text">Profil</div>
-                        </a>
-                    </li>
-                    <!-- <div class="koi-image-container">
-                        <img src="{{ asset('assets/images/koi1.png') }}"
-                            style="opacity: 0.5; margin-top: 70px; width: 230px; height: auto;" />
-                    </div> -->
-                </ul>
-                <style>
-                    /* Mengubah warna teks menu menjadi putih terang dan bold */
-                    #layout-menu .menu-item .menu-link {
-                        overflow-y: auto;
-                        /* Enable scrolling */
-                        max-height: 100vh;
-                        /* Limit sidebar height to the viewport */
-                        color: #ffffff !important;
-                        /* Warna putih terang */
-                        font-weight: bold !important;
-                        /* Tebal */
-                    }
-
-                    .larger-text {
-                        font-size: 1.2rem;
-                        /* Sesuaikan ukuran sesuai kebutuhan */
-                        font-weight: bold;
-                        /* Opsional untuk membuat teks lebih tegas */
-                    }
-
-
-                    #layout-menu .menu-header .menu-header-text {
-                        color: #ffffff !important;
-                        /* Warna putih terang untuk header */
-                        font-weight: bold !important;
-                        /* Tebal */
-                    }
-
-                    /* Mengubah warna teks menu menjadi putih terang dan bold untuk item yang aktif */
-                    #layout-menu .menu-item.active .menu-link {
-                        overflow-y: auto;
-                        /* Enable scrolling */
-                        max-height: 100vh;
-                        /* Limit sidebar height to the viewport */
-                        color: #ffffff !important;
-                        font-weight: bold !important;
-                        background-color: transparent !important;
-                        /* Menjaga latar belakang tetap seperti sebelumnya */
-                    }
-
-
-                    /* Mengubah warna teks menu menjadi putih terang dan bold pada hover, jika perlu */
-                    #layout-menu .menu-item .menu-link:hover {
-                        overflow-y: auto;
-                        /* Enable scrolling */
-                        max-height: 100vh;
-                        /* Limit sidebar height to the viewport */
-                        color: #ffffff !important;
-                        background-color: rgba(0, 0, 0, 0.1) !important;
-                        /* Ubah efek hover sesuai kebutuhan */
-                    }
+  <ul class="menu-inner py-3" style="padding-left: 10px; padding-right: 10px;">
+    <li class="menu-item {{ request()->is('admin/dashboard') ? 'active' : '' }}">
+      <a href="{{ route('admindashboard') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-home"></i>
+        <div>Dashboard</div>
+      </a>
+    </li>
+   <li class="menu-item {{ request()->is('admin/all-satuan*') || request()->is('admin/edit-satuan*') || request()->is('admin/add-satuan') ? 'active' : '' }}">
+      <a href="{{ route('allsatuan') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-table"></i>
+        <div>Daftar Satuan</div>
+      </a>
+    </li>
+    <li class="menu-item {{ request()->is('admin/all-type*') || request()->is('admin/edit-type*') || request()->is('admin/add-type') ? 'active' : '' }}">
+      <a href="{{ route('alltype') }}" class="menu-link">
+        <i class='menu-icon tf-icons bx bx-package'></i>
+        <div>Daftar Jenis Barang</div>
+      </a>
+    </li>
+   <li class="menu-item {{ request()->is('admin/all-item*') || request()->is('admin/add-items*') || request()->is('admin/keluar-barang') || request()->is('admin/edit-item*') ? 'active' : '' }}">
+      <a href="{{ route('allitems') }}" class="menu-link">
+        <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
+        <div>Daftar Barang</div>
+      </a>
+    </li>
+    <li class="menu-item {{ request()->is('admin/all-produk*') || request()->is('admin/add-produk*') || request()->is('admin/edit-produk') ? 'active' : '' }}">
+      <a href="{{ route('allproduk') }}" class="menu-link">
+        <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
+        <div>Daftar Produk</div>
+      </a>
+    </li>
+    <li class="menu-item {{ request()->is('admin/daftar-supplier*') || request()->is('admin/add-supplier*') || request()->is('admin/edit-supplier') ? 'active' : '' }}">
+      <a href="{{ route('allsuppliers') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-store"></i>
+        <div>Data Supplier</div>
+      </a>
+    </li>
+   <li class="menu-item {{ request()->is('admin/daftar-customer*') ? 'active' : '' }}">
+      <a href="{{ route('allcustomer') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-table"></i>
+        <div>Daftar Customer</div>
+      </a>
+    </li>
+    <li class="menu-item {{ request()->is('admin/laporanbarang*') || request()->is('admin/detaillaporanbarang*') || request()->is('admin/laporantransaksi') || request()->is('admin/detail-laporantransaksi*') ? 'active' : '' }}">
+      <a href="{{ route('laporanbarang') }}" class="menu-link">
+        <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
+        <div>Laporan</div>
+      </a>
+    </li>
+    <li class="menu-item {{ request()->is('admin/all-transaksi*') ? 'active' : '' }}">
+      <a href="{{ route('alltransaksi') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-collection"></i>
+        <div>Data Transaksi</div>
+      </a>
+    </li>
+  </ul>
+ <!-- Tombol Logout di bagian bawah sidebar -->
+<div style="position: absolute; bottom: 20px; left: 0; width: 100%; padding: 0 20px;">
+  <a href="{{ route('adminlogout') }}"
+     style="display: block; width: 100%; background-color: #2f80ed; color: white; text-align: center; border-radius: 8px; padding: 12px; font-weight: bold; font-size: 16px; text-decoration: none;">
+    Logout
+  </a>
+</div>
 
 
 
+  <style>
+    /* Sidebar container */
+    #layout-menu {
+      overflow-y: auto;
+      max-height: 100vh;
+      background-color: #f0f4f8;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+    }
 
-                    /* Jika Anda ingin mengubah latar belakang item menu aktif */
-                    #layout-menu .menu-item.active {
-                        background-color: rgba(0, 0, 0, 0.2) !important;
-                        /* Sesuaikan warna latar belakang aktif */
-                    }
-                </style>
+    /* Menu link style */
+    #layout-menu .menu-link {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: #333 !important;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      font-size: 1rem;
+    }
 
-            </aside>
-            <!-- / Menu -->
+    /* Icon spacing */
+    #layout-menu .menu-link i {
+      margin-right: 12px;
+      font-size: 1.25rem;
+    }
+
+    /* Active menu item */
+    #layout-menu .menu-item.active .menu-link {
+      background-color: #d0e7ff;
+      color: #007bff !important;
+      box-shadow: 0 0 8px rgba(0,123,255,0.4);
+    }
+
+    /* Hover effect */
+    #layout-menu .menu-link:hover {
+      background-color: #e8f4fd;
+      color: #007bff !important;
+      text-decoration: none;
+    }
+
+    /* Spacing between menu items */
+    #layout-menu .menu-inner li {
+      margin-bottom: 8px;
+    }
+
+    /* Brand logo */
+    .app-brand-link img {
+      border-radius: 8px;
+      transition: transform 0.3s ease;
+    }
+
+    .app-brand-link img:hover {
+      transform: scale(1.05);
+    }
+
+    /* Scrollbar styling for sidebar (optional, modern) */
+    #layout-menu::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    #layout-menu::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    #layout-menu::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 123, 255, 0.3);
+      border-radius: 10px;
+    }
+  </style>
+</aside>
+
 
             <!-- Layout container -->
-            <div class="layout-page">
+            <div class="layout-page" style="background-color: rgb(240, 246, 250);">
 
                 <!-- Navbar -->
                 <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
-                    id="layout-navbar" style="background: linear-gradient(135deg, #28a745, #0e6b2f);">
+                    id="layout-navbar" style="background: linear-gradient(135deg,rgb(255, 255, 255),rgb(255, 255, 255));">
                     <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
                         <div class="dropdown">
                             <a class="nav-item nav-link px-0 me-xl-4 dropdown-toggle" href="javascript:void(0)" data-bs-toggle="dropdown">
                                 <i class="bx bx-menu bx-sm"></i>
                             </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a class="dropdown-item" href="{{ route('adminlogout') }}">
-                                        <i class="bx bx-power-off me-2"></i>
-                                        <span class="align-middle">Log Out</span>
-                                    </a>
-                                </li>
-                            </ul>
                         </div>
                     </div>
 
@@ -255,7 +246,7 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li>
-                                        <a class="dropdown-item" href="#">
+                                        <a class="dropdown-item" href="{{ route('profile') }}">
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0 me-3">
                                                     <div class="avatar avatar-online">
@@ -271,15 +262,6 @@
                                                     <small class="text-muted">Admin</small>
                                                 </div>
                                             </div>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <div class="dropdown-divider"></div>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="{{ route('adminlogout') }}">
-                                            <i class="bx bx-power-off me-2"></i>
-                                            <span class="align-middle">Log Out</span>
                                         </a>
                                     </li>
                                 </ul>

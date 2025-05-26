@@ -1,10 +1,11 @@
     @extends('admin.layouts.template')
 
     @section('page_title')
-        Daftar Produk - Sistem Manajemen Percetakan
+CIME | Halaman Daftar Produk
     @endsection
-
     @section('search')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
         <div class="navbar-nav align-items-center">
             <div class="nav-item d-flex align-items-center">
                 <i class="bx bx-search fs-4 lh-0"></i>
@@ -16,27 +17,21 @@
 
     @section('content')
         <div class="container-xxl flex-grow-1 container-p-y">
-            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Produk /</span> Daftar Produk</h4>
+            <h4 class="py-2 mb-3"><span class="text-muted fw-light">Data Produk /</span> Daftar Produk</h4>
+            <a href="{{ route('addproduk') }}" class="btn btn-outline-primary mb-3">
+                + Tambah Produk
+            </a>
 
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Daftar Produk</h5>
-                    <div class="d-flex gap-2">
-                        <a href="{{ route('addproduk') }}" class="btn btn-primary">
-                            <i class="bx bx-plus"></i> Tambah Produk
-                        </a>
-                        <form action="{{ route('searchproduk') }}" method="GET" class="d-flex gap-2">
-                            <input type="text" name="search" class="form-control" placeholder="Cari produk..." value="{{ $search ?? '' }}">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bx bx-search"></i>
-                            </button>
-                        </form>
-                    </div>
+            @if (session()->has('message'))
+                <div class="alert alert-success mb-2">
+                    {{ session()->get('message') }}
                 </div>
 
+            <div class="card mt-3">
+                <h5 class="card-header">Produk Yang Terdaftar</h5>
                 <div class="table-responsive text-nowrap">
-                    <table class="table">
-                        <thead class="table-light">
+                    <table class="table table-striped">
+                     <thead class="table-primary">
                             <tr>
                                 <th>ID</th>
                                 <th>Gambar</th>
@@ -74,24 +69,17 @@
                                             <span class="text-muted">-</span>
                                         @endif
                                     </td>
-                                    <td>
-                                        <div class="dropdown">
-                                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                                <i class="bx bx-dots-vertical-rounded"></i>
-                                            </button>
-                                            <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="{{ route('editproduk', $produk->IdProduk) }}">
-                                                    <i class="bx bx-edit-alt me-1"></i> Edit
-                                                </a>
-                                                <form action="{{ route('deleteproduk', $produk->IdProduk) }}" method="POST" class="d-inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="dropdown-item" onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')">
-                                                        <i class="bx bx-trash me-1"></i> Delete
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </div>
+                                    <td class="text-center">
+                                        <a href="{{ route('editproduk', $produk->IdProduk) }}"  class="btn btn-warning">
+                                            <i class="fas fa-edit me-1"></i> Edit
+                                        </a>
+                                       <form action="{{ route('deleteproduk', $produk->IdProduk) }}" method="POST" style="display:inline;" id="delete-form-{{ $produk->IdProduk }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <a href="#" class="btn btn-danger" onclick="event.preventDefault(); if(confirm('Yakin ingin menghapus produk ini?')) document.getElementById('delete-form-{{ $produk->IdProduk }}').submit();">
+                                                <i class="fas fa-trash-alt me-1"></i> Delete
+                                            </a>
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach

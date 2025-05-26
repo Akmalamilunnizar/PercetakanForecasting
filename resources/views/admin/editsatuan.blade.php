@@ -1,6 +1,6 @@
 @extends('admin.layouts.template')
 @section('page_title')
-    CIME
+CIME | Halaman Edit Satuan
 @endsection
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
@@ -8,8 +8,7 @@
         <div class="col-xxl">
             <div class="card mb-4">
                 <div class="card-header d-flex align-items-center justify-content-between">
-                    <h5 class="mb-0">Edit Satuan</h5>
-                    <small class="text-muted float-end">Input Informasi</small>
+                  <h5 class="mb-0 fw-bold fs-4">Edit Satuan</h5>
                 </div>
                 <div class="card-body">
                     @if ($errors->any())
@@ -40,7 +39,7 @@
                         </div>
                         <div class="row justify-content-end">
                             <div class="col-sm-10">
-                                <button type="submit" class="btn btn-primary">Update Satuan</button>
+                                <button type="submit" class="btn btn-outline-primary">Update Satuan</button>
                             </div>
                         </div>
                     </form>

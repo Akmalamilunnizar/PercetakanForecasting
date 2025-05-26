@@ -18,6 +18,7 @@
         "livewire/volt": "^1.0",
         "midtrans/midtrans-php": "^2.6",
         "paypal/rest-api-sdk-php": "*",
+        "realrashid/sweet-alert": "^7.3",
         "santigarcor/laratrust": "^8.2"
     },
     "require-dev": {

@@ -57,9 +57,24 @@
         <div class="row">
           <div class="col-lg-12">
             <nav class="navbar navbar-expand-lg">
-              <a class="navbar-brand" href="{{ url('/') }}" style="margin-left: 25px;">
+               <style>
+                @keyframes pulse {
+                  0% { transform: scale(1); }
+                  50% { transform: scale(1.1); }
+                  100% { transform: scale(1); }
+                }
+
+                .pulse {
+                  display: inline-block; /* supaya transform work */
+                  animation: pulse 2s ease-in-out infinite;
+                }
+              </style>
+
+              <a class="logo pulse" href="javascript:void(0)">
                 <img src="{{ asset('dashboard2/assets/img/icons/logocime.png') }}" alt="Logo" />
               </a>
+
+
 
               </a>
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -140,9 +155,6 @@
                 style="font-size: 35px;">
                 Optimasi Manajemen Stok di Industri Percetakan Menggunakan Prediksi Penjualan
               </h2>
-              <p class="text wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.8s" style="font-size: 20px;">
-              Sistem prediksi penjualan untuk mengoptimalkan pengelolaan stok bahan di industri percetakan  
-              </p>
             </div>
 
           </div>
@@ -150,9 +162,21 @@
 
         <div class="row">
           <div class="col-lg-12">
-            <div class="header-hero-image text-center wow fadeIn" data-wow-duration="1.3s" data-wow-delay="1.4s">
+            <style>
+              @keyframes swing {
+                0% { transform: translateX(0px); }
+                50% { transform: translateX(15px); }
+                100% { transform: translateX(0px); }
+              }
+
+              .swinging {
+                animation: swing 4s ease-in-out infinite;
+              }
+            </style>
+            <div class="header-hero-image text-center wow fadeIn swinging" data-wow-duration="1.3s" data-wow-delay="1.4s">
               <img src="{{ asset('dashboard2/assets/img/imgtoko/print2.png') }}" alt="print" />
             </div>
+
 
           </div>
         </div>
@@ -334,9 +358,21 @@
             </div>
           </div>
           <div class="col-lg-6">
-            <div class="about-image text-center mt-50 wow fadeInRightBig" data-wow-duration="1s" data-wow-delay="0.5s">
-              <img src="{{ asset('dashboard2/assets/img/imgtoko/print3.png') }}" alt="about" />
+            <style>
+              @keyframes swing {
+                0% { transform: translateX(0px); }
+                50% { transform: translateX(15px); }
+                100% { transform: translateX(0px); }
+              }
+
+              .swinging {
+                animation: swing 4s ease-in-out infinite;
+              }
+            </style>
+            <div class="header-hero-image text-center wow fadeIn swinging" data-wow-duration="1.3s" data-wow-delay="1.4s">
+              <img src="{{ asset('dashboard2/assets/img/imgtoko/print3.png') }}" alt="print" />
             </div>
+
           </div>
         </div>
       </div>
@@ -385,16 +421,11 @@
               </div>
 
               <p class="text">
-                The GenKs Koi 99 Farm terletak di lokasi yang mudah diakses dan menjadi pusat budidaya
-                serta penjualan ikan koi berkualitas unggul dengan berbagai jenis dan ukuran. Kami berfokus pada
-                memberikan layanan terbaik bagi para penghobi koi, termasuk konsultasi mengenai perawatan ikan dan
-                pengelolaan kolam. Dengan demikian, pelanggan dapat merasakan pengalaman optimal dalam merawat dan
-                menikmati keindahan koi mereka
+                Citra Media adalah usaha percetakan di Jember yang melayani berbagai kebutuhan cetak seperti undangan, brosur, banner, dan kartu nama. Kami hadir untuk memberikan hasil cetak berkualitas dengan harga bersahabat dan pelayanan cepat.
                 <br><br>
-                Gumuksari, Tegal Besar, Kaliwates, Jember Regency, East Java 68131, Indonesia
-                Kabupaten Jember, Jawa Timur, 68131
+                Sekarputih, Laden, Kec. Pamekasan, Kabupaten Pamekasan, Jawa Timur 69317
               </p>
-              <a href="https://maps.app.goo.gl/DuKjA14h9GYk25sM7" target="_blank" class="main-btn">Temukan Lokasi
+              <a href="https://www.google.com/maps/place/Percetakan+Citra+Media/@-7.1693678,113.4758272,17z/data=!4m14!1m7!3m6!1s0x2dd77e7512343c49:0x82e78bef3d99a4fc!2sPercetakan+Citra+Media!8m2!3d-7.169467!4d113.4758246!16s%2Fg%2F11g9jgjf93!3m5!1s0x2dd77e7512343c49:0x82e78bef3d99a4fc!8m2!3d-7.169467!4d113.4758246!16s%2Fg%2F11g9jgjf93?entry=ttu&g_ep=EgoyMDI1MDUxNS4xIKXMDSoJLDEwMjExNDUzSAFQAw%3D%3D" target="_blank" class="main-btn">Temukan Lokasi
                 Kami</a>
 
             </div>
@@ -402,7 +433,7 @@
           </div>
           <div class="col-lg-6 order-lg-first">
             <div class="about-image text-center mt-50 wow fadeInRightBig" data-wow-duration="1s" data-wow-delay="0.5s">
-              <img src="{{ asset('assets/images/about/genksKoi.svg') }}" alt="about" />
+              <img src="{{ asset('assets/images/about/cimelocations.png') }}" alt="about" />
             </div>
 
           </div>
@@ -570,10 +601,23 @@
         <div class="row">
           <div class="col-lg-4 col-md-6 col-sm-8">
             <div class="footer-about mt-50 wow fadeIn" data-wow-duration="1s" data-wow-delay="0.2s">
-              <a class="logo" href="javascript:void(0)">
-           
+             <style>
+                @keyframes pulse {
+                  0% { transform: scale(1); }
+                  50% { transform: scale(1.1); }
+                  100% { transform: scale(1); }
+                }
+
+                .pulse {
+                  display: inline-block; /* supaya transform work */
+                  animation: pulse 2s ease-in-out infinite;
+                }
+              </style>
+
+              <a class="logo pulse" href="javascript:void(0)">
                 <img src="{{ asset('dashboard2/assets/img/icons/logocime.png') }}" alt="Logo" />
               </a>
+
               <p class="text">
               Citra Media adalah usaha percetakan di Jember yang melayani berbagai kebutuhan cetak seperti undangan, 
               brosur, banner, dan kartu nama. Kami hadir untuk memberikan hasil cetak berkualitas dengan harga bersahabat dan pelayanan cepat.
@@ -613,7 +657,6 @@
                 <li>0896 2716 0919</li>
                 <li>
                 <li>Citramedia@gmail.com</li>
-                <li>www.genks99.com</li>
                 <li>
                 Kabupaten Jember, Jawa Timur 68121<br />
                 Indonesia

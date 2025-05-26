@@ -1,6 +1,6 @@
 @extends('admin.layouts.template')
 @section('page_title')
-    Keluar Barang - Single Ecom
+CIME | Halaman Keluar Barang
 @endsection
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
@@ -13,7 +13,7 @@
         @endif
 
         <div class="card">
-            <h5 class="card-header">Form Keluar Barang</h5>
+            <h5 class="card-header fw-bold">Form Barang Keluar</h5>
             <div class="card-body">
                 <form action="{{ route('store-exititems') }}" method="POST">
                     @csrf
@@ -49,8 +49,7 @@
 
                     <div class="row">
                         <div class="col-12">
-                            <button type="submit" class="btn btn-primary">Simpan</button>
-                            <a href="{{ route('allitems') }}" class="btn btn-secondary">Kembali</a>
+                            <button type="submit" class="btn btn-outline-primary">Barang keluar</button>
                         </div>
                     </div>
                 </form>

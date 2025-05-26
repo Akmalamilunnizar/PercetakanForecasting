@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Items;
 use App\Models\Diskon;
 use App\Models\Size;
+use App\Models\LaporanTransaksi;
 
 class Produk extends Model
 {
@@ -53,5 +54,10 @@ class Produk extends Model
     public function size()
     {
         return $this->belongsTo(Size::class, 'ukuran', 'id_ukuran');
+    }
+
+     public function laporantransaksi()
+    {
+        return $this->hasMany(LaporanTransaksi::class, 'IdProduk', 'IdProduk');
     }
 }

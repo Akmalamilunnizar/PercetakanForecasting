@@ -42,10 +42,11 @@ class SupplierController extends Controller
             'Alamat' => 'required',
         ]);
 
-        Supplier::create($request->all());
+        Supplier::create($request->only(['IdSupplier', 'NamaSupplier', 'NoTelp', 'Alamat']));
 
         return redirect()->route('allsuppliers')->with('message', 'Supplier berhasil ditambahkan!');
     }
+
 
     public function editSupplier($IdSupplier)
     {

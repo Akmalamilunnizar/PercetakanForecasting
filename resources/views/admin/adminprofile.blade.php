@@ -1,9 +1,10 @@
 @extends('admin.layouts.template')
 @section('page_title')
-    SANKE | Halaman Ubah Profil Admin
+CIME | Halaman Profil Admin
 @endsection
-
 @section('search')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <div class="navbar-nav align-items-center">
         <div class="nav-item d-flex align-items-center">
             <i class="bx bx-search fs-4 lh-0"></i>
@@ -41,15 +42,9 @@
                 <div class="row">
                     <div class="col-md-12">
                         <ul class="nav nav-pills flex-column flex-md-row mb-3">
-                            <li class="nav-item">
-                                <a class="nav-link active" href="javascript:void(0);"
-                                    style="background: linear-gradient(135deg, #00FF00, #006400);">
-                                    <i class="bx bx-user me-1"></i> Akun Admin
-                                </a>
-                            </li>
                         </ul>
                         <div class="card mb-4">
-                            <h5 class="card-header">Detail Profil</h5>
+                            <h5 class="card-header fw-bold">Detail Profil</h5>
                             <form method="POST" action="{{ route('storeprofile') }}" enctype="multipart/form-data" id="profileForm">
                                 @csrf
                                 <div class="card-body">
@@ -57,8 +52,7 @@
                                         <img src="{{ Auth::user()->img ? asset('uploads/users/' . Auth::user()->img) : asset('uploads/users/images/default-avatar.png') }}" alt="user-avatar"
                                             class="d-block rounded" height="100" width="100" id="uploadedAvatar" />
                                         <div class="button-wrapper">
-                                            <label for="img" class="btn btn-primary me-2 mb-4" tabindex="0"
-                                                style="background: linear-gradient(135deg, #00FF00, #006400);">
+                                            <label for="img" class="btn btn-primary me-2 mb-4" tabindex="0">
                                                 <span>Unggah Foto</span>
                                             </label>
                                             <input type="file" id="img" name="img" class="form-control" style="display: none;" accept="image/*" />
@@ -113,8 +107,7 @@
                                                     name="newPassword_confirmation" placeholder="Konfirmasi password baru" />
                                             </div>
                                             <div class="mt-3">
-                                                <button type="submit" class="btn btn-primary w-100"
-                                                    style="background: linear-gradient(135deg, #00FF00, #006400);">
+                                                <button type="submit" class="btn btn-outline-primary w-100"  style="width: 100%; background-color: #2f80ed; color: white; border: none; border-radius: 8px; padding: 12px; font-weight: bold; font-size: 16px; cursor: pointer;">
                                                     Simpan
                                                 </button>
                                             </div>

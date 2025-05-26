@@ -1,10 +1,11 @@
 @extends('admin.layouts.template')
 
 @section('page_title')
-    CIME | Daftar Customer
+CIME | Halaman Daftar Customer
 @endsection
-
 @section('search')
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
     <div class="navbar-nav align-items-center">
         <div class="nav-item d-flex align-items-center">
             <i class="bx bx-search fs-4 lh-0"></i>
@@ -26,32 +27,33 @@
     </div>
 @endif
 <div class="card">
-    <h5 class="card-header">Customer yang Terdaftar</h5>
+    <h5 class="card-header fw-bold">Customer yang Terdaftar</h5>
     <div class="table-responsive text-nowrap">
-        <table class="table">
-            <thead class="table-light">
+                <table class="table table-striped">
+                     <thead class="table-primary">
                 <tr>
-                    <th>Id</th>
-                    <th>Nama Customer</th>
-                    <th>Nomor telepon</th>
-                    <th>Email</th>
-                    <th>Alamat</th>
-                    <th>Actions</th>
+                  <th style="text-align: center; font-weight: bold;">Id</th>
+                <th style="text-align: center; font-weight: bold;">Nama Customer</th>
+                <th style="text-align: center; font-weight: bold;">Nomor Telepon</th>
+                <th style="text-align: center; font-weight: bold;">Email</th>
+                <th style="text-align: center; font-weight: bold;">Alamat</th>
+                <th style="text-align: center; font-weight: bold;">Actions</th>
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
 
                 @foreach ($customer as $item)
                     <tr>
-                        <td>{{ $item->id }}</td>
-                        <td>{{ $item->f_name }}</td>
-                        <td>{{ $item->nomor_telepon }}</td>
-                        <td>{{ $item->email }}</td>
-                        <td>{{ $item->alamat }}</td>
-                        <td>
-                            <a href="{{ route('deletecustomer', $item->id) }}" class="btn btn-warning">Delete</a>
+                        <td style="text-align: center;">{{ $item->id }}</td>
+                        <td style="text-align: center;">{{ $item->f_name }}</td>
+                        <td style="text-align: center;">{{ $item->nomor_telepon }}</td>
+                        <td style="text-align: center;">{{ $item->email }}</td>
+                        <td style="text-align: center;">{{ $item->alamat }}</td>
+                        <td style="text-align: center;">
+                            <a href="{{ route('deletecustomer', $item->id) }}" class="btn btn-danger" onclick="return confirm('Yakin ingin hapus data ini?')">
+                                        <i class="fas fa-trash-alt me-1"></i> Delete
+                                    </a>
                         </td>
-
                     </tr>
                 @endforeach
             </tbody>

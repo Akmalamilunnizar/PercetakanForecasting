@@ -22,8 +22,7 @@ class Supplier extends Model
     // Tipe data primary key (defaultnya integer)
     protected $keyType = 'string';
 
-    // Timestamp dimatikan kalau nggak ada created_at dan updated_at
-    public $timestamps = true;
+    public $timestamps = false;
 
     // Field yang bisa diisi mass-assignment
     protected $fillable = [
