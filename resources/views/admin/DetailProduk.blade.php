@@ -39,6 +39,12 @@
                             @endforeach
                         </div>
                     </div>
+                    @if(auth()->check() && $user)
+                        <div class="mt-4">
+                            <h5><b>Informasi Kontak</b></h5>
+                            <p>Nomor Telepon: {{ $user->nomor_telepon }}</p>
+                        </div>
+                    @endif
                     <div class="mt-4">
                         <div class="d-flex align-items-center">
                             <h5><b>Pilih Rating</b></h5>
@@ -235,8 +241,6 @@
                     </div>
                 </div>
                 <div class="col-md-6">
-<<<<<<< 335e3ccf5a4496ef664d27b0f91c597a15b0f9d4
-=======
                     <div>
                         <h1> <b style="font-size: 2em; color: black;">
                                 {{ $produk->NamaProduk ?? 'Detail Produk' }}
@@ -304,7 +308,9 @@
                                                     name="ukuran_produk_selected">
                                                     <option value="">-- Pilih Ukuran --</option>
                                                     @foreach ($ukuranList as $ukuran)
-                                                        <option value="{{ $ukuran }}" {{ old('ukuran_produk') == $ukuran ? 'selected' : '' }}>{{ $ukuran }}</option>
+                                                        <option value="{{ $ukuran->id_ukuran }}" {{ old('ukuran_produk') == $ukuran->id_ukuran ? 'selected' : '' }}>
+                                                            {{ $ukuran->nama }} ({{ $ukuran->panjang }} x {{ $ukuran->lebar }} cm)
+                                                        </option>
                                                     @endforeach
                                                     <option value="custom" {{ old('ukuran_produk_is_custom') ? 'selected' : '' }}>Custom</option>
                                                 </select>
@@ -377,7 +383,7 @@
                                                 Nomor HP</label>
                                         </div>
                                         <div class="col-md-8">
-                                            <input type="tel" class="form-control" id="nomorHP" placeholder="Nomor Telepon">
+                                            <input type="tel" class="form-control" id="nomorHP" placeholder="Nomor Telepon" value="{{ Auth::user()->nomor_telepon }}" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -461,9 +467,31 @@
                     </div>
                     <div class="modal-actions">
                         <button class="btn btn-secondary" id="batalBeliBtn">Batal</button>
-                        <button class="btn btn-primary">Beli Sekarang</button>
+                        <button class="btn btn-primary" id="modalBeliSekarangBtn">Pesan Sekarang</button>
                     </div>
->>>>>>> fitur eccomerce terbaru
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Konfirmasi -->
+    <div class="modal fade" id="modalBeliSekarang" tabindex="-1" aria-labelledby="modalBeliSekarangLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalBeliSekarangLabel">Konfirmasi Pesanan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Apakah Anda yakin ingin membeli produk ini sekarang?</p>
+                    <div class="mb-3">
+                        <label class="form-label">Jumlah Order</label>
+                        <input type="number" class="form-control" id="jumlahOrderInput" value="1" min="1">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" id="modalBeliSekarangBtn">Pesan Sekarang</button>
                 </div>
             </div>
         </div>
@@ -1385,6 +1413,73 @@
                 beliSekarangModal.classList.remove("show");
             }
         });
+
+        // Add click handler for the modal's Beli Sekarang button
+        const modalBeliSekarangBtn = document.getElementById('modalBeliSekarangBtn');
+        modalBeliSekarangBtn.addEventListener('click', function() {
+            // Get product details
+            const productId = '{{ $produk->IdProduk }}';
+            const productName = '{{ $produk->NamaProduk }}';
+            const productPrice = {{ $produk->HargaProduk }};
+            const productImg = '{{ $produk->Img }}';
+            const quantity = document.getElementById('jumlahOrderInput').value;
+            const size = sizeSelect.value;
+            const designFile = fileInput.files[0];
+            
+            // Create form data
+            const formData = new FormData();
+            formData.append('_token', '{{ csrf_token() }}');
+            formData.append('id', productId);
+            formData.append('nama', productName);
+            formData.append('harga', productPrice);
+            formData.append('img', productImg);
+            formData.append('quantity', quantity);
+            formData.append('ukuran', size);
+            formData.append('design_file', designFile);
+            
+            // Show loading state
+            modalBeliSekarangBtn.disabled = true;
+            modalBeliSekarangBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Memproses...';
+            
+            // Add to cart via AJAX
+            fetch('{{ route("cart.add") }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success message
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: 'Produk berhasil ditambahkan ke keranjang',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        // Redirect to cart page
+                        window.location.href = '{{ route("cart") }}';
+                    });
+                } else {
+                    throw new Error(data.error || 'Gagal menambahkan produk ke keranjang');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: error.message || 'Terjadi kesalahan saat menambahkan ke keranjang'
+                });
+                // Reset button state
+                modalBeliSekarangBtn.disabled = false;
+                modalBeliSekarangBtn.innerHTML = 'Beli Sekarang';
+            });
+        });
     });
 
 </script>
@@ -1403,47 +1498,6 @@
             }
         });
     }
-<<<<<<< 335e3ccf5a4496ef664d27b0f91c597a15b0f9d4
-            thumbnailScrollWrapper.style.overflowX = 'auto';
-        }
-
-        // Ubah display modal dengan menambah/menghapus class "show"
-        beliSekarangBtn.addEventListener('click', function () {
-            beliSekarangModal.classList.add("show");
-        });
-
-        closeButton.addEventListener('click', function () {
-            beliSekarangModal.classList.remove("show");
-        });
-
-        batalBeliBtn.addEventListener('click', function () {
-            beliSekarangModal.classList.remove("show");
-        });
-
-        window.addEventListener('click', function (event) {
-            if (event.target === beliSekarangModal) {
-                beliSekarangModal.classList.remove("show");
-            }
-        });
-    });
-
-</script>
-
-<script>
-    function highlightStars(selectedStar) {
-        const stars = document.querySelectorAll('.star-filter');
-        const rating = parseInt(selectedStar.getAttribute('data-rating'));
-
-        stars.forEach(star => {
-            const starRating = parseInt(star.getAttribute('data-rating'));
-            if (starRating <= rating) {
-                star.style.color = 'gold'; // Warna emas yang lebih pekat adalah default
-            } else {
-                star.style.color = '#ccc';
-            }
-        });
-    }
-=======
 </script>
 
 @push('scripts')
@@ -1500,5 +1554,123 @@
             hiddenFinal.value = this.value;
         });
     });
->>>>>>> fitur eccomerce terbaru
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const beliSekarangBtn = document.getElementById('beliSekarangBtn');
+        const sizeSelect = document.getElementById('ukuran_produk_select');
+        const fileInput = document.getElementById('uploadFile');
+        
+        // Initially disable the button
+        beliSekarangBtn.disabled = true;
+        
+        // Function to check if all required fields are filled
+        function validateForm() {
+            const isSizeSelected = sizeSelect && sizeSelect.value !== '';
+            const isFileSelected = fileInput && fileInput.files.length > 0;
+            
+            // Enable button only if both size and file are selected
+            beliSekarangBtn.disabled = !(isSizeSelected && isFileSelected);
+            
+            // Add visual feedback
+            if (!isSizeSelected) {
+                sizeSelect.classList.add('is-invalid');
+            } else {
+                sizeSelect.classList.remove('is-invalid');
+            }
+            
+            if (!isFileSelected) {
+                fileInput.classList.add('is-invalid');
+            } else {
+                fileInput.classList.remove('is-invalid');
+            }
+        }
+        
+        // Add event listeners for validation
+        if (sizeSelect) {
+            sizeSelect.addEventListener('change', validateForm);
+        }
+        
+        if (fileInput) {
+            fileInput.addEventListener('change', validateForm);
+        }
+        
+        // Add click handler for the button
+        beliSekarangBtn.addEventListener('click', function() {
+            // Validate again before proceeding
+            if (beliSekarangBtn.disabled) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Lengkapi Data',
+                    text: 'Silakan pilih ukuran dan upload file desain terlebih dahulu',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+            
+            // Get product details
+            const productId = '{{ $produk->IdProduk }}';
+            const productName = '{{ $produk->NamaProduk }}';
+            const productPrice = {{ $produk->HargaProduk }};
+            const productImg = '{{ $produk->Img }}';
+            const quantity = document.getElementById('jumlahOrderInput').value;
+            const size = sizeSelect.value;
+            const designFile = fileInput.files[0];
+            
+            // Create form data
+            const formData = new FormData();
+            formData.append('_token', '{{ csrf_token() }}');
+            formData.append('id', productId);
+            formData.append('nama', productName);
+            formData.append('harga', productPrice);
+            formData.append('img', productImg);
+            formData.append('quantity', quantity);
+            formData.append('ukuran', size);
+            formData.append('design_file', designFile);
+            
+            // Show loading state
+            beliSekarangBtn.disabled = true;
+            beliSekarangBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Memproses...';
+            
+            // Add to cart via AJAX
+            fetch('{{ route("cart.add") }}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success message
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: 'Produk berhasil ditambahkan ke keranjang',
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => {
+                        // Redirect to cart page
+                        window.location.href = '{{ route("cart") }}';
+                    });
+                } else {
+                    throw new Error(data.error || 'Gagal menambahkan produk ke keranjang');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: error.message || 'Terjadi kesalahan saat menambahkan ke keranjang'
+                });
+                // Reset button state
+                beliSekarangBtn.disabled = false;
+                beliSekarangBtn.innerHTML = '<i class="bx bx-credit-card me-2"></i> Beli Sekarang';
+            });
+        });
+    });
 </script>

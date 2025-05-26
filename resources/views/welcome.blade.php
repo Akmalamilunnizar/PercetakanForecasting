@@ -180,7 +180,7 @@
 
     <div class="d-flex justify-content-end mb-3">
       <a href="{{ route('tokodashboard') }}" class="btn btn-sm" style="color: #4318FF; font-size: 20px;">
-        Lihat Semua
+        Lihat Semua <i class="fas fa-arrow-right"></i>
       </a>
     </div>
 
@@ -191,17 +191,20 @@
 
       {{-- Carousel --}}
       <div id="carousel" class="d-flex overflow-hidden" style="gap: 20px; scroll-behavior: smooth; max-width: 100%;">
-        @foreach ($produk->take(8) as $item)
+        @foreach ($produk as $item)
           <div class="card shadow-sm border-0 p-3 flex-shrink-0"
                style="min-width: 300px; max-width: 300px; background-color: #f5f5f5; border-radius: 15px;">
-               <img src="{{ asset('storage/' . $item->Img) }}" class="img-fluid" alt="FotoProduk"
-               style="height: 280px; width: 100%; object-fit: cover; border-radius: 15px;">
+               <img src="{{ asset('storage/' . ($item->Img ?? 'default.jpg')) }}" 
+                    class="img-fluid" 
+                    alt="{{ $item->NamaProduk }}"
+                    style="height: 280px; width: 100%; object-fit: cover; border-radius: 15px;"
+                    onerror="this.onerror=null; this.src='{{ asset('storage/default.jpg') }}';">
                <div class="card-body" style="padding: 15px;">
                         <h5 class="fw-bold mb-1" style="color: #2B3674;">{{$item->NamaProduk}}</h5>
                         <p class="text-muted mb-2">Digital Printing</p>
                         <div class="d-flex justify-content-between align-items-center mt-3">
                             <span class="fw-bold" style="color: #4318FF;">Rp {{number_format($item->HargaProduk, 0, ',', '.')}}</span>
-                            <a href="#" class="btn" style="background-color: #1D1E94; color: white; border-radius: 30px; padding: 5px 20px;">Pesan</a>
+                            <a href="{{ route('detail.produk', ['id' => $item->IdProduk]) }}" class="btn" style="background-color: #1D1E94; color: white; border-radius: 30px; padding: 5px 20px;">Pesan</a>
                         </div>
                     </div>
           </div>
