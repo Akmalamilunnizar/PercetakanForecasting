@@ -1,4 +1,4 @@
-    @extends('admin.layouts.app')
+    @extends('admin.layouts.template')
 
     @section('page_title')
         Daftar Produk - Sistem Manajemen Percetakan
@@ -63,11 +63,13 @@
                                     <td>{{ $produk->NamaProduk }}</td>
                                     <td>Rp {{ number_format($produk->HargaProduk, 0, ',', '.') }}</td>
                                     <td>{{ $produk->size ? $produk->size->nama . ' (' . $produk->size->panjang . ' x ' . $produk->size->lebar . ' ' . $produk->size->satuan->Satuan . ')' : '-' }}</td>
-                                    <td>{{ $produk->bahan ?? '-' }}</td>
+                                    <td>{{ $produk->bahan ? $produk->bahan->NamaBarang : '-' }}</td>
                                     <td>{{ $produk->custom ?? '-' }}</td>
                                     <td>
-                                        @if($produk->diskon)
-                                            <span class="badge bg-label-success">{{ $produk->diskon->persentase }}%</span>
+                                        @if($produk->diskonRelasi && $produk->diskonRelasi->persentase !== null)
+                                            <span class="badge bg-label-success">
+                                                {{ $produk->diskonRelasi->persentase }}%
+                                            </span>
                                         @else
                                             <span class="text-muted">-</span>
                                         @endif

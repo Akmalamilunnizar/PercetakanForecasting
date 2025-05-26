@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Produk;
-use App\Models\DataBarang;
+use App\Models\Items;
 use App\Models\Diskon;
 use App\Models\Size;
 use Illuminate\Support\Facades\DB;
@@ -16,7 +16,7 @@ class ProdukController extends Controller
     // Menampilkan semua produk
     public function index()
     {
-        $dataProduk = Produk::with(['bahan', 'diskon', 'size'])->get();
+        $dataProduk = Produk::with(['bahan', 'diskonRelasi', 'size'])->get();
         return view('admin.allproduk', compact('dataProduk'));
     }
 
@@ -28,7 +28,7 @@ class ProdukController extends Controller
         $newId = $lastProduk ? 'P' . str_pad((substr($lastProduk->IdProduk, 1) + 1), 4, '0', STR_PAD_LEFT) : 'P0001';
 
         // Ambil data bahan, diskon, dan ukuran untuk dropdown
-        $bahanList = DataBarang::all();
+        $bahanList = Items::all();
         $diskonList = Diskon::all();
         $sizeList = Size::all();
 
@@ -78,8 +78,8 @@ class ProdukController extends Controller
     // Menampilkan form edit produk
     public function editProduk($id)
     {
-        $produk = Produk::with(['bahan', 'diskon', 'size'])->findOrFail($id);
-        $bahanList = DataBarang::all();
+        $produk = Produk::with(['bahan', 'diskonRelasi', 'size'])->findOrFail($id);
+        $bahanList = Items::all();
         $diskonList = Diskon::all();
         $sizeList = Size::all();
         return view('admin.editproduk', compact('produk', 'bahanList', 'diskonList', 'sizeList'));
@@ -146,7 +146,7 @@ class ProdukController extends Controller
     // Menampilkan list produk dalam format JSON
     public function get_produk_list()
     {
-        $produk = Produk::with(['bahan', 'diskon'])->get();
+        $produk = Produk::with(['bahan', 'diskonRelasi'])->get();
         return response()->json($produk, 200);
     }
 
@@ -155,18 +155,21 @@ class ProdukController extends Controller
     {
         $search = $request->search;
 
-        $produk = Produk::with(['bahan', 'diskon'])
+        $dataProduk = Produk::with(['bahan', 'diskonRelasi'])
+            ->leftJoin('databarang', 'produk.id_bahan', '=', 'databarang.IdBarang')
             ->where(function ($query) use ($search) {
                 $query->where('IdProduk', 'like', "%$search%")
                     ->orWhere('NamaProduk', 'like', "%$search%")
                     ->orWhere('HargaProduk', 'like', "%$search%")
                     ->orWhere('ukuran', 'like', "%$search%")
-                    ->orWhere('bahan', 'like', "%$search%")
-                    ->orWhere('custom', 'like', "%$search%")
-                    ->orWhere('deskripsi', 'like', "%$search%");
-            })->get();
+                    ->orWhere('id_bahan', 'like', "%$search%")
+                    ->orWhere('deskripsi', 'like', "%$search%")
+                    ->orWhere('databarang.NamaBarang', 'like', "%$search%");
+            })
+            ->select('produk.*')
+            ->get();
 
-        return view('admin.allproduk', compact('produk', 'search'));
+        return view('admin.allproduk', compact('dataProduk', 'search'));
     }
 
     // This method seems out of place for a ProdukController and refers to a Supplier model.

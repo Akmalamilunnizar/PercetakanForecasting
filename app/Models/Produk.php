@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\DataBarang;
+use App\Models\Items;
 use App\Models\Diskon;
 use App\Models\Size;
 
@@ -42,10 +42,10 @@ class Produk extends Model
     // Relationships
     public function bahan()
     {
-        return $this->belongsTo(DataBarang::class, 'id_bahan', 'IdBarang');
+        return $this->belongsTo(Items::class, 'id_bahan', 'IdBarang');
     }
 
-    public function diskon()
+    public function diskonRelasi()
     {
         return $this->belongsTo(Diskon::class, 'diskon', 'id');
     }
