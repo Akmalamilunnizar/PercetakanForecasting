@@ -6,39 +6,45 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\DB; // Jika Anda menggunakan Query Builder
+use App\Models\Produk;
+use App\Models\Size;
 
 class DetailProdukController extends Controller
 {
     public function show(string $id): View
     {
-        $produk = DB::table('produk')->where('IdProduk', $id)->first();
-
-        if (!$produk) {
-            abort(404);
-        }
+        $produk = Produk::findOrFail($id);
 
         $hargaAsli = $produk->HargaProduk;
         $diskonPersen = $produk->diskon ?? 0;
         $hargaSetelahDiskon = $hargaAsli - ($hargaAsli * ($diskonPersen / 100));
 
-        // Ambil dan olah ukuran produk dari semua data
-        $ukuranProduk = DB::table('produk')
-            ->whereNotNull('ukuran_produk')
-            ->where('ukuran_produk', '!=', '0')
-            ->pluck('ukuran_produk')
-            ->toArray();
+        // Get description from database
+        $description = $produk->deskripsi ?? 'Produk berkualitas dengan hasil cetak yang memukau. Tersedia dalam berbagai ukuran dan finishing.';
 
-        $ukuranList = collect($ukuranProduk)
-            ->flatMap(fn($item) => explode(',', $item))
-            ->map(fn($item) => trim($item))
-            ->unique()
-            ->values()
-            ->toArray();
+        // Get sizes using Eloquent relationship
+        $ukuranList = Size::whereIn('id_ukuran', function($query) {
+            $query->select('ukuran')
+                  ->from('produk')
+                  ->whereNotNull('ukuran')
+                  ->where('ukuran', '!=', '0');
+        })->get();
+
+        // Get user data if authenticated
+        $user = null;
+        $userPhone = '';
+        if (auth()->check()) {
+            $user = auth()->user();
+            $userPhone = $user->nomor_telepon ?? '';
+        }
 
         return view('admin.DetailProduk', [
             'produk' => $produk,
             'hargaSetelahDiskon' => $hargaSetelahDiskon,
-            'ukuranList' => $ukuranList // <-- KIRIM ke View
+            'ukuranList' => $ukuranList,
+            'userPhone' => $userPhone,
+            'description' => $description,
+            'user' => $user
         ]);
     }
 

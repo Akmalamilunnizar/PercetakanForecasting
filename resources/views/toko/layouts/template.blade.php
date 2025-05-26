@@ -51,7 +51,9 @@
 
      <!-- Logo -->
       <div class="d-flex align-items-center me-4" style="margin-left: 30px;">
-        <img src="{{ asset('dashboard2/assets/img/icons/logocime.png') }}" alt="Logo" width="120" class="me-2">
+        <a href="{{ url('/') }}">
+          <img src="{{ asset('dashboard2/assets/img/icons/logocime.png') }}" alt="Logo" width="120" class="me-2">
+        </a>
       </div>
         <!-- Search Bar -->
       <form class="flex-grow-1 me-4" style="max-width: 600px;" action="{{ route('tokodashboard') }}" method="GET">

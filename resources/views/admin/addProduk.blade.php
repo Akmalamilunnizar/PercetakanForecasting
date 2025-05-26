@@ -30,63 +30,78 @@ CIME | Halaman Tambah Produk
                         <div class="row mb-3">
                             <label class="col-sm-2 col-form-label" for="IdProduk">ID Produk</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="IdProduk" name="IdProduk" value="{{$newId}}"
-                                    readonly />
+                                <input type="text" class="form-control" id="IdProduk" name="IdProduk" value="{{$newId}}" readonly />
                             </div>
                         </div>
 
                         <div class="row mb-3">
                             <label class="col-sm-2 col-form-label" for="NamaProduk">Nama Produk</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="NamaProduk" name="NamaProduk"
-                                    placeholder="Banner" />
+                                <input type="text" class="form-control" id="NamaProduk" name="NamaProduk" placeholder="Banner" required />
                             </div>
                         </div>
 
                         <div class="row mb-3">
                             <label class="col-sm-2 col-form-label" for="HargaProduk">Harga Produk</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="HargaProduk" name="HargaProduk"
-                                    placeholder="5000" />
+                                <input type="number" class="form-control" id="HargaProduk" name="HargaProduk" placeholder="5000" required />
                             </div>
                         </div>
 
-                        {{-- New field: Ukuran Produk --}}
                         <div class="row mb-3">
-                            <label class="col-sm-2 col-form-label" for="ukuran_produk_tags">Ukuran Produk</label>
+                            <label class="col-sm-2 col-form-label" for="ukuran">Ukuran</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="ukuran_produk_tags" name="ukuran_produk"
-                                    placeholder="Ketik ukuran dan tekan Enter (misal: A4)"
-                                    value="{{ old('ukuran_produk') }}" />
-                                <small class="form-text text-muted">Ketik ukuran produk dan tekan Enter. Contoh: A4, A3,
-                                    A2.</small>
+                                <select class="form-select" id="ukuran" name="ukuran">
+                                    <option value="">Pilih Ukuran</option>
+                                    @foreach($sizeList as $size)
+                                        <option value="{{ $size->id_ukuran }}">{{ $size->nama }} ({{ $size->panjang }} x {{ $size->lebar }} {{ $size->satuan->Satuan }})</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
 
-                        {{-- New field: Jenis Bahan Produk --}}
                         <div class="row mb-3">
-                            <label class="col-sm-2 col-form-label" for="jenis_bahan_produk">Jenis Bahan Produk</label>
+                            <label class="col-sm-2 col-form-label" for="bahan">Bahan</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="jenis_bahan_produk" name="jenis_bahan_produk"
-                                    placeholder="Contoh: Flexy, Albatros" />
+                                <input type="text" class="form-control" id="bahan" name="bahan" placeholder="Contoh: Flexy, Albatros" />
                             </div>
                         </div>
 
-                        {{-- New field: Custom Produk --}}
                         <div class="row mb-3">
-                            <label class="col-sm-2 col-form-label" for="custom_produk">Custom Produk</label>
+                            <label class="col-sm-2 col-form-label" for="custom">Custom</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="custom_produk" name="custom_produk"
-                                    placeholder="Contoh: Ya/Tidak" />
+                                <input type="text" class="form-control" id="custom" name="custom" placeholder="Contoh: Ya/Tidak" />
                             </div>
                         </div>
 
-                        {{-- New field: Diskon --}}
+                        <div class="row mb-3">
+                            <label class="col-sm-2 col-form-label" for="id_bahan">Bahan (Database)</label>
+                            <div class="col-sm-10">
+                                <select class="form-select" id="id_bahan" name="id_bahan">
+                                    <option value="">Pilih Bahan</option>
+                                    @foreach($bahanList as $bahan)
+                                        <option value="{{ $bahan->IdBarang }}">{{ $bahan->NamaBarang }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="row mb-3">
                             <label class="col-sm-2 col-form-label" for="diskon">Diskon</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="diskon" name="diskon"
-                                    placeholder="Contoh: 10 (dalam persen)" />
+                                <select class="form-select" id="diskon" name="diskon">
+                                    <option value="">Pilih Diskon</option>
+                                    @foreach($diskonList as $diskon)
+                                        <option value="{{ $diskon->id }}">{{ $diskon->nama }} ({{ $diskon->persentase }}%)</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label class="col-sm-2 col-form-label" for="deskripsi">Deskripsi</label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control" id="deskripsi" name="deskripsi" rows="4" placeholder="Masukkan deskripsi produk" required></textarea>
                             </div>
                         </div>
 

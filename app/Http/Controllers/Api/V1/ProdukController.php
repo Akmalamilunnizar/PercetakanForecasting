@@ -5,15 +5,18 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Produk;
-use Illuminate\Support\Facades\DB; // Untuk query database
-use Illuminate\Support\Facades\Storage; // Untuk menghapus file gambar
+use App\Models\DataBarang;
+use App\Models\Diskon;
+use App\Models\Size;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ProdukController extends Controller
 {
     // Menampilkan semua produk
     public function index()
     {
-        $dataProduk = Produk::all();
+        $dataProduk = Produk::with(['bahan', 'diskon', 'size'])->get();
         return view('admin.allproduk', compact('dataProduk'));
     }
 
@@ -24,8 +27,12 @@ class ProdukController extends Controller
         $lastProduk = Produk::orderBy('IdProduk', 'desc')->first();
         $newId = $lastProduk ? 'P' . str_pad((substr($lastProduk->IdProduk, 1) + 1), 4, '0', STR_PAD_LEFT) : 'P0001';
 
-        // Kirim variabel newId ke view
-        return view('admin.addproduk', compact('newId'));
+        // Ambil data bahan, diskon, dan ukuran untuk dropdown
+        $bahanList = DataBarang::all();
+        $diskonList = Diskon::all();
+        $sizeList = Size::all();
+
+        return view('admin.addproduk', compact('newId', 'bahanList', 'diskonList', 'sizeList'));
     }
 
     // Menyimpan produk baru
@@ -35,11 +42,13 @@ class ProdukController extends Controller
         $request->validate([
             'NamaProduk' => 'required',
             'HargaProduk' => 'required|numeric',
-            'ukuran_produk' => 'nullable|string|max:255', // Add validation for new fields
-            'jenis_bahan_produk' => 'nullable|string|max:255',
-            'custom_produk' => 'nullable|string|max:255',
-            'diskon' => 'nullable|numeric',
+            'ukuran' => 'nullable|exists:size,id_ukuran',
+            'bahan' => 'nullable|string|max:100',
+            'custom' => 'nullable|string|max:100',
+            'diskon' => 'nullable|exists:diskon,id',
+            'id_bahan' => 'nullable|exists:databarang,IdBarang',
             'Img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'deskripsi' => 'required|string|max:1500',
         ]);
 
         // Ambil ID produk terakhir dari database
@@ -49,21 +58,18 @@ class ProdukController extends Controller
         // Upload gambar
         $path = $request->file('Img')->store('produk', 'public');
 
-        $ukuranProduk = $request->ukuran_produk;
-        // Jika field kosong atau null, berikan nilai default
-        if (empty($ukuranProduk)) {
-            $ukuranProduk = 'Tidak Ada Ukuran'; // Atau 'N/A', 'Ukuran Default', dll.
-        }
         // Simpan data produk ke database
         Produk::create([
-            'IdProduk' => $newId, // ID produk otomatis
+            'IdProduk' => $newId,
             'NamaProduk' => $request->NamaProduk,
             'HargaProduk' => $request->HargaProduk,
-            'ukuran_produk' =>$ukuranProduk, // Save new field
-            'jenis_bahan_produk' => $request->jenis_bahan_produk, // Save new field
-            'custom_produk' => $request->custom_produk, // Save new field
-            'diskon' => $request->diskon, // Save new field
-            'Img' => $path, // Menyimpan path gambar
+            'ukuran' => $request->ukuran,
+            'bahan' => $request->bahan,
+            'custom' => $request->custom,
+            'diskon' => $request->diskon,
+            'id_bahan' => $request->id_bahan,
+            'Img' => $path,
+            'deskripsi' => $request->deskripsi,
         ]);
 
         return redirect()->route('allproduk')->with('message', 'Produk berhasil ditambahkan!');
@@ -72,8 +78,11 @@ class ProdukController extends Controller
     // Menampilkan form edit produk
     public function editProduk($id)
     {
-        $produk = Produk::findOrFail($id);
-        return view('admin.editproduk', compact('produk'));
+        $produk = Produk::with(['bahan', 'diskon', 'size'])->findOrFail($id);
+        $bahanList = DataBarang::all();
+        $diskonList = Diskon::all();
+        $sizeList = Size::all();
+        return view('admin.editproduk', compact('produk', 'bahanList', 'diskonList', 'sizeList'));
     }
 
     // Memperbarui data produk
@@ -81,42 +90,18 @@ class ProdukController extends Controller
     {
         $produk = Produk::findOrFail($id);
 
-        // --- DEBUGGING STEP 1: Lihat semua data yang diterima dari form ---
-        // dd($request->all()); // Uncomment baris ini untuk melihat semua data request
         // Validasi input
         $request->validate([
             'NamaProduk' => 'required',
             'HargaProduk' => 'required|numeric',
-            'ukuran_produk' => 'nullable|string|max:255',
-            'jenis_bahan_produk' => 'nullable|string|max:255',
-            'custom_produk' => 'nullable|string|max:255',
-            'diskon' => 'nullable|numeric',
+            'ukuran' => 'nullable|exists:size,id_ukuran',
+            'bahan' => 'nullable|string|max:100',
+            'custom' => 'nullable|string|max:100',
+            'diskon' => 'nullable|exists:diskon,id',
+            'id_bahan' => 'nullable|exists:databarang,IdBarang',
             'Img' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'deskripsi' => 'required|string|max:1500',
         ]);
-
-        // Inisialisasi variabel dengan nilai dari request
-        $ukuranProduk = $request->ukuran_produk;
-        $jenisBahanProduk = $request->jenis_bahan_produk;
-        $customProduk = $request->custom_produk;
-
-        // Terapkan nilai default jika kosong
-        if (empty($ukuranProduk)) {
-            $ukuranProduk = 'Tidak Ada Ukuran';
-        }
-        if (empty($jenisBahanProduk)) {
-            $jenisBahanProduk = 'Tidak Ada Jenis Bahan';
-        }
-        if (empty($customProduk)) {
-            $customProduk = 'Tidak Ada Kustomisasi';
-        }
-
-        // --- DEBUGGING STEP 2: Lihat nilai variabel setelah diolah ---
-        // dd([
-        //     'ukuran_produk_final' => $ukuranProduk,
-        //     'jenis_bahan_produk_final' => $jenisBahanProduk,
-        //     'custom_produk_final' => $customProduk,
-        // ]);
-
 
         // Jika gambar baru diupload
         if ($request->hasFile('Img')) {
@@ -131,14 +116,17 @@ class ProdukController extends Controller
         $produk->update([
             'NamaProduk' => $request->NamaProduk,
             'HargaProduk' => $request->HargaProduk,
-            'ukuran_produk' => $ukuranProduk,
-            'jenis_bahan_produk' => $jenisBahanProduk,
-            'custom_produk' => $customProduk,
+            'ukuran' => $request->ukuran,
+            'bahan' => $request->bahan,
+            'custom' => $request->custom,
             'diskon' => $request->diskon,
+            'id_bahan' => $request->id_bahan,
+            'deskripsi' => $request->deskripsi,
         ]);
 
         return redirect()->route('allproduk')->with('message', 'Produk berhasil diperbarui!');
     }
+
     // Menghapus produk
     public function deleteProduk($id)
     {
@@ -158,24 +146,25 @@ class ProdukController extends Controller
     // Menampilkan list produk dalam format JSON
     public function get_produk_list()
     {
-        $produk = Produk::all();
+        $produk = Produk::with(['bahan', 'diskon'])->get();
         return response()->json($produk, 200);
     }
 
-    // Fitur pencarian produk (opsional)
+    // Fitur pencarian produk
     public function searchProduk(Request $request)
     {
         $search = $request->search;
 
-        $produk = Produk::where(function ($query) use ($search) {
-            $query->where('IdProduk', 'like', "%$search%")
-                ->orWhere('NamaProduk', 'like', "%$search%")
-                ->orWhere('HargaProduk', 'like', "%$search%")
-                ->orWhere('ukuran_produk', 'like', "%$search%") // Add search for new fields
-                ->orWhere('jenis_bahan_produk', 'like', "%$search%")
-                ->orWhere('custom_produk', 'like', "%$search%")
-                ->orWhere('diskon', 'like', "%$search%");
-        })->get();
+        $produk = Produk::with(['bahan', 'diskon'])
+            ->where(function ($query) use ($search) {
+                $query->where('IdProduk', 'like', "%$search%")
+                    ->orWhere('NamaProduk', 'like', "%$search%")
+                    ->orWhere('HargaProduk', 'like', "%$search%")
+                    ->orWhere('ukuran', 'like', "%$search%")
+                    ->orWhere('bahan', 'like', "%$search%")
+                    ->orWhere('custom', 'like', "%$search%")
+                    ->orWhere('deskripsi', 'like', "%$search%");
+            })->get();
 
         return view('admin.allproduk', compact('produk', 'search'));
     }

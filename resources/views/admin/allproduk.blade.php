@@ -1,4 +1,4 @@
-    @extends('admin.layouts.template')
+    @extends('admin.layouts.app')
 
     @section('page_title')
 CIME | Halaman Daftar Produk
@@ -26,32 +26,45 @@ CIME | Halaman Daftar Produk
                 <div class="alert alert-success mb-2">
                     {{ session()->get('message') }}
                 </div>
-            @endif
 
             <div class="card mt-3">
-                <h5 class="card-header fw-bold">Produk Yang Terdaftar</h5>
+                <h5 class="card-header">Produk Yang Terdaftar</h5>
                 <div class="table-responsive text-nowrap">
                     <table class="table table-striped">
                      <thead class="table-primary">
                             <tr>
-                             <th class="fw-bold text-center">Id Produk</th>
-                            <th class="fw-bold text-center">Nama Produk</th>
-                            <th class="fw-bold text-center">Harga Produk</th>
-                            <th class="fw-bold text-center">Gambar</th>
-                            <th class="fw-bold text-center">Actions</th>
+                                <th>ID</th>
+                                <th>Gambar</th>
+                                <th>Nama Produk</th>
+                                <th>Harga</th>
+                                <th>Ukuran</th>
+                                <th>Bahan</th>
+                                <th>Custom</th>
+                                <th>Diskon</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody class="table-border-bottom-0">
                             @foreach ($dataProduk as $produk)
                                 <tr>
-                                    <td class="text-center">{{ $produk->IdProduk }}</td>
-                                    <td class="text-center">{{ $produk->NamaProduk }}</td>
-                                    <td class="text-center">{{ $produk->HargaProduk }}</td>
-                                    <td class="text-center">
+                                    <td>{{ $produk->IdProduk }}</td>
+                                    <td>
                                         @if ($produk->Img)
-                                            <img src="{{ asset('storage/' . $produk->Img) }}" width="80">
+                                            <img src="{{ asset('storage/' . $produk->Img) }}" alt="{{ $produk->NamaProduk }}" class="img-thumbnail" style="max-width: 80px;">
                                         @else
-                                            Tidak ada gambar
+                                            <span class="text-muted">No Image</span>
+                                        @endif
+                                    </td>
+                                    <td>{{ $produk->NamaProduk }}</td>
+                                    <td>Rp {{ number_format($produk->HargaProduk, 0, ',', '.') }}</td>
+                                    <td>{{ $produk->size ? $produk->size->nama . ' (' . $produk->size->panjang . ' x ' . $produk->size->lebar . ' ' . $produk->size->satuan->Satuan . ')' : '-' }}</td>
+                                    <td>{{ $produk->bahan ?? '-' }}</td>
+                                    <td>{{ $produk->custom ?? '-' }}</td>
+                                    <td>
+                                        @if($produk->diskon)
+                                            <span class="badge bg-label-success">{{ $produk->diskon->persentase }}%</span>
+                                        @else
+                                            <span class="text-muted">-</span>
                                         @endif
                                     </td>
                                     <td class="text-center">

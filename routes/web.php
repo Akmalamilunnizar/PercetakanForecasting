@@ -48,8 +48,9 @@ use App\Http\Controllers\Api\V1\DetailProdukController;
 //     return view('welcome');
 // });
 Route::get('/', function () {
-    $produk = Produk::orderBy('IdProduk', 'desc')->take(7)->get();
-    return view('welcome', compact('produk'));
+    $produk = Produk::orderBy('IdProduk', 'desc')->take(8)->get();
+    $produkTerlaris = Produk::orderBy('IdProduk', 'desc')->take(4)->get();
+    return view('welcome', compact('produk', 'produkTerlaris'));
 });
 
 // Add dashboard route
@@ -215,15 +216,7 @@ Route::controller(ItemsController::class)->group(function () {
         // Proses form tambah produk
         Route::post('/admin/all-transaksi/{id}/tolak', 'tolakOrderan')->name('tolakOrderan');
         // Form edit produk
-        Route::get('/admin/all-produk/{id}/edit', 'editProduk')->name('editproduk');
-        // Update produk
-        Route::put('/admin/all-produk/{id}/update', 'updateProduk')->name('updateproduk');
-        // Hapus produk
-        Route::delete('/admin/all-produk/{id}', 'deleteProduk')->name('deleteproduk');
-        // Cari produk
-        Route::get('/admin/search-produk', 'searchProduk')->name('searchproduk');
-        // API get list produk (JSON)
-        Route::get('/api/produk', 'get_produk_list')->name('getproduk');
+        
     });
 
 
@@ -439,3 +432,6 @@ Route::post('/set-payment-method', function (Illuminate\Http\Request $request) {
     session(['midtrans_paid' => $request->paid]);
     return response()->json(['success' => true]);
 });
+
+// Detail Produk Routes
+Route::post('/cart/add', [DetailProdukController::class, 'addToCart'])->name('cart.add');
