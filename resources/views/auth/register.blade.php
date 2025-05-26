@@ -60,7 +60,8 @@
 
     .login-card input[type="text"],
     .login-card input[type="password"],
-    .login-card input[type="tel"] {
+    .login-card input[type="tel"],
+    .login-card textarea {
       width: 100%;
       padding: 12px;
       margin-bottom: 15px;
@@ -68,11 +69,19 @@
       border-radius: 8px;
       transition: all 0.3s ease;
       outline: none;
+      font-family: 'Public Sans', sans-serif;
+      font-size: 1rem;
     }
 
-    .login-card input:focus {
+    .login-card input:focus,
+    .login-card textarea:focus {
       border-color: #80bdff;
       box-shadow: 0 0 8px rgba(128, 189, 255, 0.7);
+    }
+
+    .login-card textarea {
+      resize: vertical;
+      min-height: 80px;
     }
 
     .login-card button {
@@ -149,73 +158,78 @@
   <div class="login-card">
     <h2>Register</h2>
 
-        @if ($errors->any() || session('error') || session('success'))
-        <script>
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 9000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer);
-                    toast.addEventListener('mouseleave', Swal.resumeTimer);
-                }
-            });
+    @if ($errors->any() || session('error') || session('success'))
+    <script>
+      const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 9000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener('mouseenter', Swal.stopTimer);
+          toast.addEventListener('mouseleave', Swal.resumeTimer);
+        }
+      });
 
-            @if ($errors->any())
-                @foreach ($errors->all() as $error)
-                    Toast.fire({
-                        icon: 'error',
-                        title: 'Gagal !',
-                        text: 'Register gagal !'
-                    });
-                @endforeach
-            @endif
+      @if ($errors->any())
+      @foreach ($errors->all() as $error)
+      Toast.fire({
+        icon: 'error',
+        title: 'Gagal !',
+        text: 'Register gagal !'
+      });
+      @endforeach
+      @endif
 
-            @if (session('error'))
-                Toast.fire({
-                    icon: 'error',
-                    title: 'Gagal !',
-                    text: 'Register gagal !'
-                });
-            @endif
+      @if (session('error'))
+      Toast.fire({
+        icon: 'error',
+        title: 'Gagal !',
+        text: 'Register gagal !'
+      });
+      @endif
 
-            @if (session('success'))
-                Toast.fire({
-                    icon: 'success',
-                    title: 'Berhasil !',
-                    text: 'Register berhasil, Silahkan Login !'
-                });
-            @endif
-        </script>
+      @if (session('success'))
+      Toast.fire({
+        icon: 'success',
+        title: 'Berhasil !',
+        text: 'Register berhasil, Silahkan Login !'
+      });
+      @endif
+    </script>
     @endif
 
     <form action="{{ url('register') }}" method="POST">
       @csrf
       <input type="text" name="f_name" placeholder="Nama Lengkap" value="{{ old('f_name') }}" autofocus required>
       @error('f_name')
-        <span style="color: red;">{{ $message }}</span>
+      <span style="color: red;">{{ $message }}</span>
       @enderror
 
       <input type="text" name="email" placeholder="Email" value="{{ old('email') }}" required>
       @error('email')
-        <span style="color: red;">{{ $message }}</span>
+      <span style="color: red;">{{ $message }}</span>
       @enderror
 
       <input type="tel" name="nomor_telepon" placeholder="Nomor Telepon (081234567890)" value="{{ old('nomor_telepon') }}" required pattern="[0-9]*" minlength="10" maxlength="15">
       @error('nomor_telepon')
-        <span style="color: red;">{{ $message }}</span>
+      <span style="color: red;">{{ $message }}</span>
+      @enderror
+
+      <textarea name="alamat" placeholder="Alamat Lengkap" required>{{ old('alamat') }}</textarea>
+      @error('alamat')
+      <span style="color: red;">{{ $message }}</span>
       @enderror
 
       <input type="password" name="password" placeholder="Password" required>
       @error('password')
-        <span style="color: red;">{{ $message }}</span>
+      <span style="color: red;">{{ $message }}</span>
       @enderror
 
       <input type="password" name="password_confirmation" placeholder="Konfirmasi Password" required>
       @error('password_confirmation')
-        <span style="color: red;">{{ $message }}</span>
+      <span style="color: red;">{{ $message }}</span>
       @enderror
 
       <button type="submit">Daftar</button>
