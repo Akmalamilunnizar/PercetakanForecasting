@@ -42,6 +42,16 @@
     <!-- Helpers -->
     <script src="{{ asset('dashboard2/assets/vendor/js/helpers.js') }}"></script>
     <script src="{{ asset('dashboard2/assets/js/config.js') }}"></script>
+    <style>
+        html,
+        body {
+            height: auto;
+            overflow-y: auto;
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
 </head>
 
 <body>
@@ -97,12 +107,12 @@
                         </a>
                     </li>
 
-                    <li class="menu-item {{ request()->is('admin/all-produk*') ? 'active' : '' }}">
+                    {{-- <li class="menu-item {{ request()->is('admin/all-produk*') ? 'active' : '' }}">
                         <a href="{{ route('allproduk') }}" class="menu-link">
                             <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
                             <div data-i18n="Basic" class="larger-text">Daftar Produk</div>
                         </a>
-                    </li>
+                    </li> --}}
 
                     <li class="menu-item {{ request()->is('admin/daftar-supplier*') ? 'active' : '' }}">
                         <a href="{{ route('allsuppliers') }}" class="menu-link">
@@ -117,6 +127,7 @@
                         </a>
                     </li>
 
+<<<<<<< 3c341d6b9833ab1760acd8c4c46034e034d76c51
                     <li
                         class="menu-item {{ request()->is('admin/all-laporan*') || request()->is('admin/laporan-transaksi') ? 'active' : '' }}">
                         <a href="{{ route('laporanbarang') }}" class="menu-link">
@@ -126,6 +137,10 @@
                     </li>
                     <li class="menu-item {{ request()->is('admin/all-transaksi*') ? 'active' : '' }}">
                         <a href="{{ route('alltransaksi') }}" class="menu-link">
+=======
+                    <li class="menu-item {{ request()->is('admin/all-pcv*') ? 'active' : '' }}">
+                        <a href="{{ route('pcv') }}" class="menu-link">
+>>>>>>> e-commerce
                             <i class="menu-icon tf-icons bx bx-collection"></i>
                             <div data-i18n="Basic" class="larger-text">Data Transaksi</div>
                         </a>
@@ -239,7 +254,11 @@
                                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);"
                                     data-bs-toggle="dropdown">
                                     <div class="avatar avatar-online">
+<<<<<<< 3c341d6b9833ab1760acd8c4c46034e034d76c51
+                                        <img src="{{ Auth::user() ? asset('uploads/users/' . Auth::user()->img) : asset('dashboard2/assets/img/avatars/default-avatar.png') }}" alt="user-avatar"
+=======
                                         <img src="{{ asset('uploads/users/' . Auth::user()->img) }}" alt="user-avatar"
+>>>>>>> e-commerce
                                             class="d-block rounded" height="100" width="100" id="uploadedAvatar" />
                                     </div>
                                 </a>
@@ -249,7 +268,11 @@
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0 me-3">
                                                     <div class="avatar avatar-online">
+<<<<<<< 3c341d6b9833ab1760acd8c4c46034e034d76c51
+                                                        <img src="{{ Auth::user() ? asset('uploads/users/' . Auth::user()->img) : asset('dashboard2/assets/img/avatars/default-avatar.png') }}"
+=======
                                                         <img src="{{ asset('uploads/users/' . Auth::user()->img) }}"
+>>>>>>> e-commerce
                                                             alt="user-avatar" class="d-block rounded" height="100"
                                                             width="100" id="uploadedAvatar" />
                                                     </div>

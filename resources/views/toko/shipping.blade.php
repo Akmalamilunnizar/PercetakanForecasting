@@ -112,51 +112,59 @@
         <h5 class="fw-bold mb-3">Order summary</h5>
 
         @php $total = 0; $total_berat = 0; @endphp
-        @foreach (session('cart') as $id => $details)
-          @php 
-            $subtotal = $details['harga'] * $details['quantity'];
-            $total += $subtotal;
-            $total_berat += ($details['berat'] ?? 0) * $details['quantity'];   
-          @endphp
-          <div class="d-flex mb-3 border-bottom pb-2">
-            @php
-              $imagePath = $details['img'] ?? 'default.jpg';
-              $fullPath = asset('storage/' . $imagePath);
-            @endphp
-            <img src="{{ $fullPath }}" 
-                 alt="{{ $details['nama'] }}" 
-                 style="width: 55px; height: 55px; object-fit: cover; border-radius: 8px;"
-                 class="me-3"
-                 onerror="this.onerror=null; this.src='{{ asset('storage/default.jpg') }}';">
-            <div class="flex-grow-1">
-              <div class="fw-semibold">{{ $details['nama'] }}</div>
-              <div class="text-primary">Rp {{ number_format($details['harga'], 0, ',', '.') }} 
-                <span class="text-muted">× {{ $details['quantity'] }}</span>
-              </div>
-            </div>
-          </div>
-        @endforeach
 
-        <!-- Totals -->
-        <div class="mt-4">
-          <div class="d-flex justify-content-between">
-            <span class="text-muted">Subtotal:</span>
-            <span class="fw-semibold">Rp {{ number_format($total, 0, ',', '.') }}</span>
-          </div>
-          <div class="d-flex justify-content-between">
-            <span class="text-muted">Berat:</span>
-            <span>{{ number_format($total_berat / 1000, 2) }} Kg</span>
-          </div>
-          <div class="d-flex justify-content-between" id="shippingCost" style="display: none;">
-            <span class="text-muted">Biaya Pengiriman:</span>
-            <span class="fw-semibold">Rp <span id="shippingAmount">0</span></span>
-          </div>
-          <hr>
-          <div class="d-flex justify-content-between">
-            <span class="fw-bold">Total:</span>
-            <span class="fw-bold" id="grandTotal">Rp {{ number_format($total, 0, ',', '.') }}</span>
-          </div>
-        </div>
+        @if(session('cart') && count(session('cart')) > 0)
+            @foreach (session('cart') as $id => $details)
+                @php 
+                    $subtotal = $details['harga'] * $details['quantity'];
+                    $total += $subtotal;
+                    $total_berat += ($details['berat'] ?? 0) * $details['quantity'];   
+                @endphp
+                <div class="d-flex mb-3 border-bottom pb-2">
+                    @php
+                        $imagePath = $details['img'] ?? 'default.jpg';
+                        $fullPath = asset('storage/' . $imagePath);
+                    @endphp
+                    <img src="{{ $fullPath }}" 
+                         alt="{{ $details['nama'] }}" 
+                         style="width: 55px; height: 55px; object-fit: cover; border-radius: 8px;"
+                         class="me-3"
+                         onerror="this.onerror=null; this.src='{{ asset('storage/default.jpg') }}';">
+                    <div class="flex-grow-1">
+                        <div class="fw-semibold">{{ $details['nama'] }}</div>
+                        <div class="text-primary">Rp {{ number_format($details['harga'], 0, ',', '.') }} 
+                            <span class="text-muted">× {{ $details['quantity'] }}</span>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+
+            <!-- Totals -->
+            <div class="mt-4">
+                <div class="d-flex justify-content-between">
+                    <span class="text-muted">Subtotal:</span>
+                    <span class="fw-semibold">Rp {{ number_format($total, 0, ',', '.') }}</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span class="text-muted">Berat:</span>
+                    <span>{{ number_format($total_berat / 1000, 2) }} Kg</span>
+                </div>
+                <div class="d-flex justify-content-between" id="shippingCost" style="display: none;">
+                    <span class="text-muted">Biaya Pengiriman:</span>
+                    <span class="fw-semibold">Rp <span id="shippingAmount">0</span></span>
+                </div>
+                <hr>
+                <div class="d-flex justify-content-between">
+                    <span class="fw-bold">Total:</span>
+                    <span class="fw-bold" id="grandTotal">Rp {{ number_format($total, 0, ',', '.') }}</span>
+                </div>
+            </div>
+        @else
+            <div class="alert alert-warning">
+                Keranjang kosong. Silakan pilih produk terlebih dahulu.
+                <a href="{{ route('tokodashboard') }}" class="btn btn-primary btn-sm ms-2">Kembali ke Katalog</a>
+            </div>
+        @endif
       </div>
     </div>
   </div>

@@ -158,13 +158,12 @@
             <h6 class="text-muted mb-2">Subtotal</h6>
             <h4 class="fw-bold">Rp {{ number_format($total, 0, ',', '.') }}</h4>
             <hr>
-            <div class="mb-3">
-              <span class="badge bg-primary">Note</span> <small class="text-muted">Additional comments</small>
-              <textarea name="notes" class="form-control mt-2 border-danger-subtle" rows="4" placeholder="Tambahkan catatan untuk pesanan Anda..."></textarea>
-            </div>
             <form action="{{ route('details') }}" method="POST">
                 @csrf
-                <input type="hidden" name="notes" id="notes">
+                <div class="mb-3">
+                    <span class="badge bg-primary">Note</span> <small class="text-muted">Additional comments</small>
+                    <textarea name="notes" class="form-control mt-2 border-danger-subtle" rows="4" placeholder="Tambahkan catatan untuk pesanan Anda..."></textarea>
+                </div>
                 <button type="submit" class="btn btn-danger w-100 shadow">
                     <i class="bi bi-credit-card me-2"></i> Proses Checkout
                 </button>
