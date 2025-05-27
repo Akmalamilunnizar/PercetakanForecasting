@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3307
--- Generation Time: May 24, 2025 at 01:09 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Host: 127.0.0.1
+-- Generation Time: May 26, 2025 at 01:23 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -307,68 +307,42 @@ INSERT INTO `jenisbarang` (`IdJenisBarang`, `JenisBarang`) VALUES
 
 CREATE TABLE `laporanbarang` (
   `IdLaporan` bigint(20) UNSIGNED NOT NULL,
-  `IdBarang` varchar(13) NOT NULL,
-  `IdSupplier` bigint(20) UNSIGNED DEFAULT NULL,
-  `QtyMasuk` int(11) NOT NULL DEFAULT 0,
-  `QtyKeluar` int(11) NOT NULL DEFAULT 0,
+  `IdBarang` varchar(13) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `IdSupplier` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `IdMasuk` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `IdKeluar` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `laporanbarang`
+--
+
+INSERT INTO `laporanbarang` (`IdLaporan`, `IdBarang`, `IdSupplier`, `IdMasuk`, `IdKeluar`, `created_at`, `updated_at`) VALUES
+(112233, '6923655547512', 'SP0003', 'BM0005', 'BK0005', '2025-05-20 04:05:12', '2025-05-20 04:05:12'),
+(123123, '3423531787', 'SP0001', 'BM0004', 'BK0003', '2025-05-20 04:02:26', '2025-05-20 04:02:26');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `laporans`
+-- Table structure for table `laporantransaksi`
 --
 
-CREATE TABLE `laporans` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `nama_barang` varchar(255) NOT NULL,
-  `jumlah` int(11) NOT NULL,
-  `tanggal_pengeluaran` date NOT NULL,
-  `keterangan` text DEFAULT NULL,
+CREATE TABLE `laporantransaksi` (
+  `Idlaporan_transaksi` varchar(6) NOT NULL,
+  `IdTransaksi` varchar(8) NOT NULL,
+  `IdProduk` varchar(6) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Table structure for table `laporan_transaksis`
+-- Dumping data for table `laporantransaksi`
 --
 
-CREATE TABLE `laporan_transaksis` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `kode_transaksi` varchar(255) NOT NULL,
-  `nama_pelanggan` varchar(255) NOT NULL,
-  `produk` varchar(255) NOT NULL,
-  `jumlah` int(11) NOT NULL,
-  `harga_satuan` decimal(12,2) NOT NULL,
-  `total_harga` decimal(12,2) NOT NULL,
-  `tanggal_transaksi` date NOT NULL,
-  `status_pembayaran` varchar(255) NOT NULL DEFAULT 'Belum Lunas',
-  `keterangan` text DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `laporan_transaksis`
---
-
-INSERT INTO `laporan_transaksis` (`id`, `kode_transaksi`, `nama_pelanggan`, `produk`, `jumlah`, `harga_satuan`, `total_harga`, `tanggal_transaksi`, `status_pembayaran`, `keterangan`, `created_at`, `updated_at`) VALUES
-(3, 'TR0002', 'Ahmad Muzakki', 'Brosur', 1, 12000.00, 12000.00, '2025-05-17', 'Belum Lunas', 'Pesanan baru', '2025-05-17 09:09:13', '2025-05-17 09:09:13'),
-(4, 'TR0002', 'Ahmad Muzakki', 'Kartu Nama', 1, 10500.00, 10500.00, '2025-05-17', 'Belum Lunas', 'Pesanan baru', '2025-05-17 09:09:13', '2025-05-17 09:09:13'),
-(5, 'TR0003', 'Ahmad Muzakki', 'Brosur', 5, 12000.00, 60000.00, '2025-05-19', 'Belum Lunas', 'Pesanan baru', '2025-05-18 17:27:29', '2025-05-18 17:27:29'),
-(6, 'TR0003', 'Ahmad Muzakki', 'Kalender', 2, 25000.00, 50000.00, '2025-05-19', 'Belum Lunas', 'Pesanan baru', '2025-05-18 17:27:29', '2025-05-18 17:27:29'),
-(7, 'TR0004', 'Ahmad Muzakki', 'Brosur', 3, 12000.00, 36000.00, '2025-05-19', 'Belum Lunas', 'Pesanan baru', '2025-05-18 23:23:48', '2025-05-18 23:23:48'),
-(8, 'TR0004', 'Ahmad Muzakki', 'Kalender', 2, 25000.00, 50000.00, '2025-05-19', 'Belum Lunas', 'Pesanan baru', '2025-05-18 23:23:48', '2025-05-18 23:23:48'),
-(9, 'TR0005', 'Ahmad Muzakki', 'Brosur', 2, 12000.00, 24000.00, '2025-05-20', 'Belum Lunas', 'Pesanan baru', '2025-05-20 01:34:42', '2025-05-20 01:34:42'),
-(10, 'TR0005', 'Ahmad Muzakki', 'Kartu Nama', 1, 10500.00, 10500.00, '2025-05-20', 'Belum Lunas', 'Pesanan baru', '2025-05-20 01:34:42', '2025-05-20 01:34:42'),
-(11, 'TR0006', 'Ahmad Muzakki', 'Brosur', 1, 12000.00, 12000.00, '2025-05-23', 'Belum Lunas', 'Pesanan baru', '2025-05-23 14:46:47', '2025-05-23 14:46:47'),
-(12, 'TR0006', 'Ahmad Muzakki', 'Kalender', 1, 25000.00, 25000.00, '2025-05-23', 'Belum Lunas', 'Pesanan baru', '2025-05-23 14:46:47', '2025-05-23 14:46:47'),
-(13, 'TR0007', 'Ahmad Muzakki', 'Brosur', 1, 12000.00, 12000.00, '2025-05-23', 'Belum Lunas', 'Pesanan baru', '2025-05-23 15:03:53', '2025-05-23 15:03:53'),
-(14, 'TR0008', 'Ahmad Muzakki', 'Kartu Nama', 1, 10500.00, 10500.00, '2025-05-23', 'Lunas', 'Pesanan baru', '2025-05-23 15:08:41', '2025-05-23 15:08:41');
+INSERT INTO `laporantransaksi` (`Idlaporan_transaksi`, `IdTransaksi`, `IdProduk`, `created_at`, `updated_at`) VALUES
+('1213', 'T0001', 'P0001', '2025-05-20 14:44:55', '2025-05-20 14:44:55');
 
 -- --------------------------------------------------------
 
@@ -523,6 +497,7 @@ CREATE TABLE `size` (
   `id_ukuran` int(6) NOT NULL,
   `nama` varchar(50) NOT NULL,
   `panjang` int(10) NOT NULL,
+  `lebar` int(10) NOT NULL,
   `id_satuan` varchar(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -530,8 +505,8 @@ CREATE TABLE `size` (
 -- Dumping data for table `size`
 --
 
-INSERT INTO `size` (`id_ukuran`, `nama`, `panjang`, `id_satuan`) VALUES
-(1, 'A3', 430, 'S0009');
+INSERT INTO `size` (`id_ukuran`, `nama`, `panjang`, `lebar`, `id_satuan`) VALUES
+(1, 'A3', 430, 530, 'S0009');
 
 -- --------------------------------------------------------
 
@@ -694,19 +669,19 @@ ALTER TABLE `jenisbarang`
 -- Indexes for table `laporanbarang`
 --
 ALTER TABLE `laporanbarang`
-  ADD PRIMARY KEY (`IdLaporan`);
+  ADD PRIMARY KEY (`IdLaporan`),
+  ADD UNIQUE KEY `IdBarang` (`IdBarang`,`IdSupplier`),
+  ADD UNIQUE KEY `IdMasuk` (`IdMasuk`,`IdKeluar`),
+  ADD KEY `IdSupplier` (`IdSupplier`),
+  ADD KEY `IdKeluar` (`IdKeluar`);
 
 --
--- Indexes for table `laporans`
+-- Indexes for table `laporantransaksi`
 --
-ALTER TABLE `laporans`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `laporan_transaksis`
---
-ALTER TABLE `laporan_transaksis`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `laporantransaksi`
+  ADD PRIMARY KEY (`Idlaporan_transaksi`),
+  ADD UNIQUE KEY `IdTransaksi` (`IdTransaksi`,`IdProduk`),
+  ADD KEY `IdProduk` (`IdProduk`);
 
 --
 -- Indexes for table `migrations`
@@ -797,19 +772,7 @@ ALTER TABLE `diskon`
 -- AUTO_INCREMENT for table `laporanbarang`
 --
 ALTER TABLE `laporanbarang`
-  MODIFY `IdLaporan` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `laporans`
---
-ALTER TABLE `laporans`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `laporan_transaksis`
---
-ALTER TABLE `laporan_transaksis`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `IdLaporan` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=123124;
 
 --
 -- AUTO_INCREMENT for table `migrations`
@@ -887,12 +850,28 @@ ALTER TABLE `detail_transaksi`
   ADD CONSTRAINT `detail_transaksi_ibfk_2` FOREIGN KEY (`IdTransaksi`) REFERENCES `transaksi` (`IdTransaksi`);
 
 --
+-- Constraints for table `laporanbarang`
+--
+ALTER TABLE `laporanbarang`
+  ADD CONSTRAINT `laporanbarang_ibfk_1` FOREIGN KEY (`IdBarang`) REFERENCES `databarang` (`IdBarang`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `laporanbarang_ibfk_2` FOREIGN KEY (`IdSupplier`) REFERENCES `supplier` (`IdSupplier`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `laporanbarang_ibfk_3` FOREIGN KEY (`IdMasuk`) REFERENCES `detail_barangmasuk` (`IdMasuk`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `laporanbarang_ibfk_4` FOREIGN KEY (`IdKeluar`) REFERENCES `detail_barangkeluar` (`IdKeluar`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `laporantransaksi`
+--
+ALTER TABLE `laporantransaksi`
+  ADD CONSTRAINT `laporantransaksi_ibfk_1` FOREIGN KEY (`IdTransaksi`) REFERENCES `transaksi` (`IdTransaksi`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `laporantransaksi_ibfk_2` FOREIGN KEY (`IdProduk`) REFERENCES `produk` (`IdProduk`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `produk`
 --
 ALTER TABLE `produk`
   ADD CONSTRAINT `produk_ibfk_1` FOREIGN KEY (`id_bahan`) REFERENCES `databarang` (`IdBarang`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `produk_ibfk_2` FOREIGN KEY (`diskon`) REFERENCES `diskon` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `produk_ibfk_3` FOREIGN KEY (`ukuran`) REFERENCES `size` (`id_ukuran`);
+  ADD CONSTRAINT `produk_ibfk_3` FOREIGN KEY (`ukuran`) REFERENCES `size` (`id_ukuran`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `role_user`

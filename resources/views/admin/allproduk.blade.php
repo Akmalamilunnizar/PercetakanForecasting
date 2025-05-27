@@ -1,4 +1,4 @@
-    @extends('admin.layouts.app')
+    @extends('admin.layouts.template')
 
     @section('page_title')
 CIME | Halaman Daftar Produk
@@ -26,6 +26,7 @@ CIME | Halaman Daftar Produk
                 <div class="alert alert-success mb-2">
                     {{ session()->get('message') }}
                 </div>
+            @endif
 
             <div class="card mt-3">
                 <h5 class="card-header">Produk Yang Terdaftar</h5>
@@ -58,11 +59,13 @@ CIME | Halaman Daftar Produk
                                     <td>{{ $produk->NamaProduk }}</td>
                                     <td>Rp {{ number_format($produk->HargaProduk, 0, ',', '.') }}</td>
                                     <td>{{ $produk->size ? $produk->size->nama . ' (' . $produk->size->panjang . ' x ' . $produk->size->lebar . ' ' . $produk->size->satuan->Satuan . ')' : '-' }}</td>
-                                    <td>{{ $produk->bahan ?? '-' }}</td>
+                                    <td>{{ $produk->bahan ? $produk->bahan->NamaBarang : '-' }}</td>
                                     <td>{{ $produk->custom ?? '-' }}</td>
                                     <td>
-                                        @if($produk->diskon)
-                                            <span class="badge bg-label-success">{{ $produk->diskon->persentase }}%</span>
+                                        @if($produk->diskonRelasi && $produk->diskonRelasi->persentase !== null)
+                                            <span class="badge bg-label-success">
+                                                {{ $produk->diskonRelasi->persentase }}%
+                                            </span>
                                         @else
                                             <span class="text-muted">-</span>
                                         @endif
