@@ -117,7 +117,7 @@
         </div>
         <div class="col-md-6 mb-3">
           <label for="phone_number" class="form-label">Nomor Telepon</label>
-          <input type="text" class="form-control" id="phone_number" name="phone_number" required>
+          <input type="text" class="form-control" id="phone_number" name="phone_number" value="{{ Auth::user()->nomor_telepon }}" required readonly>
         </div>
       </div>
       <div class="row">

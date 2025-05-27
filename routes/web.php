@@ -47,8 +47,9 @@ use App\Http\Controllers\Api\V1\DetailProdukController;
 //     return view('welcome');
 // });
 Route::get('/', function () {
-    $produk = Produk::orderBy('IdProduk', 'desc')->take(7)->get();
-    return view('welcome', compact('produk'));
+    $produk = Produk::orderBy('IdProduk', 'desc')->take(8)->get();
+    $produkTerlaris = Produk::orderBy('IdProduk', 'desc')->take(4)->get();
+    return view('welcome', compact('produk', 'produkTerlaris'));
 });
 
 // Add dashboard route
@@ -115,7 +116,6 @@ Route::controller(TransaksiController::class)->group(function () {
 });
 
 
-
 Route::middleware(['auth'])->group(function () {
     Route::controller(TypeItemsController::class)->group(function () {
         Route::get('/admin/all-type', 'Index')->name('alltype');
@@ -129,8 +129,6 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::get('/admin/all-laporan', [LaporanController::class, 'index'])->name('alllaporan');
-
-Route::get('/admin/laporantransaksi', [LaporanTransaksiController::class, 'index'])->name('laporan-transaksi');
 
 
 
@@ -176,7 +174,13 @@ Route::controller(LaporanController::class)->group(function () {
     Route::delete('/admin/laporanbarang/{id}', 'destroy')->name('laporanbarang.destroy');
 });
 
-Route::get('/admin/laporantransaksi', [LaporanTransaksiController::class, 'index'])->name('laporan-transaksi');
+Route::controller(LaporanTransaksiController::class)->group(function () {
+    Route::get('/admin/laporantransaksi', 'index')->name('laporantransaksi');
+    Route::get('admin/detail-laporantransaksi/{id}', 'show')->name('admin.detail-laporantransaksi');
+    Route::get('/admin/laporantransaksi/export-pdf', 'exportPdf')->name('laporantransaksi.exportpdf');
+    Route::get('/admin/laporantransaksi/{id}/export-pdf', 'exportPdfDetail')->name('laporantransaksi.exportpdf.detail');
+    Route::delete('/admin/laporantransaksi/{id}', 'destroy')->name('laporantransaksi.destroy');
+});
 
 
 Route::controller(ParameterReportController::class)->group(function () {
@@ -243,6 +247,14 @@ Route::controller(SupplierController::class)->group(function () {
 
 
 
+Route::controller(CustomerController::class)->group(function () {
+    // Tampilkan semua supplier
+    Route::get('/admin/daftar-customer', 'index')->name('allcustomer');
+    // Tampilkan form tambah supplier
+    // Hapus supplier
+    Route::delete('/admin/daftar-supplier/{id}', 'deleteCustomer')->name('deletecustomer');
+    // Cari supplier
+});
 Route::controller(CustomerController::class)->group(function () {
     // Tampilkan semua supplier
     Route::get('/admin/daftar-customer', 'index')->name('allcustomer');
@@ -437,3 +449,6 @@ Route::post('/set-payment-method', function (Illuminate\Http\Request $request) {
     session(['midtrans_paid' => $request->paid]);
     return response()->json(['success' => true]);
 });
+
+// Detail Produk Routes
+Route::post('/cart/add', [DetailProdukController::class, 'addToCart'])->name('cart.add');

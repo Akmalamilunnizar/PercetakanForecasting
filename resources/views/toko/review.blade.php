@@ -185,6 +185,18 @@
             </div>
           </div>
 
+          <!-- Informasi Kontak -->
+          <div class="mb-3">
+            <span class="badge bg-primary">Kontak</span>
+            <small class="text-muted">Informasi kontak</small>
+            <div class="form-control mt-2">
+              <div class="d-flex justify-content-between">
+                <span>Nomor Telepon:</span>
+                <span class="fw-bold">{{ Auth::user()->nomor_telepon ?? '-' }}</span>
+              </div>
+            </div>
+          </div>
+
           <div class="d-flex justify-content-between">
             <a href="{{ route('payment') }}" class="btn btn-secondary me-2 w-50">Back</a>
             <form action="{{ route('confirm.order') }}" method="POST" class="w-50" id="confirmOrderForm">

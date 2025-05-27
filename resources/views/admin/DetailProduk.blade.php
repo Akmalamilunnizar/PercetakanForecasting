@@ -45,6 +45,12 @@
                             @endforeach
                         </div>
                     </div>
+                    @if(auth()->check() && $user)
+                        <div class="mt-4">
+                            <h5><b>Informasi Kontak</b></h5>
+                            <p>Nomor Telepon: {{ $user->nomor_telepon }}</p>
+                        </div>
+                    @endif
                     <div class="mt-4">
                         <div class="d-flex align-items-center">
                             <h5><b>Pilih Rating</b></h5>
@@ -309,7 +315,9 @@
                                                     name="ukuran_produk_selected">
                                                     <option value="">-- Pilih Ukuran --</option>
                                                     @foreach ($ukuranList as $ukuran)
-                                                        <option value="{{ $ukuran }}" {{ old('ukuran_produk') == $ukuran ? 'selected' : '' }}>{{ $ukuran }}</option>
+                                                        <option value="{{ $ukuran->id_ukuran }}" {{ old('ukuran_produk') == $ukuran->id_ukuran ? 'selected' : '' }}>
+                                                            {{ $ukuran->nama }} ({{ $ukuran->panjang }} x {{ $ukuran->lebar }} cm)
+                                                        </option>
                                                     @endforeach
                                                     <option value="custom" {{ old('ukuran_produk_is_custom') ? 'selected' : '' }}>Custom</option>
                                                 </select>
@@ -382,7 +390,7 @@
                                                 Nomor HP</label>
                                         </div>
                                         <div class="col-md-8">
-                                            <input type="tel" class="form-control" id="nomorHP" placeholder="Nomor Telepon">
+                                            <input type="tel" class="form-control" id="nomorHP" placeholder="Nomor Telepon" value="{{ Auth::user()->nomor_telepon }}" readonly>
                                         </div>
                                     </div>
                                 </div>
@@ -475,7 +483,29 @@
                         Beli Sekarang
                     </button>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- Modal Konfirmasi -->
+    <div class="modal fade" id="modalBeliSekarang" tabindex="-1" aria-labelledby="modalBeliSekarangLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalBeliSekarangLabel">Konfirmasi Pesanan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Apakah Anda yakin ingin membeli produk ini sekarang?</p>
+                    <div class="mb-3">
+                        <label class="form-label">Jumlah Order</label>
+                        <input type="number" class="form-control" id="jumlahOrderInput" value="1" min="1">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary" id="modalBeliSekarangBtn">Pesan Sekarang</button>
                 </div>
             </div>
         </div>

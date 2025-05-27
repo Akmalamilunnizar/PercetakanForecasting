@@ -4,6 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\DataBarang;
+use App\Models\Diskon;
+use App\Models\Size;
+use App\Models\LaporanTransaksi;
 
 class Produk extends Model
 {
@@ -24,13 +28,36 @@ class Produk extends Model
         'IdProduk',
         'NamaProduk',
         'HargaProduk',
-        'ukuran_produk',       
-        'jenis_bahan_produk',  
-        'custom_produk',       
-        'diskon', 
+        'ukuran',       
+        'bahan',  
+        'custom',       
+        'diskon',
+        'id_bahan',
         'Img',
+        'deskripsi'
     ];
 
     // Kalau tidak pakai timestamps (created_at, updated_at)
     public $timestamps = false;
+
+    // Relationships
+    public function bahan()
+    {
+        return $this->belongsTo(DataBarang::class, 'id_bahan', 'IdBarang');
+    }
+
+    public function diskon()
+    {
+        return $this->belongsTo(Diskon::class, 'diskon', 'id');
+    }
+
+    public function size()
+    {
+        return $this->belongsTo(Size::class, 'ukuran', 'id_ukuran');
+    }
+
+     public function laporantransaksi()
+    {
+        return $this->hasMany(LaporanTransaksi::class, 'IdProduk', 'IdProduk');
+    }
 }

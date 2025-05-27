@@ -1,7 +1,7 @@
 @extends('admin.layouts.template')
 
 @section('page_title')
-    Edit Supplier - Percetakan
+CIME | Halaman Edit Supplier
 @endsection
 
 @section('content')
@@ -10,8 +10,7 @@
     <div class="col-xxl">
         <div class="card mb-4">
             <div class="card-header d-flex align-items-center justify-content-between">
-                <h5 class="mb-0">Edit Data Supplier</h5>
-                <small class="text-muted float-end">Form Edit</small>
+                <h5 class="mb-0 fw-bold fs-4">Edit Data Supplier</h5>
             </div>
             <div class="card-body">
                 @if ($errors->any())
@@ -63,7 +62,7 @@
 
                     <div class="row justify-content-end">
                         <div class="col-sm-10">
-                            <button type="submit" class="btn btn-primary">Update Supplier</button>
+                            <button type="submit" class="btn btn-outline-primary">Update Supplier</button>
                         </div>
                     </div>
                 </form>

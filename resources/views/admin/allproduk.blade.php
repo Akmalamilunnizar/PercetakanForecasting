@@ -1,10 +1,11 @@
-    @extends('admin.layouts.template')
+    @extends('admin.layouts.app')
 
     @section('page_title')
-        Daftar Produk - Sistem Manajemen Percetakan
+CIME | Halaman Daftar Produk
     @endsection
-
     @section('search')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
         <div class="navbar-nav align-items-center">
             <div class="nav-item d-flex align-items-center">
                 <i class="bx bx-search fs-4 lh-0"></i>
@@ -17,8 +18,7 @@
     @section('content')
         <div class="container-xxl flex-grow-1 container-p-y">
             <h4 class="py-2 mb-3"><span class="text-muted fw-light">Data Produk /</span> Daftar Produk</h4>
-            <a href="{{ route('addproduk') }}" class="btn btn-primary"
-                style="background: linear-gradient(45deg, #C3A2FF);">
+            <a href="{{ route('addproduk') }}" class="btn btn-outline-primary mb-3">
                 + Tambah Produk
             </a>
 
@@ -26,18 +26,21 @@
                 <div class="alert alert-success mb-2">
                     {{ session()->get('message') }}
                 </div>
-            @endif
 
             <div class="card mt-3">
                 <h5 class="card-header">Produk Yang Terdaftar</h5>
                 <div class="table-responsive text-nowrap">
-                    <table class="table">
-                        <thead class="table-light">
+                    <table class="table table-striped">
+                     <thead class="table-primary">
                             <tr>
-                                <th>Id Produk</th>
-                                <th>Nama Produk</th>
-                                <th>Harga Produk</th>
+                                <th>ID</th>
                                 <th>Gambar</th>
+                                <th>Nama Produk</th>
+                                <th>Harga</th>
+                                <th>Ukuran</th>
+                                <th>Bahan</th>
+                                <th>Custom</th>
+                                <th>Diskon</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -45,23 +48,35 @@
                             @foreach ($dataProduk as $produk)
                                 <tr>
                                     <td>{{ $produk->IdProduk }}</td>
-                                    <td>{{ $produk->NamaProduk }}</td>
-                                    <td>{{ $produk->HargaProduk }}</td>
                                     <td>
-                                        
                                         @if ($produk->Img)
-                                            <img src="{{ asset('storage/' . $produk->Img) }}" width="80">
+                                            <img src="{{ asset('storage/' . $produk->Img) }}" alt="{{ $produk->NamaProduk }}" class="img-thumbnail" style="max-width: 80px;">
                                         @else
-                                            Tidak ada gambar
+                                            <span class="text-muted">No Image</span>
                                         @endif
-
                                     </td>
+                                    <td>{{ $produk->NamaProduk }}</td>
+                                    <td>Rp {{ number_format($produk->HargaProduk, 0, ',', '.') }}</td>
+                                    <td>{{ $produk->size ? $produk->size->nama . ' (' . $produk->size->panjang . ' x ' . $produk->size->lebar . ' ' . $produk->size->satuan->Satuan . ')' : '-' }}</td>
+                                    <td>{{ $produk->bahan ?? '-' }}</td>
+                                    <td>{{ $produk->custom ?? '-' }}</td>
                                     <td>
-                                        <a href="{{ route('editproduk', $produk->IdProduk) }}" class="btn btn-primary">Edit</a>
-                                        <form action="{{ route('deleteproduk', $produk->IdProduk) }}" method="POST" style="display:inline;" id="delete-form-{{ $produk->IdProduk }}">
+                                        @if($produk->diskon)
+                                            <span class="badge bg-label-success">{{ $produk->diskon->persentase }}%</span>
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="{{ route('editproduk', $produk->IdProduk) }}"  class="btn btn-warning">
+                                            <i class="fas fa-edit me-1"></i> Edit
+                                        </a>
+                                       <form action="{{ route('deleteproduk', $produk->IdProduk) }}" method="POST" style="display:inline;" id="delete-form-{{ $produk->IdProduk }}">
                                             @csrf
                                             @method('DELETE')
-                                            <a href="#" class="btn btn-warning" onclick="event.preventDefault(); if(confirm('Yakin ingin menghapus produk ini?')) document.getElementById('delete-form-{{ $produk->IdProduk }}').submit();">Delete</a>
+                                            <a href="#" class="btn btn-danger" onclick="event.preventDefault(); if(confirm('Yakin ingin menghapus produk ini?')) document.getElementById('delete-form-{{ $produk->IdProduk }}').submit();">
+                                                <i class="fas fa-trash-alt me-1"></i> Delete
+                                            </a>
                                         </form>
                                     </td>
                                 </tr>

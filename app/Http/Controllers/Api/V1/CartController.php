@@ -114,7 +114,9 @@ class CartController extends Controller
         }
 
         $addresses = \App\Models\Address::where('user_id', auth()->id())->get();
-        return view('toko.details', compact('addresses'));
+        $user = auth()->user();
+        $userPhone = $user ? $user->nomor_telepon : '';
+        return view('toko.details', compact('addresses', 'userPhone'));
     }
 
     public function saveAddress(Request $request)

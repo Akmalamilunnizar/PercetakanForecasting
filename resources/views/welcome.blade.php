@@ -57,9 +57,24 @@
         <div class="row">
           <div class="col-lg-12">
             <nav class="navbar navbar-expand-lg">
-              <a class="navbar-brand" href="{{ url('/') }}" style="margin-left: 25px;">
+               <style>
+                @keyframes pulse {
+                  0% { transform: scale(1); }
+                  50% { transform: scale(1.1); }
+                  100% { transform: scale(1); }
+                }
+
+                .pulse {
+                  display: inline-block; /* supaya transform work */
+                  animation: pulse 2s ease-in-out infinite;
+                }
+              </style>
+
+              <a class="logo pulse" href="javascript:void(0)">
                 <img src="{{ asset('dashboard2/assets/img/icons/logocime.png') }}" alt="Logo" />
               </a>
+
+
 
               </a>
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -140,9 +155,6 @@
                 style="font-size: 35px;">
                 Optimasi Manajemen Stok di Industri Percetakan Menggunakan Prediksi Penjualan
               </h2>
-              <p class="text wow fadeInUp" data-wow-duration="1.3s" data-wow-delay="0.8s" style="font-size: 20px;">
-              Sistem prediksi penjualan untuk mengoptimalkan pengelolaan stok bahan di industri percetakan  
-              </p>
             </div>
 
           </div>
@@ -150,9 +162,21 @@
 
         <div class="row">
           <div class="col-lg-12">
-            <div class="header-hero-image text-center wow fadeIn" data-wow-duration="1.3s" data-wow-delay="1.4s">
+            <style>
+              @keyframes swing {
+                0% { transform: translateX(0px); }
+                50% { transform: translateX(15px); }
+                100% { transform: translateX(0px); }
+              }
+
+              .swinging {
+                animation: swing 4s ease-in-out infinite;
+              }
+            </style>
+            <div class="header-hero-image text-center wow fadeIn swinging" data-wow-duration="1.3s" data-wow-delay="1.4s">
               <img src="{{ asset('dashboard2/assets/img/imgtoko/print2.png') }}" alt="print" />
             </div>
+
 
           </div>
         </div>
@@ -180,7 +204,7 @@
 
     <div class="d-flex justify-content-end mb-3">
       <a href="{{ route('tokodashboard') }}" class="btn btn-sm" style="color: #4318FF; font-size: 20px;">
-        Lihat Semua
+        Lihat Semua <i class="fas fa-arrow-right"></i>
       </a>
     </div>
 
@@ -191,17 +215,20 @@
 
       {{-- Carousel --}}
       <div id="carousel" class="d-flex overflow-hidden" style="gap: 20px; scroll-behavior: smooth; max-width: 100%;">
-        @foreach ($produk->take(8) as $item)
+        @foreach ($produk as $item)
           <div class="card shadow-sm border-0 p-3 flex-shrink-0"
                style="min-width: 300px; max-width: 300px; background-color: #f5f5f5; border-radius: 15px;">
-               <img src="{{ asset('storage/' . $item->Img) }}" class="img-fluid" alt="FotoProduk"
-               style="height: 280px; width: 100%; object-fit: cover; border-radius: 15px;">
+               <img src="{{ asset('storage/' . ($item->Img ?? 'default.jpg')) }}" 
+                    class="img-fluid" 
+                    alt="{{ $item->NamaProduk }}"
+                    style="height: 280px; width: 100%; object-fit: cover; border-radius: 15px;"
+                    onerror="this.onerror=null; this.src='{{ asset('storage/default.jpg') }}';">
                <div class="card-body" style="padding: 15px;">
                         <h5 class="fw-bold mb-1" style="color: #2B3674;">{{$item->NamaProduk}}</h5>
                         <p class="text-muted mb-2">Digital Printing</p>
                         <div class="d-flex justify-content-between align-items-center mt-3">
                             <span class="fw-bold" style="color: #4318FF;">Rp {{number_format($item->HargaProduk, 0, ',', '.')}}</span>
-                            <a href="#" class="btn" style="background-color: #1D1E94; color: white; border-radius: 30px; padding: 5px 20px;">Pesan</a>
+                            <a href="{{ route('detail.produk', ['id' => $item->IdProduk]) }}" class="btn" style="background-color: #1D1E94; color: white; border-radius: 30px; padding: 5px 20px;">Pesan</a>
                         </div>
                     </div>
           </div>
@@ -331,9 +358,21 @@
             </div>
           </div>
           <div class="col-lg-6">
-            <div class="about-image text-center mt-50 wow fadeInRightBig" data-wow-duration="1s" data-wow-delay="0.5s">
-              <img src="{{ asset('dashboard2/assets/img/imgtoko/print3.png') }}" alt="about" />
+            <style>
+              @keyframes swing {
+                0% { transform: translateX(0px); }
+                50% { transform: translateX(15px); }
+                100% { transform: translateX(0px); }
+              }
+
+              .swinging {
+                animation: swing 4s ease-in-out infinite;
+              }
+            </style>
+            <div class="header-hero-image text-center wow fadeIn swinging" data-wow-duration="1.3s" data-wow-delay="1.4s">
+              <img src="{{ asset('dashboard2/assets/img/imgtoko/print3.png') }}" alt="print" />
             </div>
+
           </div>
         </div>
       </div>
@@ -382,16 +421,11 @@
               </div>
 
               <p class="text">
-                The GenKs Koi 99 Farm terletak di lokasi yang mudah diakses dan menjadi pusat budidaya
-                serta penjualan ikan koi berkualitas unggul dengan berbagai jenis dan ukuran. Kami berfokus pada
-                memberikan layanan terbaik bagi para penghobi koi, termasuk konsultasi mengenai perawatan ikan dan
-                pengelolaan kolam. Dengan demikian, pelanggan dapat merasakan pengalaman optimal dalam merawat dan
-                menikmati keindahan koi mereka
+                Citra Media adalah usaha percetakan di Jember yang melayani berbagai kebutuhan cetak seperti undangan, brosur, banner, dan kartu nama. Kami hadir untuk memberikan hasil cetak berkualitas dengan harga bersahabat dan pelayanan cepat.
                 <br><br>
-                Gumuksari, Tegal Besar, Kaliwates, Jember Regency, East Java 68131, Indonesia
-                Kabupaten Jember, Jawa Timur, 68131
+                Sekarputih, Laden, Kec. Pamekasan, Kabupaten Pamekasan, Jawa Timur 69317
               </p>
-              <a href="https://maps.app.goo.gl/DuKjA14h9GYk25sM7" target="_blank" class="main-btn">Temukan Lokasi
+              <a href="https://www.google.com/maps/place/Percetakan+Citra+Media/@-7.1693678,113.4758272,17z/data=!4m14!1m7!3m6!1s0x2dd77e7512343c49:0x82e78bef3d99a4fc!2sPercetakan+Citra+Media!8m2!3d-7.169467!4d113.4758246!16s%2Fg%2F11g9jgjf93!3m5!1s0x2dd77e7512343c49:0x82e78bef3d99a4fc!8m2!3d-7.169467!4d113.4758246!16s%2Fg%2F11g9jgjf93?entry=ttu&g_ep=EgoyMDI1MDUxNS4xIKXMDSoJLDEwMjExNDUzSAFQAw%3D%3D" target="_blank" class="main-btn">Temukan Lokasi
                 Kami</a>
 
             </div>
@@ -399,7 +433,7 @@
           </div>
           <div class="col-lg-6 order-lg-first">
             <div class="about-image text-center mt-50 wow fadeInRightBig" data-wow-duration="1s" data-wow-delay="0.5s">
-              <img src="{{ asset('assets/images/about/genksKoi.svg') }}" alt="about" />
+              <img src="{{ asset('assets/images/about/cimelocations.png') }}" alt="about" />
             </div>
 
           </div>
@@ -567,10 +601,23 @@
         <div class="row">
           <div class="col-lg-4 col-md-6 col-sm-8">
             <div class="footer-about mt-50 wow fadeIn" data-wow-duration="1s" data-wow-delay="0.2s">
-              <a class="logo" href="javascript:void(0)">
-           
+             <style>
+                @keyframes pulse {
+                  0% { transform: scale(1); }
+                  50% { transform: scale(1.1); }
+                  100% { transform: scale(1); }
+                }
+
+                .pulse {
+                  display: inline-block; /* supaya transform work */
+                  animation: pulse 2s ease-in-out infinite;
+                }
+              </style>
+
+              <a class="logo pulse" href="javascript:void(0)">
                 <img src="{{ asset('dashboard2/assets/img/icons/logocime.png') }}" alt="Logo" />
               </a>
+
               <p class="text">
               Citra Media adalah usaha percetakan di Jember yang melayani berbagai kebutuhan cetak seperti undangan, 
               brosur, banner, dan kartu nama. Kami hadir untuk memberikan hasil cetak berkualitas dengan harga bersahabat dan pelayanan cepat.
@@ -610,7 +657,6 @@
                 <li>0896 2716 0919</li>
                 <li>
                 <li>Citramedia@gmail.com</li>
-                <li>www.genks99.com</li>
                 <li>
                 Kabupaten Jember, Jawa Timur 68121<br />
                 Indonesia
