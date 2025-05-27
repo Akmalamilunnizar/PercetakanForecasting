@@ -46,7 +46,7 @@ class Produk extends Model
         return $this->belongsTo(Items::class, 'id_bahan', 'IdBarang');
     }
 
-    public function diskon()
+    public function diskonRelasi()
     {
         return $this->belongsTo(Diskon::class, 'diskon', 'id');
     }

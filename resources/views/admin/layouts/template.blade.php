@@ -52,7 +52,7 @@
             <!-- Menu -->
             <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme" style="background-color: #f0f4f8; box-shadow: 2px 0 5px rgba(0,0,0,0.05); height: 100vh; overflow-y: auto;">
             <div class="main-sidebar sidebar-style-2" style="padding: 20px; display: flex; justify-content: center; border-bottom: 1px solid #d1d9e6;">
-                <a href="{{ route('admindashboard') }}" class="app-brand-link" style="display: flex; justify-content: center; width: 100%;">
+                <a href="http://127.0.0.1:8000" class="app-brand-link" style="display: flex; justify-content: center; width: 100%;">
             <img
                 src="{{ asset('dashboard2/assets/img/icons/logocime.png') }}"
                 alt="Logo"
