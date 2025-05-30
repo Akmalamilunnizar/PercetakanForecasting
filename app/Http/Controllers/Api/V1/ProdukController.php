@@ -16,7 +16,7 @@ class ProdukController extends Controller
     // Menampilkan semua produk
     public function index()
     {
-        $dataProduk = Produk::with(['bahan', 'diskonRelasi', 'size'])->get();
+        $dataProduk = Produk::with(['bahan', 'diskonRelasi', 'sizes.satuan'])->get();
         return view('admin.allproduk', compact('dataProduk'));
     }
 
@@ -30,7 +30,7 @@ class ProdukController extends Controller
         // Ambil data bahan, diskon, dan ukuran untuk dropdown
         $bahanList = Items::all();
         $diskonList = Diskon::all();
-        $sizeList = Size::all();
+        $sizeList = Size::with('satuan')->get();
 
         return view('admin.addproduk', compact('newId', 'bahanList', 'diskonList', 'sizeList'));
     }
@@ -41,47 +41,59 @@ class ProdukController extends Controller
         // Validasi input
         $request->validate([
             'NamaProduk' => 'required',
-            'HargaProduk' => 'required|numeric',
-            'ukuran' => 'nullable|exists:size,id_ukuran',
-            'bahan' => 'nullable|string|max:100',
-            'custom' => 'nullable|string|max:100',
+            'sizes' => 'required|array',
+            'sizes.*' => 'exists:size,id_ukuran',
+            'harga_per_size' => 'required|array',
+            'harga_per_size.*' => 'required|integer',
+            'custom_harga' => 'required|integer',
             'diskon' => 'nullable|exists:diskon,id',
             'id_bahan' => 'nullable|exists:databarang,IdBarang',
             'Img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'deskripsi' => 'required|string|max:1500',
         ]);
 
-        // Ambil ID produk terakhir dari database
-        $lastProduk = Produk::orderBy('IdProduk', 'desc')->first();
-        $newId = $lastProduk ? 'P' . str_pad((substr($lastProduk->IdProduk, 1) + 1), 4, '0', STR_PAD_LEFT) : 'P0001';
+        DB::beginTransaction();
+        try {
+            // Ambil ID produk terakhir dari database
+            $lastProduk = Produk::orderBy('IdProduk', 'desc')->first();
+            $newId = $lastProduk ? 'P' . str_pad((substr($lastProduk->IdProduk, 1) + 1), 4, '0', STR_PAD_LEFT) : 'P0001';
 
-        // Upload gambar
-        $path = $request->file('Img')->store('produk', 'public');
+            // Upload gambar
+            $path = $request->file('Img')->store('produk', 'public');
 
-        // Simpan data produk ke database
-        Produk::create([
-            'IdProduk' => $newId,
-            'NamaProduk' => $request->NamaProduk,
-            'HargaProduk' => $request->HargaProduk,
-            'ukuran' => $request->ukuran,
-            'bahan' => $request->bahan,
-            'custom' => $request->custom,
-            'diskon' => $request->diskon,
-            'id_bahan' => $request->id_bahan,
-            'Img' => $path,
-            'deskripsi' => $request->deskripsi,
-        ]);
+            // Simpan data produk ke database
+            $produk = Produk::create([
+                'IdProduk' => $newId,
+                'NamaProduk' => $request->NamaProduk,
+                'custom_harga' => $request->custom_harga,
+                'diskon' => $request->diskon,
+                'id_bahan' => $request->id_bahan,
+                'Img' => $path,
+                'deskripsi' => $request->deskripsi,
+            ]);
 
-        return redirect()->route('allproduk')->with('message', 'Produk berhasil ditambahkan!');
+            // Attach sizes with harga
+            $syncData = [];
+            foreach ($request->sizes as $index => $sizeId) {
+                $syncData[$sizeId] = ['harga' => $request->harga_per_size[$index]];
+            }
+            $produk->sizes()->attach($syncData);
+
+            DB::commit();
+            return redirect()->route('allproduk')->with('message', 'Produk berhasil ditambahkan!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 
     // Menampilkan form edit produk
     public function editProduk($id)
     {
-        $produk = Produk::with(['bahan', 'diskonRelasi', 'size'])->findOrFail($id);
+        $produk = Produk::with(['bahan', 'diskonRelasi', 'sizes.satuan'])->findOrFail($id);
         $bahanList = Items::all();
         $diskonList = Diskon::all();
-        $sizeList = Size::all();
+        $sizeList = Size::with('satuan')->get();
         return view('admin.editproduk', compact('produk', 'bahanList', 'diskonList', 'sizeList'));
     }
 
@@ -93,38 +105,48 @@ class ProdukController extends Controller
         // Validasi input
         $request->validate([
             'NamaProduk' => 'required',
-            'HargaProduk' => 'required|numeric',
-            'ukuran' => 'nullable|exists:size,id_ukuran',
-            'bahan' => 'nullable|string|max:100',
-            'custom' => 'nullable|string|max:100',
+            'sizes' => 'required|array',
+            'sizes.*' => 'exists:size,id_ukuran',
+            'custom_harga' => 'required|integer',
             'diskon' => 'nullable|exists:diskon,id',
             'id_bahan' => 'nullable|exists:databarang,IdBarang',
             'Img' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'deskripsi' => 'required|string|max:1500',
         ]);
 
-        // Jika gambar baru diupload
-        if ($request->hasFile('Img')) {
-            if ($produk->Img && Storage::disk('public')->exists($produk->Img)) {
-                Storage::disk('public')->delete($produk->Img);
+        DB::beginTransaction();
+        try {
+            // Jika gambar baru diupload
+            if ($request->hasFile('Img')) {
+                if ($produk->Img && Storage::disk('public')->exists($produk->Img)) {
+                    Storage::disk('public')->delete($produk->Img);
+                }
+                $path = $request->file('Img')->store('produk', 'public');
+                $produk->Img = $path;
             }
-            $path = $request->file('Img')->store('produk', 'public');
-            $produk->Img = $path;
+
+            // Update data produk
+            $produk->update([
+                'NamaProduk' => $request->NamaProduk,
+                'custom_harga' => $request->custom_harga,
+                'diskon' => $request->diskon,
+                'id_bahan' => $request->id_bahan,
+                'deskripsi' => $request->deskripsi,
+            ]);
+
+            // Sync sizes
+            $syncData = [];
+            foreach ($request->sizes as $index => $sizeId) {
+                $syncData[$sizeId] = ['harga' => $request->harga_per_size[$index]];
+            }
+            $produk->sizes()->sync($syncData);
+
+            DB::commit();
+            return redirect()->route('allproduk')->with('message', 'Produk berhasil diperbarui!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
-
-        // Update data produk
-        $produk->update([
-            'NamaProduk' => $request->NamaProduk,
-            'HargaProduk' => $request->HargaProduk,
-            'ukuran' => $request->ukuran,
-            'bahan' => $request->bahan,
-            'custom' => $request->custom,
-            'diskon' => $request->diskon,
-            'id_bahan' => $request->id_bahan,
-            'deskripsi' => $request->deskripsi,
-        ]);
-
-        return redirect()->route('allproduk')->with('message', 'Produk berhasil diperbarui!');
     }
 
     // Menghapus produk
@@ -132,15 +154,22 @@ class ProdukController extends Controller
     {
         $produk = Produk::findOrFail($id);
 
-        // Hapus gambar jika ada
-        if ($produk->Img && Storage::disk('public')->exists($produk->Img)) {
-            Storage::disk('public')->delete($produk->Img);
+        DB::beginTransaction();
+        try {
+            // Hapus gambar jika ada
+            if ($produk->Img && Storage::disk('public')->exists($produk->Img)) {
+                Storage::disk('public')->delete($produk->Img);
+            }
+
+            // Hapus data produk dari database
+            $produk->delete();
+
+            DB::commit();
+            return redirect()->route('allproduk')->with('message', 'Produk berhasil dihapus!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
-
-        // Hapus data produk dari database
-        $produk->delete();
-
-        return redirect()->route('allproduk')->with('message', 'Produk berhasil dihapus!');
     }
 
     // Menampilkan list produk dalam format JSON
@@ -161,7 +190,7 @@ class ProdukController extends Controller
                 $query->where('IdProduk', 'like', "%$search%")
                     ->orWhere('NamaProduk', 'like', "%$search%")
                     ->orWhere('HargaProduk', 'like', "%$search%")
-                    ->orWhere('ukuran', 'like', "%$search%")
+                    ->orWhere('sizes.id_ukuran', 'like', "%$search%")
                     ->orWhere('id_bahan', 'like', "%$search%")
                     ->orWhere('deskripsi', 'like', "%$search%")
                     ->orWhere('databarang.NamaBarang', 'like', "%$search%");
@@ -185,5 +214,28 @@ class ProdukController extends Controller
         $supplier->delete();
 
         return response()->json(['message' => 'Supplier deleted successfully'], 200);
+    }
+
+    public function show($id)
+    {
+        $produk = Produk::with(['bahan', 'diskonRelasi', 'sizes.satuan'])->findOrFail($id);
+
+        if ($produk->ukuran) {
+            // Standard size
+            $size = Size::find($produk->ukuran);
+            $price = $produk->HargaProduk;
+        } else {
+            // Custom size
+            $size = 'Custom';
+            $price = $produk->custom_harga;
+        }
+
+        return view('admin.showproduk', compact('produk', 'size', 'price'));
+    }
+    public function sizes()
+    {
+        return $this->belongsToMany(Size::class, 'produk_size', 'IdProduk', 'id_ukuran')
+                    ->withPivot('harga')
+                    ->withTimestamps();
     }
 }

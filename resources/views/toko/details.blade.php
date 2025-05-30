@@ -174,19 +174,18 @@
     // Handle "Pilih Alamat Ini" button click
     document.querySelectorAll('.select-address').forEach(button => {
       button.addEventListener('click', function(e) {
-        e.stopPropagation(); // Prevent card click event
+        e.preventDefault();
         const addressId = this.dataset.addressId;
-        
-        // Highlight the card
-        const card = this.closest('.address-card');
-        addressCards.forEach(c => c.classList.remove('selected'));
-        card.classList.add('selected');
-        
-        // Store selected address ID
-        selectedAddressId = addressId;
-        
-        // Show next button
-        nextButton.style.display = 'block';
+        fetch('/addresses/' + addressId + '/default', {
+          method: 'POST',
+          headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json'
+          }
+        }).then(() => {
+          // Optionally reload or show a message
+          window.location.href = '{{ route('shipping') }}';
+        });
       });
     });
   });

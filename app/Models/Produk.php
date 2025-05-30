@@ -27,10 +27,7 @@ class Produk extends Model
     protected $fillable = [
         'IdProduk',
         'NamaProduk',
-        'HargaProduk',
-        'ukuran',       
-        'bahan',  
-        'custom',       
+        'custom_harga',
         'diskon',
         'id_bahan',
         'Img',
@@ -56,8 +53,15 @@ class Produk extends Model
         return $this->belongsTo(Size::class, 'ukuran', 'id_ukuran');
     }
 
-     public function laporantransaksi()
+    public function laporantransaksi()
     {
         return $this->hasMany(LaporanTransaksi::class, 'IdProduk', 'IdProduk');
+    }
+
+    public function sizes()
+    {
+        return $this->belongsToMany(\App\Models\Size::class, 'produk_size', 'IdProduk', 'id_ukuran')
+                    ->withPivot('harga')
+                    ->withTimestamps();
     }
 }

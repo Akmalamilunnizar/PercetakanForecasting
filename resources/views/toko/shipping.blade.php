@@ -114,7 +114,8 @@
         @php $total = 0; $total_berat = 0; @endphp
 
         @if(session('cart') && count(session('cart')) > 0)
-            @foreach (session('cart') as $id => $details)
+            @php $cart = session('cart', []); @endphp
+            @foreach ($cart as $id => $details)
                 @php 
                     $subtotal = $details['harga'] * $details['quantity'];
                     $total += $subtotal;

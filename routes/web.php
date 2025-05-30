@@ -42,6 +42,8 @@ use App\Http\Controllers\Api\V1\AddressController;
 use App\Http\Controllers\Api\V1\PaymentController;
 
 use App\Http\Controllers\Api\V1\DetailProdukController;
+use App\Http\Controllers\Api\V1\SizeController;
+use App\Http\Controllers\Api\V1\DiskonController;
 
 
 // Route::get('/', function () {
@@ -67,6 +69,22 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/admin/admin-profile', 'Index')->name('profile');
         Route::post('/admin/store-profile', 'StoreProfile')->name('storeprofile');
     });
+
+    Route::get('/admin/all-ukuran', [SizeController::class, 'index'])->name('allukuran');
+    Route::get('/admin/add-ukuran', [SizeController::class, 'create'])->name('addukuran');
+    Route::post('/admin/store-ukuran', [SizeController::class, 'store'])->name('storeukuran');
+    Route::get('/admin/edit-ukuran/{id}', [SizeController::class, 'edit'])->name('editukuran');
+    Route::put('/admin/update-ukuran/{id}', [SizeController::class, 'update'])->name('updateukuran');
+    Route::delete('/admin/delete-ukuran/{id}', [SizeController::class, 'destroy'])->name('deleteukuran');
+
+    Route::get('/admin/all-diskon', [DiskonController::class, 'index'])->name('alldiskon');
+    Route::get('/admin/add-diskon', [DiskonController::class, 'create'])->name('adddiskon');
+    Route::post('/admin/store-diskon', [DiskonController::class, 'store'])->name('storediskon');
+    Route::get('/admin/edit-diskon/{id}', [DiskonController::class, 'edit'])->name('editdiskon');
+    Route::put('/admin/update-diskon/{id}', [DiskonController::class, 'update'])->name('updatediskon');
+    Route::delete('/admin/delete-diskon/{id}', [DiskonController::class, 'destroy'])->name('deletediskon');
+
+    Route::post('/admin/store-produk', [ProdukController::class, 'storeProduk'])->name('storeproduk');
 });
 
 
@@ -434,4 +452,4 @@ Route::post('/set-payment-method', function (Illuminate\Http\Request $request) {
 });
 
 // Detail Produk Routes
-Route::post('/cart/add', [DetailProdukController::class, 'addToCart'])->name('cart.add');
+Route::post('/cart/add', [App\Http\Controllers\Api\V1\CartController::class, 'add'])->name('cart.add');
