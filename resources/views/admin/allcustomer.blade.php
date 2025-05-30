@@ -37,7 +37,6 @@ CIME | Halaman Daftar Customer
                 <th style="text-align: center; font-weight: bold;">Nomor Telepon</th>
                 <th style="text-align: center; font-weight: bold;">Email</th>
                 <th style="text-align: center; font-weight: bold;">Alamat</th>
-                <th style="text-align: center; font-weight: bold;">Actions</th>
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
@@ -49,11 +48,6 @@ CIME | Halaman Daftar Customer
                         <td style="text-align: center;">{{ $item->nomor_telepon }}</td>
                         <td style="text-align: center;">{{ $item->email }}</td>
                         <td style="text-align: center;">{{ $item->alamat }}</td>
-                        <td style="text-align: center;">
-                            <a href="{{ route('deletecustomer', $item->id) }}" class="btn btn-danger" onclick="return confirm('Yakin ingin hapus data ini?')">
-                                        <i class="fas fa-trash-alt me-1"></i> Delete
-                                    </a>
-                        </td>
                     </tr>
                 @endforeach
             </tbody>

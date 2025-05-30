@@ -3,6 +3,7 @@
 
 
 <head>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <meta charset="utf-8" />
 
   <title>CIME | Website Percetakan</title>
@@ -124,12 +125,33 @@
                     Dashboard
                   </a>
                 @endif
-                <form method="POST" action="{{ route('logout') }}" class="d-inline">
-                  @csrf
-                  <button type="submit" class="main-btn wow fadeInUp" data-wow-duration="1s">
-                    Logout
-                  </button>
-                </form>
+                <form id="logout-form" method="POST" action="{{ route('logout') }}" class="d-inline">
+    @csrf
+    <button type="button" id="logout-button" class="main-btn wow fadeInUp" data-wow-duration="1s">
+        Logout
+    </button>
+</form>
+
+<script>
+    document.getElementById('logout-button').addEventListener('click', function(event) {
+        event.preventDefault(); // Mencegah form disubmit langsung
+
+        Swal.fire({
+            title: 'Konfirmasi Logout',
+            text: "Anda yakin ingin keluar?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Logout!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('logout-form').submit(); // Submit form jika dikonfirmasi
+            }
+        })
+    });
+</script>
               @else
                 <a href="{{ url('/login')}}" class="main-btn wow fadeInUp" data-wow-duration="1s" style="margin-right: 10px;">
                   Login
@@ -218,11 +240,11 @@
         @foreach ($produk as $item)
           <div class="card shadow-sm border-0 p-3 flex-shrink-0"
                style="min-width: 300px; max-width: 300px; background-color: #f5f5f5; border-radius: 15px;">
-               <img src="{{ asset('storage/' . ($item->Img ?? 'default.jpg')) }}" 
+               <img src="{{ asset('storage/' . ($item->Img ?? 'assets/images/poster1.jpeg')) }}" 
                     class="img-fluid" 
                     alt="{{ $item->NamaProduk }}"
                     style="height: 280px; width: 100%; object-fit: cover; border-radius: 15px;"
-                    onerror="this.onerror=null; this.src='{{ asset('storage/default.jpg') }}';">
+                    onerror="this.onerror=null; this.src='{{ asset('assets/images/poster1.jpeg') }}';">
                <div class="card-body" style="padding: 15px;">
                         <h5 class="fw-bold mb-1" style="color: #2B3674;">{{$item->NamaProduk}}</h5>
                         <p class="text-muted mb-2">Digital Printing</p>

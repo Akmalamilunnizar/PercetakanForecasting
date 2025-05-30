@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class OrderController extends Controller
 {
@@ -91,15 +94,12 @@ class OrderController extends Controller
 
             if ($paymentMethod === 'midtrans' && $isPaid) {
                 $transaction->Bayar = $total;
-                $transaction->SisaBayar = 0;
                 $transaction->StatusPembayaran = 'Lunas';
             } else {
                 $transaction->Bayar = 0;
-                $transaction->SisaBayar = $total;
                 $transaction->StatusPembayaran = 'Belum Lunas';
             }
 
-            $transaction->Kembali = 0;
             $transaction->GrandTotal = $total;
             $transaction->tglTransaksi = now();
             $transaction->StatusPesanan = 'Menunggu Konfirmasi';
@@ -109,26 +109,20 @@ class OrderController extends Controller
 
             // Create transaction details
             foreach ($cart as $id => $details) {
-                $detail = DetailTransaksi::create([
+                $isCustom = ($details['ukuran'] === 'custom');
+                $detailData = [
                     'IdTransaksi' => $transactionId,
-                    'IdProduk' => $id,
+                    'IdProduk' => $details['id'],
+                    'id_ukuran' => $isCustom ? null : $details['ukuran'],
+                    'CustomUkuran' => $isCustom ? $details['ukuran_label'] : null,
                     'QtyProduk' => $details['quantity'],
-                    'SubTotal' => $details['harga'] * $details['quantity']
-                ]);
-                Log::info('Transaction detail created:', ['detail' => $detail->toArray()]);
+                    'SubTotal' => $details['harga'] * $details['quantity'],
+                    'design_file' => $details['design_file'] ?? null,
+                ];
+                DetailTransaksi::create($detailData);
+                Log::info('Transaction detail created:', ['detail' => $detailData]);
 
-                // Create laporan_transaksis record
-                \App\Models\LaporanTransaksi::create([
-                    'kode_transaksi' => $transactionId,
-                    'nama_pelanggan' => $user->f_name,
-                    'produk' => $details['nama'],
-                    'jumlah' => $details['quantity'],
-                    'harga_satuan' => $details['harga'],
-                    'total_harga' => $details['harga'] * $details['quantity'],
-                    'tanggal_transaksi' => now()->toDateString(),
-                    'status_pembayaran' => $transaction->StatusPembayaran,
-                    'keterangan' => 'Pesanan baru'
-                ]);
+                
             }
 
             // Clear cart and payment flags
@@ -136,6 +130,8 @@ class OrderController extends Controller
             session()->forget('midtrans_paid');
             session()->forget('payment_method');
             Log::info('Cart cleared from session');
+
+            
 
             DB::commit();
 

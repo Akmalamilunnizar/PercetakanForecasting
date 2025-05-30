@@ -114,7 +114,8 @@
         @php $total = 0; $total_berat = 0; @endphp
 
         @if(session('cart') && count(session('cart')) > 0)
-            @foreach (session('cart') as $id => $details)
+            @php $cart = session('cart', []); @endphp
+            @foreach ($cart as $id => $details)
                 @php 
                     $subtotal = $details['harga'] * $details['quantity'];
                     $total += $subtotal;
@@ -122,14 +123,14 @@
                 @endphp
                 <div class="d-flex mb-3 border-bottom pb-2">
                     @php
-                        $imagePath = $details['img'] ?? 'default.jpg';
+                        $imagePath = $details['img'] ?? 'assets/images/poster1.jpeg';
                         $fullPath = asset('storage/' . $imagePath);
                     @endphp
                     <img src="{{ $fullPath }}" 
                          alt="{{ $details['nama'] }}" 
                          style="width: 55px; height: 55px; object-fit: cover; border-radius: 8px;"
                          class="me-3"
-                         onerror="this.onerror=null; this.src='{{ asset('storage/default.jpg') }}';">
+                         onerror="this.onerror=null; this.src='{{ asset('assets/images/poster1.jpeg') }}';">
                     <div class="flex-grow-1">
                         <div class="fw-semibold">{{ $details['nama'] }}</div>
                         <div class="text-primary">Rp {{ number_format($details['harga'], 0, ',', '.') }} 

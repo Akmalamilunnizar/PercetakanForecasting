@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Transaksi;
+use App\Models\DetailTransaksi;
 
 class OrderController extends Controller
 {
@@ -44,21 +45,42 @@ class OrderController extends Controller
             // Determine payment status
             $isPaid = session('midtrans_paid', false);
             $total = 0;
-            foreach ($cart as $item) {
-                $total += $item['harga'] * $item['quantity'];
+            foreach ($cart as $id => $details) {
+                $parts = explode('|', $id);
+                $productId = $parts[0];
+                $sizeId = $parts[1] ?? null;
+
+                $detailData = [
+                    'IdTransaksi' => $transactionId,
+                    'IdProduk' => $details['id'],
+                    'QtyProduk' => $details['quantity'],
+                    'SubTotal' => $details['harga'] * $details['quantity'],
+                    'design_file' => $details['design_file'] ?? null,
+                ];
+                if ($sizeId !== null) {
+                    $detailData['id_ukuran'] = $sizeId;
+                }
+
+                $detail = DetailTransaksi::create($detailData);
+                $total += $details['harga'] * $details['quantity'];
             }
+
+            $selectedAddressId = session('selected_address_id');
+            $address = \App\Models\Address::find($selectedAddressId);
 
             $transaction = new Transaksi();
             $transaction->IdTransaksi = $transactionId;
             $transaction->username = $user->username;
             $transaction->id = $user->id;
             $transaction->Bayar = $isPaid ? $total : 0;
-            $transaction->SisaBayar = $isPaid ? 0 : $total;
-            $transaction->Kembali = 0;
             $transaction->GrandTotal = $total;
             $transaction->tglTransaksi = now();
             $transaction->StatusPembayaran = $isPaid ? 'Lunas' : 'Belum Lunas';
             $transaction->StatusPesanan = 'Menunggu Konfirmasi';
+            if ($address) {
+                $transaction->address_id = $address->id;
+                $transaction->alamat_pengiriman = $address->full_address;
+            }
             $transaction->save();
 
             // ... existing code ...

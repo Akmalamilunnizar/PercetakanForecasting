@@ -14,8 +14,11 @@ class DetailTransaksi extends Model
     protected $fillable = [
         'IdTransaksi',
         'IdProduk',
+        'id_ukuran',
+        'CustomUkuran',
         'QtyProduk',
-        'SubTotal'
+        'SubTotal',
+        'design_file'
     ];
 
     public function transaksi()

@@ -25,8 +25,10 @@ class Size extends Model
         return $this->belongsTo(Satuan::class, 'id_satuan', 'IdSatuan');
     }
 
-    public function produk()
+    public function produks()
     {
-        return $this->hasMany(Produk::class, 'ukuran', 'id_ukuran');
+        return $this->belongsToMany(Produk::class, 'produk_size', 'id_ukuran', 'IdProduk')
+                    ->withPivot('harga')
+                    ->withTimestamps();
     }
 } 

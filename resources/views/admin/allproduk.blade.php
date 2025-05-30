@@ -22,9 +22,23 @@ CIME | Halaman Daftar Produk
                 + Tambah Produk
             </a>
 
-            @if (session()->has('message'))
-                <div class="alert alert-success mb-2">
-                    {{ session()->get('message') }}
+            @if (session('message'))
+                <div class="alert alert-success">
+                    {{ session('message') }}
+                </div>
+            @endif
+            @if (session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
                 </div>
             @endif
 
@@ -57,10 +71,36 @@ CIME | Halaman Daftar Produk
                                         @endif
                                     </td>
                                     <td>{{ $produk->NamaProduk }}</td>
-                                    <td>Rp {{ number_format($produk->HargaProduk, 0, ',', '.') }}</td>
-                                    <td>{{ $produk->size ? $produk->size->nama . ' (' . $produk->size->panjang . ' x ' . $produk->size->lebar . ' ' . $produk->size->satuan->Satuan . ')' : '-' }}</td>
+                                    <td>
+                                        @if($produk->sizes->count())
+                                            @foreach ($produk->sizes as $size)
+                                            <span class="badge bg-primary text-white mb-1 d-block">
+                                                    Rp {{ number_format($size->pivot->harga, 0, ',', '.') }}
+                                                </span>
+                                            @endforeach
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($produk->sizes->count())
+                                            @foreach ($produk->sizes as $size)
+                                                <span class="badge bg-primary text-white mb-1 d-block">
+                                                    {{ $size->nama }} ({{ $size->panjang }} x {{ $size->lebar }} {{ $size->satuan->Satuan }})
+                                                </span>
+                                            @endforeach
+                                        @else
+                                            <span class="text-muted">-</span>
+                                        @endif
+                                    </td>
                                     <td>{{ $produk->bahan ? $produk->bahan->NamaBarang : '-' }}</td>
-                                    <td>{{ $produk->custom ?? '-' }}</td>
+                                    <td>
+                                        @if($produk->custom_harga && $produk->custom_harga > 0)
+                                            Rp {{ number_format($produk->custom_harga, 0, ',', '.') }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
                                     <td>
                                         @if($produk->diskonRelasi && $produk->diskonRelasi->persentase !== null)
                                             <span class="badge bg-label-success">
@@ -90,3 +130,15 @@ CIME | Halaman Daftar Produk
             </div>
         </div>
     @endsection
+
+    <script>
+    $(document).ready(function() {
+        $('#ukuran').on('change', function() {
+            if ($(this).val() === '') {
+                $('#customSizeFields').show();
+            } else {
+                $('#customSizeFields').hide();
+            }
+        });
+    });
+    </script>

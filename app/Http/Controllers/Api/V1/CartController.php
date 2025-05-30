@@ -19,26 +19,62 @@ class CartController extends Controller
     // Menambahkan item ke keranjang
     public function add(Request $request)
     {
+        // Validate file if present
+        if ($request->hasFile('design_file')) {
+            $request->validate([
+                'design_file' => 'file|mimes:jpg,jpeg,png,webp,pdf,rar,zip|max:10240', // 10240 KB = 10 MB
+            ], [
+                'design_file.mimes' => 'File harus berupa jpg, jpeg, png, webp, pdf, rar, atau zip.',
+                'design_file.max' => 'Ukuran file maksimal 10MB.',
+            ]);
+        }
+
         $cart = session()->get('cart', []);
 
         $productId = $request->id;
+        $ukuran = $request->ukuran; // ukuran id or custom string
+        $ukuran_label = $request->ukuran_label ?? null; // label for display (optional)
+        // Make a unique key for product+ukuran
+        $cartKey = $productId . '|' . $ukuran;
 
-        if (isset($cart[$productId])) {
-            // Jika produk sudah ada, tambahkan jumlah
-            $cart[$productId]['quantity']++;
+        if (isset($cart[$cartKey])) {
+            // Jika produk+ukuran sudah ada, tambahkan jumlah
+            $cart[$cartKey]['quantity']++;
         } else {
-            // Jika produk belum ada, tambahkan baru
-            $cart[$productId] = [
+            // Jika produk+ukuran belum ada, tambahkan baru
+            $cart[$cartKey] = [
+                "id" => $request->id,
+                "quantity" => $request->quantity,
                 "nama" => $request->nama,
                 "harga" => $request->harga,
                 "img" => $request->img,
-                "quantity" => 1
+                "ukuran" => $ukuran,
+                "ukuran_label" => $ukuran_label,
+                "subtotal" => $request->subtotal,
             ];
         }
 
-        session()->put('cart', $cart);
+        // Handle file upload
+        if ($request->hasFile('design_file')) {
+            $file = $request->file('design_file');
+            $filePath = $file->store('designs', 'public');
+            $cart[$cartKey]['design_file'] = $filePath;
+        }
 
-        return response()->json(['success' => true, 'cartCount' => count($cart)]);
+            session()->put('cart', $cart);
+
+            return response()->json([
+                'success' => true,
+                'cartCount' => array_sum(array_column($cart, 'quantity')),
+                'message' => 'Produk berhasil ditambahkan ke keranjang'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
 
@@ -46,9 +82,10 @@ class CartController extends Controller
     public function index()
     {
         $cart = session('cart', []);
+        // dd(session('cart'));
         return view('toko.cart', compact('cart'));
 
-        
+
     }
 
     // Menghapus item dari keranjang
@@ -93,17 +130,20 @@ class CartController extends Controller
     public function update(Request $request, $id)
     {
         $cart = session()->get('cart');
-
         if (isset($cart[$id])) {
             if ($request->type == 'increase') {
                 $cart[$id]['quantity'] += 1;
-            } elseif ($request->type == 'decrease' && $cart[$id]['quantity'] > 1) {
+            } elseif ($request->type == 'decrease') {
                 $cart[$id]['quantity'] -= 1;
+                if ($cart[$id]['quantity'] <= 0) {
+                    unset($cart[$id]);
+                }
+            } elseif ($request->type == 'set' && $request->has('quantity')) {
+                $cart[$id]['quantity'] = max(1, (int)$request->quantity);
             }
             session()->put('cart', $cart);
         }
-
-        return redirect()->back();
+        return response()->json(['success' => true]);
     }
 
     public function details(Request $request)

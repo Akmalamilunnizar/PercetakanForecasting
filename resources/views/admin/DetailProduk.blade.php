@@ -15,10 +15,41 @@
     </div>
 @endsection
 
+
+
 <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 @section('content')
+    @php
+        // Collect all prices from sizes and custom_harga
+        $hargaList = collect();
+        $selectedUkuranId = null;
+        if ($produk->sizes && count($produk->sizes)) {
+            $minUkuran = null;
+            foreach ($produk->sizes as $size) {
+                if ($size->pivot->harga > 0) {
+                    $hargaList->push($size->pivot->harga);
+                    if ($minUkuran === null || $size->pivot->harga < $minUkuran->pivot->harga) {
+                        $minUkuran = $size;
+                    }
+                }
+            }
+            if ($minUkuran) {
+                $selectedUkuranId = $minUkuran->id_ukuran;
+            }
+        }
+        if ($produk->custom_harga > 0) {
+            $hargaList->push($produk->custom_harga);
+        }
+        // Get the minimum non-zero price, or 0 if all are zero
+        $minHarga = $hargaList->count() ? $hargaList->min() : 0;
+        $maxHarga = $produk->sizes->max(function($size) {
+            return $size->pivot->harga;
+        });
+        $customHargaFinal = $maxHarga + $produk->custom_harga;
+    @endphp
     <div class="content-wrapper">
         <div class="container-xxl flex-grow-1 container-p-y" style="overflow-x: auto;">
             <div class="row">
@@ -28,271 +59,37 @@
                             class="product-image" id="main-image">
                     </div>
                     <div class="thumbnail-scroll-wrapper mt-3" id="thumbnailScrollWrapper">
-                        <div class="thumbnail-scroll" id="thumbnail-scroll">
-                            @foreach (['banner.jpg', 'banner.jpg', 'banner.jpg', 'banner.jpg', 'banner.jpg', 'banner.jpg',  'banner.jpg', 'banner.jpg', 'banner.jpg',] as $img)
-                                <a href="#">
-                                    <div class="img-thumb-wrapper" style="margin-right: 5px;">
-                                        <img src="{{ asset('assets/images/' . $img) }}" alt="Gambar"
-                                            class="img-fluid img-thumb">
-                                    </div>
-                                </a>
-                            @endforeach
-                        </div>
+                        
                     </div>
                     @if(auth()->check() && $user)
                         <div class="mt-4">
                             <h5><b>Informasi Kontak</b></h5>
-                            <p>Nomor Telepon: {{ $user->nomor_telepon }}</p>
+                            <p>Nomor Telepon: 0896 2716 0919</p>
                         </div>
                     @endif
-                    <div class="mt-4">
-                        <div class="d-flex align-items-center">
-                            <h5><b>Pilih Rating</b></h5>
-                            <div class="ms-3">
-                                <span class="star-filter" data-rating="1"
-                                    style="cursor: pointer; font-size: 1.5em; color: #ccc; transition: color 0.2s ease;"
-                                    onclick="highlightStars(this)">&#9733;</span>
-                                <span class="star-filter" data-rating="2"
-                                    style="cursor: pointer; font-size: 1.5em; color: #ccc; transition: color 0.2s ease;"
-                                    onclick="highlightStars(this)">&#9733;</span>
-                                <span class="star-filter" data-rating="3"
-                                    style="cursor: pointer; font-size: 1.5em; color: #ccc; transition: color 0.2s ease;"
-                                    onclick="highlightStars(this)">&#9733;</span>
-                                <span class="star-filter" data-rating="4"
-                                    style="cursor: pointer; font-size: 1.5em; color: #ccc; transition: color 0.2s ease;"
-                                    onclick="highlightStars(this)">&#9733;</span>
-                                <span class="star-filter" data-rating="5"
-                                    style="cursor: pointer; font-size: 1.5em; color: #ccc; transition: color 0.2s ease;"
-                                    onclick="highlightStars(this)">&#9733;</span>
-                            </div>
-                        </div>
-                        <div class="review-summary mt-3 d-flex align-items-start">
-                            <div class="left-column me-3">
-                                <div class="overall-rating">
-                                    <span class="star">&#9733;</span>
-                                    <span class="rating-value">5.0</span> <span class="out-of">/ 5.0</span>
-                                </div>
-                                <div class="satisfaction">
-                                    <span>100%</span> pembeli merasa puas
-                                </div>
-                                <div class="rating-count">
-                                    <span>9</span> rating, <span>3</span> ulasan
-                                </div>
-                            </div>
-                            <div class="right-column d-flex">
-                                <div class="rating-bars-left">
-                                    <div class="rating-bar">
-                                        <span class="star">&#9733;</span> 5
-                                        <div class="bar-container">
-                                            <div class="bar" style="width: 100%; background-color:rgb(0, 151, 50);"></div>
-                                        </div>
-                                        <span class="count">(5)</span>
-                                    </div>
-                                    <div class="rating-bar">
-                                        <span class="star">&#9733;</span> 4
-                                        <div class="bar-container">
-                                            <div class="bar" style="width: 0%; background-color: #6c757d;"></div>
-                                        </div>
-                                        <span class="count">(0)</span>
-                                    </div>
-                                    <div class="rating-bar">
-                                        <span class="star">&#9733;</span> 3
-                                        <div class="bar-container">
-                                            <div class="bar" style="width: 0%; background-color: #6c757d;"></div>
-                                        </div>
-                                        <span class="count">(0)</span>
-                                    </div>
-                                </div>
-                                <div class="rating-bars-right ms-auto">
-                                    <div class="rating-bar">
-                                        <span class="star">&#9733;</span> 2
-                                        <div class="bar-container">
-                                            <div class="bar" style="width: 0%; background-color: #ffc107;"></div>
-                                        </div>
-                                        <span class="count">(2)</span>
-                                    </div>
-                                    <div class="rating-bar">
-                                        <span class="star">&#9733;</span> 1
-                                        <div class="bar-container">
-                                            <div class="bar" style="width: 0%; background-color: #dc3545;"></div>
-                                        </div>
-                                        <span class="count">(2)</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="user-reviews mt-3">
-                            <div class="user-review">
-                                <div class="user-info d-flex align-items-center mb-2">
-                                    <img src="{{ asset('assets/images/orang1.jpeg') }}" alt="Foto Profil Sayiful Adham"
-                                        class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;">
-                                    <div class="user-details">
-                                        <span class="fw-bold">Sayiful Adham Gaming</span>
-                                        <div class="rating-stars">
-                                            <span class="star" style="color: gold;">&#9733;</span>
-                                            <span class="star" style="color: gold;">&#9733;</span>
-                                            <span class="star" style="color: gold;">&#9733;</span>
-                                            <span class="star" style="color: gold;">&#9733;</span>
-                                            <span class="star" style="color: gold;">&#9733;</span>
-                                        </div>
-                                    </div>
-                                    <small class="ms-auto text-muted">2 Hari yang lalu</small>
-                                </div>
-                                <div class="review-images mb-2">
-                                    <a href="{{ asset('assets/images/poster1.jpeg') }}" data-lightbox="review-1">
-                                        <img src="{{ asset('assets/images/poster1.jpeg') }}" style="margin-right: 10px;"
-                                            alt="Gambar Ulasan 1" ...>
-                                    </a>
-                                    <a href="{{ asset('assets/images/poster2.jpg') }}" data-lightbox="review-1">
-                                        <img src="{{ asset('assets/images/poster2.jpg') }}" style="margin-right: 10px;"
-                                            alt="Gambar Ulasan 2" ...>
-                                    </a>
-                                    <a href="{{ asset('assets/images/poster3.webp') }}" data-lightbox="review-1">
-                                        <img src="{{ asset('assets/images/poster3.webp') }}" style="margin-right: 10px;"
-                                            alt="Gambar Ulasan 3" ...>
-                                    </a>
-                                </div>
-                                <p class="review-text">merk masker ini sih uda affordable hrgnya, bahannya jg ga bikin engep
-                                    makany
-                                    sukak bgt.. semoga makin bny variant masker lg dr onerneda ya.. utk packaging
-                                    aman bgt krn dil... <a href="#"
-                                        style="color: blue; text-decoration: none;">Selengkapnya</a>
-                                </p>
-                                <hr class="my-2">
-                            </div>
-
-                            <div class="user-review">
-                                <div class="user-info d-flex align-items-center mb-2">
-                                    <img src="{{ asset('assets/images/orang2.jpeg') }}" alt="Foto Profil Adham Syaiful"
-                                        class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;">
-                                    <div class="user-details">
-                                        <span class="fw-bold">Adham Syaiful</span>
-                                        <div class="rating-stars">
-                                            <span class="star" style="color: gold;">&#9733;</span>
-                                            <span class="star" style="color: gold;">&#9733;</span>
-                                            <span class="star" style="color: gold;">&#9733;</span>
-                                            <span class="star" style="color: gold;">&#9733;</span>
-                                            <span class="star" style="color: #ccc;">&#9733;</span>
-                                        </div>
-                                    </div>
-                                    <small class="ms-auto text-muted">2 Hari yang lalu</small>
-                                </div>
-                                <div class="review-images mb-2">
-                                    <a href="{{ asset('assets/images/poster1.jpeg') }}" data-lightbox="review-1">
-                                        <img src="{{ asset('assets/images/poster1.jpeg') }}" style="margin-right: 10px;"
-                                            alt="Gambar Ulasan 1" ...>
-                                    </a>
-                                    <a href="{{ asset('assets/images/poster2.jpg') }}" data-lightbox="review-1">
-                                        <img src="{{ asset('assets/images/poster2.jpg') }}" style="margin-right: 10px;"
-                                            alt="Gambar Ulasan 2" ...>
-                                    </a>
-                                    <a href="{{ asset('assets/images/poster3.webp') }}" data-lightbox="review-1">
-                                        <img src="{{ asset('assets/images/poster3.webp') }}" style="margin-right: 10px;"
-                                            alt="Gambar Ulasan 3" ...>
-                                    </a>
-                                </div>
-                                <p class="review-text">merk masker ini sih uda affordable hrgnya, bahannya jg ga bikin engep
-                                    makany
-                                    sukak bgt.. semoga makin bny variant masker lg dr onerneda ya.. utk packaging
-                                    aman bgt krn dil... <a href="#"
-                                        style="color: blue; text-decoration: none;">Selengkapnya</a>
-                                </p>
-                                <hr class="my-2">
-                            </div>
-                            <div class="user-review">
-                                <div class="user-info d-flex align-items-center mb-2">
-                                    <img src="{{ asset('assets/images/orang2.jpeg') }}" alt="Foto Profil Adham Syaiful"
-                                        class="rounded-circle me-2" style="width: 30px; height: 30px; object-fit: cover;">
-                                    <div class="user-details">
-                                        <span class="fw-bold">Adham Syaiful</span>
-                                        <div class="rating-stars">
-                                            <span class="star" style="color: gold;">&#9733;</span>
-                                            <span class="star" style="color: gold;">&#9733;</span>
-                                            <span class="star" style="color: gold;">&#9733;</span>
-                                            <span class="star" style="color: gold;">&#9733;</span>
-                                            <span class="star" style="color: #ccc;">&#9733;</span>
-                                        </div>
-                                    </div>
-                                    <small class="ms-auto text-muted">2 Hari yang lalu</small>
-                                </div>
-                                <div class="review-images mb-2">
-                                    <a href="{{ asset('assets/images/poster1.jpeg') }}" data-lightbox="review-1">
-                                        <img src="{{ asset('assets/images/poster1.jpeg') }}" style="margin-right: 10px;"
-                                            alt="Gambar Ulasan 1" ...>
-                                    </a>
-                                    <a href="{{ asset('assets/images/poster2.jpg') }}" data-lightbox="review-1">
-                                        <img src="{{ asset('assets/images/poster2.jpg') }}" style="margin-right: 10px;"
-                                            alt="Gambar Ulasan 2" ...>
-                                    </a>
-                                    <a href="{{ asset('assets/images/poster3.webp') }}" data-lightbox="review-1">
-                                        <img src="{{ asset('assets/images/poster3.webp') }}" style="margin-right: 10px;"
-                                            alt="Gambar Ulasan 3" ...>
-                                    </a>
-                                </div>
-                                <p class="review-text">merk masker ini sih uda affordable hrgnya, bahannya jg ga bikin engep
-                                    makany
-                                    sukak bgt.. semoga makin bny variant masker lg dr onerneda ya.. utk packaging
-                                    aman bgt krn dil... <a href="#"
-                                        style="color: blue; text-decoration: none;">Selengkapnya</a>
-                                </p>
-                                <hr class="my-2">
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <div class="col-md-6">
+
                     <div>
                         <h1> <b style="font-size: 2em; color: black;">
                                 {{ $produk->NamaProduk ?? 'Detail Produk' }}
                             </b></h1>
                         <p><b style="color: black;">Terjual</b> 10rb+ <span class="star" style="color: gold;">&#9733;</span>
-                            <b style="color: black;">5 </b>(5.089 rating)
+                            <b style="color: black;">5
                         </p>
                         <h4 class="jarakHarga">
                             <b style="font-size: 2em; color: black; position: relative; top: 5px;">
-                                Rp <span id="displayHargaSatuan">{{ number_format($produk->HargaProduk, 0, ',', '.') }}</span>
+                                Rp <span id="displayHargaSatuan">
+                                    {{ number_format($minHarga, 0, ',', '.') }} *starts from
+                                </span>
                             </b>
                         </h4>
 
                         <div class="mt-3">
-                            <h5 style="margin-top: 25px;"><b
-                                    style="font-size: 1.5em; color: black; color:rgb(104, 59, 187)  ">
-                                    Deskripsi Produk </b></h5>
-                            <p style="margin-top: 20px;">Custom Spanduk / Mmt / Baliho / Banner - Citra Media Digital
-                                Printing
-                            </p>
-                            <p style="margin-top: 10px;">Cetak Spanduk Custom: Kunci Sukses Branding kamu! 🚀
-                            </p>
-                            <p style="margin-top: 10px;">Tersedia Ukuran Besar Mulai dari 3x4, 4x6, 10x5 dan hingga ukuran
-                                kecil 1x1, 2x1, 100x50cm, 50x50 cm dan ukuran lainnya.
-                                Jadikan setiap spanduk sebagai alat branding untuk memperkuat identitas merek kamu! Dengan
-                                desain yang menarik dan kualitas cetak terbaik Bersama Citra Media.
-                            </p>
-                            <p style="margin-top: 10px;">Custom Banner Dengan Harga Start 13 Ribu/m (Untuk Pemesanan Banyak)
-                                Harga di atas adalah harga Per meter (19.500) Sudah FREE Finishing
-                            </p>
-                            <p style="margin-top: 10px;"> ☑️Tanpa Minimal Order (1 meter Bisa)
-                            </p>
-                            <p style="margin-top: 10px;"> ☑️ Deskripsi
-                                Area Cetak Max : 3 Meter ( Lebar )
-                                Bahan :
-                                - Bahan China 280gsm (Permukaan Bahan Glossy)
-                                Format File : PDF.TIFF
-                            </p>
-                            <p style="margin-top: 10px;"> ☑️ Cara pemesanan
-                                Silahkan Pilih Bahan & Input PANJANG Spanduk (kesamping) dan input Lebar Spanduk (keatas)
-                                misal 2x1 berarti input 2(Panjang) + 1 (Lebar)
-                            </p>
-                            <p style="margin-top: 10px;">Cetak Spanduk Custom: Kunci Sukses Branding kamu! 🚀
-                            </p>
-                            <p style="margin-top: 10px;">Tersedia Ukuran Besar Mulai dari 3x4, 4x6, 10x5 dan hingga ukuran
-                                kecil 1x1, 2x1, 100x50cm, 50x50 cm dan ukuran lainnya.
-                                Jadikan setiap spanduk sebagai alat branding untuk memperkuat identitas merek kamu! Dengan
-                                desain yang menarik dan kualitas cetak terbaik Bersama Citra Media.
-                            </p>
-                            <p style="margin-top: 10px;">Custom Banner Dengan Harga Start 13 Ribu/m (Untuk Pemesanan Banyak)
-                                Harga di atas adalah harga Per meter (19.500) Sudah FREE Finishing
-                            </p>
+                            <h5 style="margin-top: 25px;"><b style="font-size: 1.5em; color: black; color:rgb(104, 59, 187)">Deskripsi Produk </b></h5>
+                            <p style="margin-top: 20px; white-space: pre-line;">{{ $produk->deskripsi ?? ($description ?? '-') }}</p>
+                        </div>
+                        
 
 
                             <h5 class="mt-4">Pemesanan</h5>
@@ -306,13 +103,14 @@
                                             <div class="col-sm-10">
                                                 <select class="form-select" id="ukuran_produk_select"
                                                     name="ukuran_produk_selected">
-                                                    <option value="">-- Pilih Ukuran --</option>
-                                                    @foreach ($ukuranList as $ukuran)
-                                                        <option value="{{ $ukuran->id_ukuran }}" {{ old('ukuran_produk') == $ukuran->id_ukuran ? 'selected' : '' }}>
-                                                            {{ $ukuran->nama }} ({{ $ukuran->panjang }} x {{ $ukuran->lebar }} cm)
+                                                    @foreach ($produk->sizes as $ukuran)
+                                                        <option value="{{ $ukuran->id_ukuran }}" data-harga="{{ $ukuran->pivot->harga }}" @if($ukuran->id_ukuran == $selectedUkuranId) selected @endif>
+                                                            {{ $ukuran->nama }} ({{ $ukuran->panjang }} x {{ $ukuran->lebar }} {{ $ukuran->satuan->Satuan ?? 'cm' }}) - Rp {{ number_format($ukuran->pivot->harga, 0, ',', '.') }}
                                                         </option>
                                                     @endforeach
-                                                    <option value="custom" {{ old('ukuran_produk_is_custom') ? 'selected' : '' }}>Custom</option>
+                                                    <option value="custom" data-harga="{{ $customHargaFinal }}">
+                                                        Custom - Rp {{ number_format($customHargaFinal, 0, ',', '.') }}
+                                                    </option>
                                                 </select>
 
                                                 <input type="text"
@@ -330,26 +128,8 @@
 
 
                                     </div>
-                                    <div class="row mb-3 align-items-center">
-                                        <div class="col-md-4">
-                                            <label class="form-label fw-bold"><i class="bx bx-tag me-2"></i> Promo</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <div class="text-muted">Potongan :
-                                                {{ $produk->diskon ? $produk->diskon . '%' : '0%' }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3 align-items-center">
-                                        <div class="col-md-4">
-                                            <label for="catatan" class="form-label fw-bold"><i class="bx bx-label me-2"></i>
-                                                Catatan</label>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <textarea class="form-control" id="catatan" rows="1"
-                                                placeholder="Opsional"></textarea>
-                                        </div>
-                                    </div>
+                                    
+                                    
                                     <div class="row mb-3 align-items-center">
                                         <div class="col-md-4">
                                             <label for="jumlahOrderInput" class="form-label fw-bold"><i
@@ -372,7 +152,8 @@
                                                     class="bx bx-upload me-2"></i> Upload File</label>
                                         </div>
                                         <div class="col-md-8">
-                                            <input class="form-control form-control-sm" type="file" id="uploadFile">
+                                            <input class="form-control form-control-sm" type="file" id="uploadFile" name="design_file"
+                                                accept=".jpg,.jpeg,.png,.webp,.pdf,.rar,.zip" />
                                             <small class="text-muted">nb : jpg, png, jpeg, webp, pdf, rar, zip. max
                                                 10mb</small>
                                         </div>
@@ -394,20 +175,12 @@
                                     <hr>
                                     <div class="row mb-2 fw-bold" style="margin-top: 10px;">
                                         <div class="col-6">Total Harga Satuan</div>
-                                        <div class="col-6 text-end">Rp
-                                            <span id="hargaSatuanDisplay">{{ number_format($hargaSetelahDiskon, 0, ',', '.') }}</span>
-                                            @if ($produk->diskon > 0)
-                                                <span class="text-decoration-line-through ms-2 text-muted">
-                                                    Rp {{ number_format($produk->HargaProduk, 0, ',', '.') }}
-                                                </span>
-                                            @endif
+                                        <div class="col-6 text-end">
+                                            Rp <span id="hargaSatuanDisplay"></span>
+                                            <span id="hargaSatuanOriginal" class="text-decoration-line-through ms-2 text-muted"></span>
                                         </div>
                                     </div>
-                                    <div class="row mb-2">
-                                        <div class="col-6">Potongan</div>
-                                        <div class="col-6 text-end">{{ $produk->diskon ? $produk->diskon . '%' : '0%' }}
-                                        </div>
-                                    </div>
+                                    
                                     <div class="row mb-2">
                                         <div class="col-6">Jumlah Order</div>
                                         <div class="col-6 text-end" id="summaryJumlahOrder">1</div>
@@ -420,8 +193,7 @@
                                         </div>
                                     </div>
                                     <div class="d-grid gap-2" style="margin-top: 20px;">
-                                        <button class="btn btn-primary shadow-sm" type="button" id="beliSekarangBtn"><i
-                                                class="bx bx-credit-card me-2"></i> Beli Sekarang</button>
+                                        <button class="btn btn-primary shadow-sm" type="button" id="beliSekarangBtn">Beli Sekarang</button>
                                     </div>
                                 </div>
                             </div>
@@ -442,7 +214,6 @@
                                     {{ $produk->NamaProduk ?? 'Detail Produk' }}
                                 </h6>
                                 <small style="margin-left: 20px;">Ukuran: <span id="modalUkuran"></span></small><br>
-                                <small style="margin-left: 20px;">Catatan: <span id="modalCatatan"></span></small><br>
                                 <small style="margin-left: 20px;">Nomor HP: <span id="modalNomorHP"></span></small>
                             </div>
                         </div>
@@ -455,10 +226,6 @@
                                 <span>Jumlah:</span>
                                 <span><span id="modalJumlah"></span></span>
                             </div>
-                            <div class="harga-item diskon">
-                                <span>Diskon (<span id="modalDiskonPersen"></span>):</span>
-                                <span>Rp <span id="modalDiskonNominal"></span></span>
-                            </div>
                             <div class="harga-item total">
                                 <span>Subtotal:</span>
                                 <span>Rp <span id="modalSubtotal"></span></span>
@@ -467,7 +234,7 @@
                     </div>
                     <div class="modal-actions">
                         <button class="btn btn-secondary" id="batalBeliBtn">Batal</button>
-                        <button class="btn btn-primary" id="modalBeliSekarangBtn">Pesan Sekarang</button>
+                        <button class="btn btn-primary" id="customModalBeliSekarangBtn" disabled>Pesan Sekarang</button>
                     </div>
                 </div>
             </div>
@@ -491,7 +258,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="button" class="btn btn-primary" id="modalBeliSekarangBtn">Pesan Sekarang</button>
+                    <button type="button" class="btn btn-primary" id="bsModalBeliSekarangBtn">Pesan Sekarang</button>
                 </div>
             </div>
         </div>
@@ -499,7 +266,307 @@
 @endsection
 
 
+<script>
+$(document).ready(function () {
+    $('#beliSekarangBtn2').click(function () {
+        let productId = $(this).data('id');
+        let productNama = $(this).data('nama');
+        let productHarga = $(this).data('harga');
+        let productImg = $(this).data('img');
+
+        $.ajax({
+            url: "{{ route('cart.add') }}",
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                id: productId,
+                nama: productNama,
+                harga: productHarga,
+                img: productImg
+            },
+            success: function (response) {
+                if (response.success) {
+                    // Tutup modal konfirmasi pembelian
+                    $('#beliSekarangModal').removeClass("show");
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: 'Produk berhasil ditambahkan ke keranjang.',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log('Error:', error);
+            }
+        });
+    });
+});
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const mainImage = document.getElementById('main-image');
+        const thumbnailScrollWrapper = document.getElementById('thumbnailScrollWrapper');
+        const beliSekarangBtn = document.getElementById('beliSekarangBtn');
+        const beliSekarangModal = document.getElementById('beliSekarangModal');
+        const closeButton = document.querySelector('.close-button');
+        const batalBeliBtn = document.getElementById('batalBeliBtn');
+
+        // Quantity calculation elements
+        const jumlahOrderInput = document.getElementById('jumlahOrderInput');
+        const plusButton = document.getElementById('plusButton');
+        const minusButton = document.getElementById('minusButton');
+        const summaryJumlahOrder = document.getElementById('summaryJumlahOrder');
+        const summaryTotalPembayaran = document.getElementById('summaryTotalPembayaran');
+        const hargaSatuanDisplay = document.getElementById('hargaSatuanDisplay');
+
+        // Input elements for modal
+        const ukuranProdukSelect = document.getElementById('ukuran_produk_select');
+        const ukuranProdukCustom = document.getElementById('ukuran_produk_custom');
+        const catatanInput = document.getElementById('catatan');
+        const uploadFileInput = document.getElementById('uploadFile');
+        const nomorHPInput = document.getElementById('nomorHP');
+
+        // Modal display elements
+        const modalProductImage = document.getElementById('modalProductImage');
+        const modalUkuran = document.getElementById('modalUkuran');
+        const modalCatatan = document.getElementById('modalCatatan');
+        const modalNomorHP = document.getElementById('modalNomorHP');
+        const modalHargaSatuan = document.getElementById('modalHargaSatuan');
+        const modalJumlah = document.getElementById('modalJumlah');
+        const modalDiskonPersen = document.getElementById('modalDiskonPersen');
+        const modalDiskonNominal = document.getElementById('modalDiskonNominal');
+        const modalSubtotal = document.getElementById('modalSubtotal');
+
+
+        // Get the initial product price and discount from your Blade variables
+        const basePrice = {{ $produk->HargaProduk }};
+        const discountPercentage = {{ $produk->diskon ?? 0 }};
+
+        function formatRupiah(amount) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount).replace('Rp', ''); // Remove 'Rp' as it's added manually
+        }
+
+        function updateTotal() {
+            let quantity = parseInt(jumlahOrderInput.value);
+            if (isNaN(quantity) || quantity < 1) {
+                quantity = 1;
+                jumlahOrderInput.value = 1;
+            }
+
+            // Calculate price after discount
+            let priceAfterDiscount = basePrice;
+            let discountAmount = 0;
+            if (discountPercentage > 0) {
+                discountAmount = basePrice * discountPercentage / 100;
+                priceAfterDiscount = basePrice - discountAmount;
+            }
+
+            const totalPrice = priceAfterDiscount * quantity;
+
+            summaryJumlahOrder.textContent = quantity;
+            summaryTotalPembayaran.textContent = formatRupiah(totalPrice);
+            hargaSatuanDisplay.textContent = formatRupiah(priceAfterDiscount); // Update harga satuan display
+        }
+
+        // Event Listeners for quantity buttons
+        plusButton.addEventListener('click', () => {
+            jumlahOrderInput.value = parseInt(jumlahOrderInput.value) + 1;
+            updateTotal();
+        });
+
+        minusButton.addEventListener('click', () => {
+            if (parseInt(jumlahOrderInput.value) > 1) {
+                jumlahOrderInput.value = parseInt(jumlahOrderInput.value) - 1;
+                updateTotal();
+            }
+        });
+
+        jumlahOrderInput.addEventListener('input', updateTotal);
+
+        // Initial update when the page loads
+        updateTotal();
+
+
+        if (mainImage && thumbnailScrollWrapper) {
+            const mainImageWidth = mainImage.offsetWidth;
+            thumbnailScrollWrapper.style.maxWidth = mainImageWidth + 'px';
+            thumbnailScrollWrapper.style.overflowX = 'auto';
+        }
+
+        // Ubah display modal dengan menambah/menghapus class "show"
+        beliSekarangBtn.addEventListener('click', function () {
+            // Populate modal with current values
+            const selectedUkuran = ukuranProdukSelect.value === 'custom' ? ukuranProdukCustom.value : ukuranProdukSelect.value;
+            const catatan = catatanInput.value || '-'; // Display '-' if empty
+            const nomorHP = nomorHPInput.value || '-'; // Display '-' if empty
+            const quantity = parseInt(jumlahOrderInput.value);
+
+            let priceAfterDiscount = basePrice;
+            let discountAmount = 0;
+            if (discountPercentage > 0) {
+                discountAmount = basePrice * discountPercentage / 100;
+                priceAfterDiscount = basePrice - discountAmount;
+            }
+            const totalPrice = priceAfterDiscount * quantity;
+
+
+            modalUkuran.textContent = selectedUkuran;
+            modalCatatan.textContent = catatan;
+            modalNomorHP.textContent = nomorHP;
+            modalHargaSatuan.textContent = formatRupiah(basePrice); // Original base price
+            modalJumlah.textContent = quantity;
+            modalDiskonPersen.textContent = discountPercentage > 0 ? `${discountPercentage}%` : '0%';
+            modalDiskonNominal.textContent = formatRupiah(discountAmount * quantity); // Total diskon
+            modalSubtotal.textContent = formatRupiah(totalPrice);
+
+            // Handle uploaded image
+            if (uploadFileInput.files.length > 0) {
+                const uploadedFile = uploadFileInput.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    modalProductImage.src = e.target.result;
+                };
+                reader.readAsDataURL(uploadedFile);
+            } else {
+                // If no file uploaded, revert to the original product image
+                modalProductImage.src = "{{ asset('storage/' . $produk->Img) }}";
+            }
+
+
+            beliSekarangModal.classList.add("show");
+        });
+
+        closeButton.addEventListener('click', function () {
+            beliSekarangModal.classList.remove("show");
+        });
+
+        batalBeliBtn.addEventListener('click', function () {
+            beliSekarangModal.classList.remove("show");
+        });
+
+        window.addEventListener('click', function (event) {
+            if (event.target === beliSekarangModal) {
+                beliSekarangModal.classList.remove("show");
+                
+            }
+        });
+
+
+    });
+
+    
+
+</script>
+
+<script>
+    function highlightStars(selectedStar) {
+        const stars = document.querySelectorAll('.star-filter');
+        const rating = parseInt(selectedStar.getAttribute('data-rating'));
+
+        stars.forEach(star => {
+            const starRating = parseInt(star.getAttribute('data-rating'));
+            if (starRating <= rating) {
+                star.style.color = 'gold'; // Warna emas yang lebih pekat adalah default
+            } else {
+                star.style.color = '#ccc';
+            }
+        });
+    }
+         
+</script>
+
+<script>
+    function highlightStars(selectedStar) {
+        const stars = document.querySelectorAll('.star-filter');
+        const rating = parseInt(selectedStar.getAttribute('data-rating'));
+
+        stars.forEach(star => {
+            const starRating = parseInt(star.getAttribute('data-rating'));
+            if (starRating <= rating) {
+                star.style.color = 'gold'; // Warna emas yang lebih pekat adalah default
+            } else {
+                star.style.color = '#ccc';
+            }
+        });
+    }
+</script>
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const select = document.getElementById('ukuran_produk_select');
+            const customInput = document.getElementById('ukuran_produk_custom');
+            const hiddenInput = document.getElementById('ukuran_produk_final');
+
+            function updateFinalValue() {
+                if (select.value === 'custom') {
+                    customInput.classList.remove('d-none');
+                    hiddenInput.value = customInput.value;
+                } else {
+                    customInput.classList.add('d-none');
+                    hiddenInput.value = select.value;
+                }
+            }
+
+            select.addEventListener('change', updateFinalValue);
+            customInput.addEventListener('input', function () {
+                hiddenInput.value = customInput.value;
+            });
+
+            // Panggil saat pertama kali jika old value adalah custom
+            if (select.value === 'custom') {
+                customInput.classList.remove('d-none');
+            }
+        });
+    </script>
+@endpush
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const selectEl = document.getElementById('ukuran_produk_select');
+        const customInput = document.getElementById('ukuran_produk_custom');
+        const hiddenFinal = document.getElementById('ukuran_produk_final');
+
+        function handleChange() {
+            const selectedValue = selectEl.value;
+            if (selectedValue === 'custom') {
+                customInput.classList.remove('d-none');
+                hiddenFinal.value = customInput.value; // Isi sementara
+            } else {
+                customInput.classList.add('d-none');
+                hiddenFinal.value = selectedValue;
+            }
+        }
+
+        selectEl.addEventListener('change', handleChange);
+
+        // Update hidden field saat user mengetik ukuran custom
+        customInput.addEventListener('input', function () {
+            hiddenFinal.value = this.value;
+        });
+    });
+</script>
+
 <style>
+
+    .modal {
+    display: none;
+    /* lainnya... */
+}
+
+.modal.show {
+    display: block;
+    /* lainnya... */
+}
     .product-image-container {
         width: 100%;
         /* Mengisi lebar parent (misalnya, col-md-4) */
@@ -1281,25 +1348,20 @@
         // Input elements for modal
         const ukuranProdukSelect = document.getElementById('ukuran_produk_select');
         const ukuranProdukCustom = document.getElementById('ukuran_produk_custom');
-        const catatanInput = document.getElementById('catatan');
         const uploadFileInput = document.getElementById('uploadFile');
         const nomorHPInput = document.getElementById('nomorHP');
 
         // Modal display elements
         const modalProductImage = document.getElementById('modalProductImage');
         const modalUkuran = document.getElementById('modalUkuran');
-        const modalCatatan = document.getElementById('modalCatatan');
         const modalNomorHP = document.getElementById('modalNomorHP');
         const modalHargaSatuan = document.getElementById('modalHargaSatuan');
         const modalJumlah = document.getElementById('modalJumlah');
-        const modalDiskonPersen = document.getElementById('modalDiskonPersen');
-        const modalDiskonNominal = document.getElementById('modalDiskonNominal');
         const modalSubtotal = document.getElementById('modalSubtotal');
 
 
         // Get the initial product price and discount from your Blade variables
-        const basePrice = {{ $produk->HargaProduk }};
-        const discountPercentage = {{ $produk->diskon ?? 0 }};
+        const basePrice = Number('{{ $produk->HargaProduk ?? 0 }}');
 
         function formatRupiah(amount) {
             return new Intl.NumberFormat('id-ID', {
@@ -1310,45 +1372,62 @@
             }).format(amount).replace('Rp', ''); // Remove 'Rp' as it's added manually
         }
 
-        function updateTotal() {
-            let quantity = parseInt(jumlahOrderInput.value);
-            if (isNaN(quantity) || quantity < 1) {
-                quantity = 1;
-                jumlahOrderInput.value = 1;
+        function updateHargaDanTotal() {
+            var select = document.getElementById('ukuran_produk_select');
+            var harga = 0;
+            if (select && select.selectedIndex >= 0) {
+                harga = parseInt(select.options[select.selectedIndex].getAttribute('data-harga')) || 0;
             }
 
-            // Calculate price after discount
-            let priceAfterDiscount = basePrice;
-            let discountAmount = 0;
-            if (discountPercentage > 0) {
-                discountAmount = basePrice * discountPercentage / 100;
-                priceAfterDiscount = basePrice - discountAmount;
+            var jumlahInput = document.getElementById('jumlahOrderInput');
+            var jumlah = parseInt(jumlahInput.value) || 1;
+
+            // Calculate total
+            var total = harga * jumlah;
+
+            // Update all price displays
+            document.getElementById('displayHargaSatuan').innerText = harga.toLocaleString('id-ID');
+            var hargaSatuanDisplay = document.getElementById('hargaSatuanDisplay');
+            if (hargaSatuanDisplay) {
+                hargaSatuanDisplay.innerText = harga.toLocaleString('id-ID');
             }
 
-            const totalPrice = priceAfterDiscount * quantity;
+            // Update total pembayaran
+            var summaryTotalPembayaran = document.getElementById('summaryTotalPembayaran');
+            if (summaryTotalPembayaran) {
+                summaryTotalPembayaran.innerText = total.toLocaleString('id-ID');
+            }
 
-            summaryJumlahOrder.textContent = quantity;
-            summaryTotalPembayaran.textContent = formatRupiah(totalPrice);
-            hargaSatuanDisplay.textContent = formatRupiah(priceAfterDiscount); // Update harga satuan display
+            // Update jumlah order
+            var summaryJumlahOrder = document.getElementById('summaryJumlahOrder');
+            if (summaryJumlahOrder) {
+                summaryJumlahOrder.innerText = jumlah;
+            }
+
+            // Disable Beli Sekarang if harga is 0
+            var beliBtn = document.getElementById('beliSekarangBtn');
+            if (beliBtn) {
+                beliBtn.disabled = (harga === 0);
+            }
         }
 
         // Event Listeners for quantity buttons
         plusButton.addEventListener('click', () => {
             jumlahOrderInput.value = parseInt(jumlahOrderInput.value) + 1;
-            updateTotal();
+            updateHargaDanTotal();
         });
 
         minusButton.addEventListener('click', () => {
             if (parseInt(jumlahOrderInput.value) > 1) {
                 jumlahOrderInput.value = parseInt(jumlahOrderInput.value) - 1;
-                updateTotal();
+                updateHargaDanTotal();
             }
         });
 
-        jumlahOrderInput.addEventListener('input', updateTotal);
+        jumlahOrderInput.addEventListener('input', updateHargaDanTotal);
 
         // Initial update when the page loads
-        updateTotal();
+        updateHargaDanTotal();
 
 
         if (mainImage && thumbnailScrollWrapper) {
@@ -1359,29 +1438,25 @@
 
         // Ubah display modal dengan menambah/menghapus class "show"
         beliSekarangBtn.addEventListener('click', function () {
-            // Populate modal with current values
-            const selectedUkuran = ukuranProdukSelect.value === 'custom' ? ukuranProdukCustom.value : ukuranProdukSelect.value;
-            const catatan = catatanInput.value || '-'; // Display '-' if empty
-            const nomorHP = nomorHPInput.value || '-'; // Display '-' if empty
-            const quantity = parseInt(jumlahOrderInput.value);
-
-            let priceAfterDiscount = basePrice;
-            let discountAmount = 0;
-            if (discountPercentage > 0) {
-                discountAmount = basePrice * discountPercentage / 100;
-                priceAfterDiscount = basePrice - discountAmount;
+            // Get selected size price
+            let harga = 0;
+            if (ukuranProdukSelect.value === 'custom') {
+                harga = parseInt(ukuranProdukCustom.value) || 0;
+            } else {
+                harga = parseInt(ukuranProdukSelect.options[ukuranProdukSelect.selectedIndex].getAttribute('data-harga')) || 0;
             }
-            const totalPrice = priceAfterDiscount * quantity;
 
+            // Get quantity
+            var jumlahOrderInputEl = document.getElementById('jumlahOrderInput');
+            var quantity = jumlahOrderInputEl ? parseInt(jumlahOrderInputEl.value) || 1 : 1;
 
-            modalUkuran.textContent = selectedUkuran;
-            modalCatatan.textContent = catatan;
-            modalNomorHP.textContent = nomorHP;
-            modalHargaSatuan.textContent = formatRupiah(basePrice); // Original base price
+            // Update modal fields
+            var ukuranLabel = ukuranProdukSelect.options[ukuranProdukSelect.selectedIndex].text;
+            modalUkuran.textContent = ukuranProdukSelect.value === 'custom' ? ukuranProdukCustom.value : ukuranProdukSelect.options[ukuranProdukSelect.selectedIndex].text;
+            modalNomorHP.textContent = nomorHPInput.value || '-';
+            modalHargaSatuan.textContent = harga.toLocaleString('id-ID');
             modalJumlah.textContent = quantity;
-            modalDiskonPersen.textContent = discountPercentage > 0 ? `${discountPercentage}%` : '0%';
-            modalDiskonNominal.textContent = formatRupiah(discountAmount * quantity); // Total diskon
-            modalSubtotal.textContent = formatRupiah(totalPrice);
+            modalSubtotal.textContent = harga * quantity;
 
             // Handle uploaded image
             if (uploadFileInput.files.length > 0) {
@@ -1392,12 +1467,16 @@
                 };
                 reader.readAsDataURL(uploadedFile);
             } else {
-                // If no file uploaded, revert to the original product image
                 modalProductImage.src = "{{ asset('storage/' . $produk->Img) }}";
             }
 
-
             beliSekarangModal.classList.add("show");
+
+            var fileInput = document.getElementById('uploadFile');
+            var pesanBtn = document.getElementById('customModalBeliSekarangBtn');
+            if (fileInput && pesanBtn) {
+                pesanBtn.disabled = fileInput.files.length === 0;
+            }
         });
 
         closeButton.addEventListener('click', function () {
@@ -1415,70 +1494,127 @@
         });
 
         // Add click handler for the modal's Beli Sekarang button
-        const modalBeliSekarangBtn = document.getElementById('modalBeliSekarangBtn');
-        modalBeliSekarangBtn.addEventListener('click', function() {
-            // Get product details
-            const productId = '{{ $produk->IdProduk }}';
-            const productName = '{{ $produk->NamaProduk }}';
-            const productPrice = {{ $produk->HargaProduk }};
-            const productImg = '{{ $produk->Img }}';
-            const quantity = document.getElementById('jumlahOrderInput').value;
-            const size = sizeSelect.value;
-            const designFile = fileInput.files[0];
-            
-            // Create form data
-            const formData = new FormData();
-            formData.append('_token', '{{ csrf_token() }}');
-            formData.append('id', productId);
-            formData.append('nama', productName);
-            formData.append('harga', productPrice);
-            formData.append('img', productImg);
-            formData.append('quantity', quantity);
-            formData.append('ukuran', size);
-            formData.append('design_file', designFile);
-            
-            // Show loading state
-            modalBeliSekarangBtn.disabled = true;
-            modalBeliSekarangBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Memproses...';
-            
-            // Add to cart via AJAX
-            fetch('{{ route("cart.add") }}', {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json'
-                },
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Show success message
+        const modalBeliSekarangBtn = document.getElementById('customModalBeliSekarangBtn');
+        if (modalBeliSekarangBtn) {
+            modalBeliSekarangBtn.addEventListener('click', function() {
+                var select = document.getElementById('ukuran_produk_select');
+                var harga = select.options[select.selectedIndex].getAttribute('data-harga');
+                harga = parseInt(harga) || 0;
+
+                if (harga === 0) {
                     Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil!',
-                        text: 'Produk berhasil ditambahkan ke keranjang',
-                        showConfirmButton: false,
-                        timer: 1500
-                    }).then(() => {
-                        // Redirect to cart page
-                        window.location.href = '{{ route("cart") }}';
+                        icon: 'warning',
+                        title: 'Harga Tidak Valid',
+                        text: 'Silakan pilih ukuran yang benar. Produk dengan harga 0 tidak dapat dipesan.'
                     });
-                } else {
-                    throw new Error(data.error || 'Gagal menambahkan produk ke keranjang');
+                    modalBeliSekarangBtn.disabled = false;
+                    modalBeliSekarangBtn.innerHTML = 'Beli Sekarang';
+                    return;
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: error.message || 'Terjadi kesalahan saat menambahkan ke keranjang'
+
+                var productId = '{{ $produk->IdProduk }}';
+                var productName = '{{ $produk->NamaProduk }}';
+                var quantity = parseInt(document.getElementById('jumlahOrderInput').value) || 1;
+                var size = select.value;
+                var ukuranLabel = select.options[select.selectedIndex].text;
+                var fileInput = document.getElementById('uploadFile');
+                var designFile = fileInput.files[0];
+
+                var subtotal = harga * quantity;
+                var formData = new FormData();
+                formData.append('_token', '{{ csrf_token() }}');
+                formData.append('id', productId);
+                formData.append('nama', productName);
+                formData.append('harga', harga);
+                formData.append('img', '{{ $produk->Img }}');
+                formData.append('quantity', quantity);
+                formData.append('ukuran', size);
+                formData.append('ukuran_label', ukuranLabel);
+                formData.append('subtotal', subtotal);
+                if (designFile) {
+                    formData.append('design_file', designFile);
+                }
+
+                // Show loading state
+                modalBeliSekarangBtn.disabled = true;
+                modalBeliSekarangBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Memproses...';
+
+                // Add to cart via AJAX
+                fetch('{{ route("cart.add") }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                })
+                .then(async response => {
+                    if (response.ok) {
+                        // Show success message
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: 'Produk berhasil ditambahkan ke keranjang',
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            // Redirect to cart page
+                            window.location.href = '{{ route("cart") }}';
+                        });
+                    } else {
+                        let errorMsg = 'Terjadi kesalahan saat menambahkan ke keranjang';
+                        if (response.status === 422) {
+                            const data = await response.json();
+                            errorMsg = Object.values(data.errors).join('<br>');
+                        }
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            html: errorMsg
+                        });
+                        modalBeliSekarangBtn.disabled = false;
+                        modalBeliSekarangBtn.innerHTML = 'Beli Sekarang';
+                    }
+                })
+                .catch(async error => {
+                    let errorMsg = error.message || 'Terjadi kesalahan saat menambahkan ke keranjang';
+                    if (error.response && error.response.status === 422) {
+                        const data = await error.response.json();
+                        errorMsg = Object.values(data.errors).join('<br>');
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        html: errorMsg
+                    });
+                    modalBeliSekarangBtn.disabled = false;
+                    modalBeliSekarangBtn.innerHTML = 'Beli Sekarang';
                 });
-                // Reset button state
-                modalBeliSekarangBtn.disabled = false;
-                modalBeliSekarangBtn.innerHTML = 'Beli Sekarang';
             });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var fileInput = document.getElementById('uploadFile');
+            var pesanBtn = document.getElementById('customModalBeliSekarangBtn');
+            if (fileInput && pesanBtn) {
+                fileInput.addEventListener('change', function() {
+                    pesanBtn.disabled = fileInput.files.length === 0;
+                });
+                // Also check on page load
+                pesanBtn.disabled = fileInput.files.length === 0;
+            }
+        });
+
+        document.getElementById('jumlahOrderInput').addEventListener('input', function() {
+            // recalculate subtotal and update modalSubtotal.innerText
+            let harga = 0;
+            if (ukuranProdukSelect.value === 'custom') {
+                harga = parseInt(ukuranProdukCustom.value) || 0;
+            } else {
+                harga = parseInt(ukuranProdukSelect.options[ukuranProdukSelect.selectedIndex].getAttribute('data-harga')) || 0;
+            }
+            let quantity = parseInt(this.value) || 1;
+            document.getElementById('modalSubtotal').innerText = harga * quantity;
         });
     });
 
@@ -1618,8 +1754,11 @@
             const size = sizeSelect.value;
             const designFile = fileInput.files[0];
             
+            // Calculate subtotal
+            var subtotal = productPrice * quantity;
+            
             // Create form data
-            const formData = new FormData();
+            var formData = new FormData();
             formData.append('_token', '{{ csrf_token() }}');
             formData.append('id', productId);
             formData.append('nama', productName);
@@ -1627,7 +1766,11 @@
             formData.append('img', productImg);
             formData.append('quantity', quantity);
             formData.append('ukuran', size);
-            formData.append('design_file', designFile);
+            formData.append('ukuran_label', sizeSelect.options[sizeSelect.selectedIndex].text);
+            formData.append('subtotal', subtotal);
+            if (designFile) {
+                formData.append('design_file', designFile);
+            }
             
             // Show loading state
             beliSekarangBtn.disabled = true;
@@ -1642,9 +1785,8 @@
                 },
                 body: formData
             })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
+            .then(async response => {
+                if (response.ok) {
                     // Show success message
                     Swal.fire({
                         icon: 'success',
@@ -1657,20 +1799,66 @@
                         window.location.href = '{{ route("cart") }}';
                     });
                 } else {
-                    throw new Error(data.error || 'Gagal menambahkan produk ke keranjang');
+                    let errorMsg = 'Terjadi kesalahan saat menambahkan ke keranjang';
+                    if (response.status === 422) {
+                        const data = await response.json();
+                        errorMsg = Object.values(data.errors).join('<br>');
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        html: errorMsg
+                    });
+                    modalBeliSekarangBtn.disabled = false;
+                    modalBeliSekarangBtn.innerHTML = 'Beli Sekarang';
                 }
             })
-            .catch(error => {
-                console.error('Error:', error);
+            .catch(async error => {
+                let errorMsg = error.message || 'Terjadi kesalahan saat menambahkan ke keranjang';
+                if (error.response && error.response.status === 422) {
+                    const data = await error.response.json();
+                    errorMsg = Object.values(data.errors).join('<br>');
+                }
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: error.message || 'Terjadi kesalahan saat menambahkan ke keranjang'
+                    html: errorMsg
                 });
-                // Reset button state
-                beliSekarangBtn.disabled = false;
-                beliSekarangBtn.innerHTML = '<i class="bx bx-credit-card me-2"></i> Beli Sekarang';
+                modalBeliSekarangBtn.disabled = false;
+                modalBeliSekarangBtn.innerHTML = 'Beli Sekarang';
             });
         });
     });
+</script>
+
+<script>
+function updateHargaSatuan() {
+    var select = document.getElementById('ukuran_produk_select');
+    var harga = select.options[select.selectedIndex].getAttribute('data-harga');
+    harga = parseInt(harga) || 0;
+
+    var jumlah = parseInt(document.getElementById('jumlahOrderInput').value) || 1;
+
+    // Calculate total
+    var total = harga * jumlah;
+
+    // Update all price displays
+    document.getElementById('displayHargaSatuan').innerText = harga.toLocaleString('id-ID');
+    var hargaSatuanDisplay = document.getElementById('hargaSatuanDisplay');
+    if (hargaSatuanDisplay) {
+        hargaSatuanDisplay.innerText = harga.toLocaleString('id-ID');
+    }
+
+    // Disable Beli Sekarang if harga is 0
+    var beliBtn = document.getElementById('beliSekarangBtn');
+    if (beliBtn) {
+        beliBtn.disabled = (harga === 0);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    updateHargaSatuan();
+    document.getElementById('ukuran_produk_select').addEventListener('change', updateHargaSatuan);
+    document.getElementById('jumlahOrderInput').addEventListener('input', updateHargaSatuan);
+});
 </script>

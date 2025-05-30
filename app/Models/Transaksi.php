@@ -21,8 +21,6 @@ class Transaksi extends Model
         'username',
         'id',
         'Bayar',
-        'SisaBayar',
-        'Kembali',
         'GrandTotal',
         'tglTransaksi',
         'StatusPembayaran',
@@ -49,9 +47,18 @@ class Transaksi extends Model
         return $this->belongsTo(User::class, 'username', 'username');
     }
 
-    
+
     public function laporantransaksi()
     {
         return $this->hasMany(LaporanTransaksi::class, 'IdTransaksi', 'IdTransaksi');
     }
+
+    public function produk()
+    {
+        return $this->belongsToMany(Produk::class, 'detail_transaksi', 'IdTransaksi', 'IdProduk')
+            ->withPivot(['QtyProduk', 'SubTotal']) // alias pivot
+            // ->withTimestamps()
+        ;
+    }
+
 }
