@@ -13,22 +13,14 @@ class DetailProdukController extends Controller
 {
     public function show(string $id): View
     {
-        $produk = Produk::findOrFail($id);
+        $produk = Produk::with(['diskonRelasi', 'sizes.satuan'])->findOrFail($id);
 
         $hargaAsli = $produk->HargaProduk;
-        $diskonPersen = $produk->diskon ?? 0;
+        $diskonPersen = $produk->diskonRelasi ? $produk->diskonRelasi->persentase : 0;
         $hargaSetelahDiskon = $hargaAsli - ($hargaAsli * ($diskonPersen / 100));
 
         // Get description from database
         $description = $produk->deskripsi ?? 'Produk berkualitas dengan hasil cetak yang memukau. Tersedia dalam berbagai ukuran dan finishing.';
-
-        // Get sizes using Eloquent relationship
-        $ukuranList = Size::whereIn('id_ukuran', function($query) {
-            $query->select('ukuran')
-                  ->from('produk')
-                  ->whereNotNull('ukuran')
-                  ->where('ukuran', '!=', '0');
-        })->get();
 
         // Get user data if authenticated
         $user = null;
@@ -41,13 +33,12 @@ class DetailProdukController extends Controller
         return view('admin.DetailProduk', [
             'produk' => $produk,
             'hargaSetelahDiskon' => $hargaSetelahDiskon,
-            'ukuranList' => $ukuranList,
             'userPhone' => $userPhone,
             'description' => $description,
-            'user' => $user
+            'user' => $user,
+            'diskonPersen' => $diskonPersen
         ]);
     }
-
 
     public function create()
     {

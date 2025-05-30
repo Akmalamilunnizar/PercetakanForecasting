@@ -116,6 +116,17 @@ CIME | Halaman Dashboard E-Commerce
     <h3 class="mb-4 fw-bold" style="color: #2B3674; font-size: 23px;">Product Terlaris</h3>
     <div class="row">
         @foreach ($produkTerlaris as $item)
+        @php
+            $minHarga = null;
+            if ($item->sizes && count($item->sizes)) {
+                $minHarga = $item->sizes->min(function($size) {
+                    return $size->pivot->harga;
+                });
+            }
+            if (!$minHarga) {
+                $minHarga = $item->custom_harga;
+            }
+        @endphp
         <div class="col-md-4 mb-4">
             <div class="card h-100 shadow-sm border-0 p-4" style="background-color: #ffffff; border-radius: 15px;">
                 <img src="{{ asset('storage/' . ($item->Img ?? 'assets/images/poster1.jpeg')) }}" 
@@ -127,9 +138,15 @@ CIME | Halaman Dashboard E-Commerce
                     <h5 class="fw-bold mb-1" style="color: #2B3674;">{{ $item->NamaProduk }}</h5>
                     <p class="text-muted mb-2">Digital Printing</p>
                     <div class="d-flex justify-content-between align-items-center mt-3">
-                        <span class="fw-bold" style="color: #4318FF;">Rp {{ number_format($item->HargaProduk, 0, ',', '.') }}</span>
-                         <a href="{{ route('detail.produk', ['id' => $item->IdProduk]) }}" class="btn" style="background-color: #1D1E94; color: white; border-radius: 30px; padding: 5px 20px;">Pesan</a>
-                       
+                        <span class="fw-bold" style="color: #4318FF;">Rp {{ number_format($minHarga, 0, ',', '.') }}</span>
+                        <button type="button" class="btn pesan-btn" 
+                            data-id="{{ $item->IdProduk }}" 
+                            data-nama="{{ $item->NamaProduk }}" 
+                            data-harga="{{ $minHarga }}" 
+                            data-img="{{ $item->Img }}" 
+                            style="background-color: #1D1E94; color: white; border-radius: 30px; padding: 5px 20px;">
+                            Pesan
+                        </button>
                     </div>
                 </div>
             </div>
@@ -144,6 +161,17 @@ CIME | Halaman Dashboard E-Commerce
         <h3 class="mb-4 fw-bold" style="color: #2B3674; font-size: 23px;">Semua Product</h3>
         <div class="row">
         @foreach ($produk as $item)
+            @php
+                $minHarga = null;
+                if ($item->sizes && count($item->sizes)) {
+                    $minHarga = $item->sizes->min(function($size) {
+                        return $size->pivot->harga;
+                    });
+                }
+                if (!$minHarga) {
+                    $minHarga = $item->custom_harga;
+                }
+            @endphp
             <div class="col-md-4 mb-4">
                 <div class="card h-100 shadow-sm border-0 p-4" style="background-color: #ffffff; border-radius: 15px;">
                 <img src="{{ asset('storage/' . ($item->Img ?? 'assets/images/poster1.jpeg')) }}" alt="Gambar Produk" 
@@ -155,7 +183,7 @@ CIME | Halaman Dashboard E-Commerce
                         <h5 class="fw-bold mb-1" style="color: #2B3674;">{{$item->NamaProduk}}</h5>
                         <p class="text-muted mb-2">Digital Printing</p>
                         <div class="d-flex justify-content-between align-items-center mt-3">
-                            <span class="fw-bold" style="color: #4318FF;">Rp {{number_format($item->HargaProduk, 0, ',', '.')}}</span>
+                            <span class="fw-bold" style="color: #4318FF;">Rp {{ number_format($minHarga, 0, ',', '.') }}</span>
                             <a href="{{ route('detail.produk', ['id' => $item->IdProduk]) }}" class="btn" style="background-color: #1D1E94; color: white; border-radius: 30px; padding: 5px 20px;">Pesan</a>
                         </div>
                     </div>

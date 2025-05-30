@@ -58,6 +58,7 @@ class AddressController extends Controller
         // Set this address as default
         $address->update(['is_default' => true]);
 
+        session(['selected_address_id' => $address->id]);
         return response()->json([
             'success' => true,
             'message' => 'Default address updated'

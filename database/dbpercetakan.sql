@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: May 26, 2025 at 01:23 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Host: 127.0.0.1:3307
+-- Generation Time: May 27, 2025 at 05:04 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `dbpercetakan1`
+-- Database: `dbpercetakan`
 --
 
 -- --------------------------------------------------------
@@ -398,6 +398,9 @@ CREATE TABLE `produk` (
   `IdProduk` varchar(6) NOT NULL,
   `NamaProduk` varchar(25) DEFAULT NULL,
   `HargaProduk` int(11) DEFAULT NULL,
+  `ukuran_produk` varchar(100) DEFAULT NULL,
+  `jenis_bahan_produk` varchar(100) DEFAULT NULL,
+  `custom_produk` varchar(100) DEFAULT NULL,
   `Img` varchar(255) DEFAULT NULL,
   `ukuran` int(6) NOT NULL,
   `deskripsi` varchar(1500) NOT NULL,
@@ -409,12 +412,26 @@ CREATE TABLE `produk` (
 -- Dumping data for table `produk`
 --
 
-INSERT INTO `produk` (`IdProduk`, `NamaProduk`, `HargaProduk`, `Img`, `ukuran`, `deskripsi`, `diskon`, `id_bahan`) VALUES
-('P0001', 'Kalender', 25000, 'produk/kalender.jpg', 1, '🗓️ Kalender Custom: Promosi & Hadiah yang Tahan Lama!\r\n\r\nKalender adalah media promosi sepanjang tahun. Cocok untuk souvenir akhir tahun, branding perusahaan, atau kebutuhan pribadi.\r\n\r\n📐 Jenis Kalender:\r\n\r\nKalender Meja: Ukuran A5, A6 (14 Halaman + Cover)\r\n\r\nKalender Dinding: Ukuran A3 / A4 (1 Lembar atau 12 Lembar)\r\n\r\n🎨 Jenis Kertas:\r\n\r\nArt Paper 150gr / 210gr\r\n\r\nIvory 260gr / Duplex\r\n\r\n💰 Harga Mulai Rp8.000 / pcs (untuk cetak banyak)\r\n\r\nKeunggulan:\r\n☑️ Bisa Custom Foto, Logo, & Warna\r\n☑️ Sudah Termasuk Spiral & Dudukan (untuk kalender meja)\r\n☑️ Cocok untuk Hadiah & Branding Perusahaan\r\n☑️ Minimal order hanya 10 pcs', 1, '8991389230237'),
-('P0002', 'Brosur', 12000, 'produk/brosur.jpg', 1, '📄 Cetak Brosur: Media Informasi Cepat & Efisien untuk Promosi\r\n\r\nBrosur adalah cara jitu menyampaikan informasi lengkap dalam satu genggaman. Cocok untuk promosi produk, jasa, event, atau profil perusahaan.\r\n\r\n📐 Ukuran Tersedia: A5, A4, A3 (Lipat 2 atau 3)\r\n\r\n🎨 Jenis Kertas:\r\n\r\nArt Paper 120gr / 150gr\r\n\r\nArt Carton 190gr / 210gr\r\n\r\nFinishing: Laminasi, Lipat Dua / Tiga\r\n\r\n💰 Harga Mulai Rp150 / lembar (untuk cetak banyak)\r\n\r\nKelebihan:\r\n☑️ Hasil Cetak Tajam & Warna Cerah\r\n☑️ Gratis Cek File Desain\r\n☑️ Bisa Pakai Template atau Desain Sendiri\r\n☑️ Proses cepat, hasil maksimal!', NULL, '8991389230237'),
-('P0003', 'Kartu Nama', 10500, 'produk/kartunama.jpg', 1, '👔 Cetak Kartu Nama Eksklusif: Bangun Citra Profesional dari Pertemuan Pertama\r\n\r\nKartu nama adalah kesan pertama yang tak terlupakan. Cetak kartu nama kamu dengan kualitas terbaik, bahan premium, dan desain eksklusif di Citra Media!\r\n\r\n📐 Ukuran Standard: 9 x 5.5 cm\r\n\r\n🎨 Jenis Kertas:\r\n\r\nArt Carton 260gr / 310gr\r\n\r\nLinen / Ivory / Matte Paper\r\n\r\nFinishing: Laminasi Doff / Glossy, Sudut Tumpul (Rounded)\r\n\r\n💰 Harga Mulai Rp30.000 / 100 pcs\r\n\r\nKelebihan:\r\n☑️ Desain Custom atau Pakai Template Siap Cetak\r\n☑️ Proses Cepat 1–2 Hari Kerja\r\n☑️ Bisa Cetak 1 atau 2 Sisi\r\n☑️ Bonus File Digital untuk Branding Online', NULL, '8991389230237'),
-('P0004', 'Buku', 30000, 'produk/buku.jpg', 1, 'Custom Buku Cetak - Citra Media Digital Printing\r\n\r\n📚 Cetak Buku Custom: Solusi Cetak Profesional untuk Kebutuhan Kamu!\r\n\r\nKini kamu bisa mencetak buku custom untuk berbagai kebutuhan seperti laporan tahunan, skripsi, modul pelatihan, buku yasin, hingga buku agenda pribadi. Citra Media menghadirkan layanan cetak buku dengan kualitas tinggi dan pilihan finishing lengkap yang bisa disesuaikan!\r\n\r\n📏 Tersedia Berbagai Ukuran Populer\r\nMulai dari A5, A4, B5, hingga ukuran custom sesuai kebutuhanmu. Uk', NULL, '8991389230237'),
-('P0005', 'Spanduk', 60000, 'produk/spanduk.jpg', 1, '📢 Cetak Spanduk Custom: Media Promosi Andal & Efektif!\r\n\r\nTingkatkan daya tarik bisnis dan event kamu dengan spanduk berkualitas dari Citra Media Digital Printing! Kami melayani cetak spanduk berbagai ukuran dan bahan sesuai kebutuhan promosi kamu.\r\n\r\n🖼️ Ukuran Tersedia:\r\nMulai dari ukuran kecil 50x50cm, 100x50cm, hingga ukuran besar seperti 3x4m, 4x6m, 10x5m.\r\n\r\n💰 Harga Mulai Rp13.000/meter (untuk pemesanan banyak)\r\nHarga normal Rp19.500/m — sudah FREE Finishing\r\n\r\nBahan yang Tersedia:\r\n\r\nChina', NULL, '8991389230237');
+INSERT INTO `produk` (`IdProduk`, `NamaProduk`, `HargaProduk`, `ukuran_produk`, `jenis_bahan_produk`, `custom_produk`, `Img`, `ukuran`, `deskripsi`, `diskon`, `id_bahan`) VALUES
+('P0001', 'Kalender', 25000, NULL, NULL, NULL, 'produk/kalender.jpg', 1, '🗓️ Kalender Custom: Promosi & Hadiah yang Tahan Lama!\r\n\r\nKalender adalah media promosi sepanjang tahun. Cocok untuk souvenir akhir tahun, branding perusahaan, atau kebutuhan pribadi.\r\n\r\n📐 Jenis Kalender:\r\n\r\nKalender Meja: Ukuran A5, A6 (14 Halaman + Cover)\r\n\r\nKalender Dinding: Ukuran A3 / A4 (1 Lembar atau 12 Lembar)\r\n\r\n🎨 Jenis Kertas:\r\n\r\nArt Paper 150gr / 210gr\r\n\r\nIvory 260gr / Duplex\r\n\r\n💰 Harga Mulai Rp8.000 / pcs (untuk cetak banyak)\r\n\r\nKeunggulan:\r\n☑️ Bisa Custom Foto, Logo, & Warna\r\n☑️ Sudah Termasuk Spiral & Dudukan (untuk kalender meja)\r\n☑️ Cocok untuk Hadiah & Branding Perusahaan\r\n☑️ Minimal order hanya 10 pcs', 1, '8991389230237'),
+('P0002', 'Brosur', 12000, NULL, NULL, NULL, 'produk/brosur.jpg', 1, '📄 Cetak Brosur: Media Informasi Cepat & Efisien untuk Promosi\r\n\r\nBrosur adalah cara jitu menyampaikan informasi lengkap dalam satu genggaman. Cocok untuk promosi produk, jasa, event, atau profil perusahaan.\r\n\r\n📐 Ukuran Tersedia: A5, A4, A3 (Lipat 2 atau 3)\r\n\r\n🎨 Jenis Kertas:\r\n\r\nArt Paper 120gr / 150gr\r\n\r\nArt Carton 190gr / 210gr\r\n\r\nFinishing: Laminasi, Lipat Dua / Tiga\r\n\r\n💰 Harga Mulai Rp150 / lembar (untuk cetak banyak)\r\n\r\nKelebihan:\r\n☑️ Hasil Cetak Tajam & Warna Cerah\r\n☑️ Gratis Cek File Desain\r\n☑️ Bisa Pakai Template atau Desain Sendiri\r\n☑️ Proses cepat, hasil maksimal!', NULL, '8991389230237'),
+('P0003', 'Kartu Nama', 10500, NULL, NULL, NULL, 'produk/kartunama.jpg', 1, '👔 Cetak Kartu Nama Eksklusif: Bangun Citra Profesional dari Pertemuan Pertama\r\n\r\nKartu nama adalah kesan pertama yang tak terlupakan. Cetak kartu nama kamu dengan kualitas terbaik, bahan premium, dan desain eksklusif di Citra Media!\r\n\r\n📐 Ukuran Standard: 9 x 5.5 cm\r\n\r\n🎨 Jenis Kertas:\r\n\r\nArt Carton 260gr / 310gr\r\n\r\nLinen / Ivory / Matte Paper\r\n\r\nFinishing: Laminasi Doff / Glossy, Sudut Tumpul (Rounded)\r\n\r\n💰 Harga Mulai Rp30.000 / 100 pcs\r\n\r\nKelebihan:\r\n☑️ Desain Custom atau Pakai Template Siap Cetak\r\n☑️ Proses Cepat 1–2 Hari Kerja\r\n☑️ Bisa Cetak 1 atau 2 Sisi\r\n☑️ Bonus File Digital untuk Branding Online', NULL, '8991389230237'),
+('P0004', 'Buku', 30000, NULL, NULL, NULL, 'produk/buku.jpg', 1, 'Custom Buku Cetak - Citra Media Digital Printing\r\n\r\n📚 Cetak Buku Custom: Solusi Cetak Profesional untuk Kebutuhan Kamu!\r\n\r\nKini kamu bisa mencetak buku custom untuk berbagai kebutuhan seperti laporan tahunan, skripsi, modul pelatihan, buku yasin, hingga buku agenda pribadi. Citra Media menghadirkan layanan cetak buku dengan kualitas tinggi dan pilihan finishing lengkap yang bisa disesuaikan!\r\n\r\n📏 Tersedia Berbagai Ukuran Populer\r\nMulai dari A5, A4, B5, hingga ukuran custom sesuai kebutuhanmu. Uk', NULL, '8991389230237'),
+('P0005', 'Spanduk', 60000, NULL, NULL, NULL, 'produk/spanduk.jpg', 1, '📢 Cetak Spanduk Custom: Media Promosi Andal & Efektif!\r\n\r\nTingkatkan daya tarik bisnis dan event kamu dengan spanduk berkualitas dari Citra Media Digital Printing! Kami melayani cetak spanduk berbagai ukuran dan bahan sesuai kebutuhan promosi kamu.\r\n\r\n🖼️ Ukuran Tersedia:\r\nMulai dari ukuran kecil 50x50cm, 100x50cm, hingga ukuran besar seperti 3x4m, 4x6m, 10x5m.\r\n\r\n💰 Harga Mulai Rp13.000/meter (untuk pemesanan banyak)\r\nHarga normal Rp19.500/m — sudah FREE Finishing\r\n\r\nBahan yang Tersedia:\r\n\r\nChina', NULL, '8991389230237');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `produk_size`
+--
+
+CREATE TABLE `produk_size` (
+  `IdProduk` varchar(6) NOT NULL,
+  `id_ukuran` int(11) NOT NULL,
+  `harga` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -705,6 +722,13 @@ ALTER TABLE `produk`
   ADD KEY `ukuran` (`ukuran`);
 
 --
+-- Indexes for table `produk_size`
+--
+ALTER TABLE `produk_size`
+  ADD PRIMARY KEY (`IdProduk`,`id_ukuran`),
+  ADD KEY `produk_size_id_ukuran_foreign` (`id_ukuran`);
+
+--
 -- Indexes for table `roles`
 --
 ALTER TABLE `roles`
@@ -872,6 +896,13 @@ ALTER TABLE `produk`
   ADD CONSTRAINT `produk_ibfk_1` FOREIGN KEY (`id_bahan`) REFERENCES `databarang` (`IdBarang`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `produk_ibfk_2` FOREIGN KEY (`diskon`) REFERENCES `diskon` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `produk_ibfk_3` FOREIGN KEY (`ukuran`) REFERENCES `size` (`id_ukuran`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `produk_size`
+--
+ALTER TABLE `produk_size`
+  ADD CONSTRAINT `produk_size_id_ukuran_foreign` FOREIGN KEY (`id_ukuran`) REFERENCES `size` (`id_ukuran`) ON DELETE CASCADE,
+  ADD CONSTRAINT `produk_size_idproduk_foreign` FOREIGN KEY (`IdProduk`) REFERENCES `produk` (`IdProduk`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `role_user`

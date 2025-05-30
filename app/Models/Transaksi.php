@@ -21,8 +21,6 @@ class Transaksi extends Model
         'username',
         'id',
         'Bayar',
-        'SisaBayar',
-        'Kembali',
         'GrandTotal',
         'tglTransaksi',
         'StatusPembayaran',

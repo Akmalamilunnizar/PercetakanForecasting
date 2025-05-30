@@ -97,6 +97,12 @@
         <div>Daftar Jenis Barang</div>
       </a>
     </li>
+    <li class="menu-item {{ request()->is('admin/all-ukuran*') || request()->is('admin/edit-ukuran*') || request()->is('admin/add-ukuran') ? 'active' : '' }}">
+      <a href="{{ route('allukuran') }}" class="menu-link">
+        <i class='menu-icon tf-icons bx bx-ruler'></i>
+        <div>Daftar Ukuran</div>
+      </a>
+    </li>
    <li class="menu-item {{ request()->is('admin/all-item*') || request()->is('admin/add-items*') || request()->is('admin/keluar-barang') || request()->is('admin/edit-item*') ? 'active' : '' }}">
       <a href="{{ route('allitems') }}" class="menu-link">
         <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
@@ -133,6 +139,7 @@
         <div>Data Transaksi</div>
       </a>
     </li>
+    
   </ul>
  <!-- Tombol Logout di bagian bawah sidebar -->
 <div style="position: absolute; bottom: 20px; left: 0; width: 100%; padding: 0 20px;">
