@@ -13,7 +13,11 @@ CIME | Halaman Laporan Transaksi
                 placeholder="Pencarian nama produk..." value="{{ isset($search) ? $search : '' }}"
                 aria-label="Pencarian..." style="600px" />
         </div>
-    </div>  
+    </div>
+    {{-- Tombol Prediksi Penjualan baru --}}
+            <a href="{{ route('prediksipenjualan') }}" class="btn btn-info"> {{-- Sesuaikan route ini --}}
+                <i class="fas fa-chart-line me-2"></i> Prediksi Penjualan
+            </a>
 @endsection
 
 @section('content')
@@ -21,16 +25,21 @@ CIME | Halaman Laporan Transaksi
     <h4 class="py-3 mb-4"><span class="text-muted fw-light">Halaman /</span> Laporan Transaksi</h4>
 
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <div class="dropdown">
-            <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton"
-                data-bs-toggle="dropdown" aria-expanded="false">
-                Pilih Laporan
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <li><a class="dropdown-item" href="{{ route('laporanbarang') }}">📄 Laporan Barang</a></li>
-                <li><a class="dropdown-item" href="{{ route('laporantransaksi') }}">📊 Laporan Transaksi</a></li>
-            </ul>
+        <div class="d-flex align-items-center gap-2"> {{-- Tambahkan div ini untuk mengelompokkan tombol --}}
+            <div class="dropdown">
+                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="dropdownMenuButton"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    Pilih Laporan
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li><a class="dropdown-item" href="{{ route('laporanbarang') }}">📄 Laporan Barang</a></li>
+                    <li><a class="dropdown-item" href="{{ route('laporantransaksi') }}">📊 Laporan Transaksi</a></li>
+                </ul>
+            </div>
+
+            
         </div>
+
 
         <div class="d-flex align-items-center gap-2">
             <form method="GET" action="{{ route('laporantransaksi') }}" class="d-flex align-items-center gap-2">
@@ -55,7 +64,7 @@ CIME | Halaman Laporan Transaksi
                 <button type="submit" class="btn btn-outline-primary">Filter</button>
             </form>
 
-            <a href="{{ route('laporantransaksi.exportpdf', ['bulan' => request('bulan'), 'tahun' => request('tahun')]) }}" 
+            <a href="{{ route('laporantransaksi.exportpdf', ['bulan' => request('bulan'), 'tahun' => request('tahun')]) }}"
                 class="btn btn-danger"
                 style="background: linear-gradient(45deg, #dc3545, #ff6b6b);"
                 target="_blank">
@@ -89,7 +98,7 @@ CIME | Halaman Laporan Transaksi
 
         <div class="table-responsive text-nowrap">
                 <table class="table table-striped">
-                     <thead class="table-primary">
+                   <thead class="table-primary">
                     <tr>
                         <th style="text-align: center; font-weight: bold;">No</th>
                         <th style="text-align: center; font-weight: bold;">Nama Produk</th>
@@ -107,20 +116,20 @@ CIME | Halaman Laporan Transaksi
                                 <td class="text-center">{{ optional($laporan->transaksi)->tglTransaksi }}</td>
                                 <td class="text-center">Rp {{ number_format(optional($laporan->transaksi)->GrandTotal, 0, ',', '.') }}</td>
                                 <td class="text-center">
-                                   <div class="d-flex justify-content-center" role="group" aria-label="Basic example">
-                                        <a href="{{ route('admin.detail-laporantransaksi', $laporan->Idlaporan_transaksi) }}"
-                                            c class="btn btn-warning">
-                                        <i class="fas fa-edit me-1"></i> Detail
-                                    </a>
-                                        <form action="{{ route('laporantransaksi.destroy', $laporan->Idlaporan_transaksi) }}" method="POST" class="p-0">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger mx-1"
-                                                style="background: linear-gradient(45deg, #dc3545, #ff6b6b); min-width: 100px;">
-                                                <i class="fas fa-trash-alt me-2"></i> Delete
-                                            </button>
-                                        </form>
-                                    </div>
+                                       <div class="d-flex justify-content-center" role="group" aria-label="Basic example">
+                                            <a href="{{ route('admin.detail-laporantransaksi', $laporan->Idlaporan_transaksi) }}"
+                                                 class="btn btn-warning">
+                                            <i class="fas fa-edit me-1"></i> Detail
+                                        </a>
+                                             <form action="{{ route('laporantransaksi.destroy', $laporan->Idlaporan_transaksi) }}" method="POST" class="p-0">
+                                                 @csrf
+                                                 @method('DELETE')
+                                                 <button type="submit" class="btn btn-danger mx-1 delete-confirm"
+                                                     style="background: linear-gradient(45deg, #dc3545, #ff6b6b); min-width: 100px;">
+                                                     <i class="fas fa-trash-alt me-2"></i> Delete
+                                                 </button>
+                                             </form>
+                                        </div>
                                 </td>
                             </tr>
                         @endforeach
@@ -135,4 +144,31 @@ CIME | Halaman Laporan Transaksi
     </div>
 
 </div>
+
+{{-- SweetAlert2 CDN --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    // Script untuk pop-up konfirmasi delete
+    document.querySelectorAll('.delete-confirm').forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault(); // Mencegah form disubmit langsung
+
+            Swal.fire({
+                title: 'Apakah Anda yakin?',
+                text: "Anda tidak akan bisa mengembalikan ini!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.closest('form').submit(); // Submit form jika dikonfirmasi
+                }
+            });
+        });
+    });
+</script>
 @endsection

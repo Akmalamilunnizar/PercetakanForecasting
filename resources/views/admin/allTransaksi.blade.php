@@ -1,3 +1,4 @@
+
 @extends('admin.layouts.template')
 
 @section('page_title')
@@ -8,7 +9,7 @@
     <div class="navbar-nav align-items-center">
         <div class="nav-item d-flex align-items-center">
             <i class="bx bx-search fs-4 lh-0"></i>
-            {{-- <form method="GET" action={{ route('searchitem') }}>
+             <form method="GET" action={{ route('searchitem') }}>
             <input type="text" name="search" class="form-control border-0 shadow-none ps-1 ps-sm-2 w-100"
                 placeholder="Pencarian id atau nama..." value="{{ isset($search) ? $search : '' }}" aria-label="Pencarian..."
                 style="600px" />
