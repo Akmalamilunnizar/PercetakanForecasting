@@ -61,9 +61,20 @@ class CartController extends Controller
             $cart[$cartKey]['design_file'] = $filePath;
         }
 
-        session()->put('cart', $cart);
+            session()->put('cart', $cart);
 
-        return response()->json(['success' => true, 'cartCount' => count($cart)]);
+            return response()->json([
+                'success' => true,
+                'cartCount' => array_sum(array_column($cart, 'quantity')),
+                'message' => 'Produk berhasil ditambahkan ke keranjang'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
 
@@ -74,7 +85,7 @@ class CartController extends Controller
         // dd(session('cart'));
         return view('toko.cart', compact('cart'));
 
-        
+
     }
 
     // Menghapus item dari keranjang

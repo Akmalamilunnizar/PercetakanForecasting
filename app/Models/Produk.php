@@ -28,7 +28,6 @@ class Produk extends Model
         'IdProduk',
         'NamaProduk',
         'custom_harga',
-        'diskon',
         'id_bahan',
         'Img',
         'deskripsi'
@@ -64,4 +63,12 @@ class Produk extends Model
                     ->withPivot('harga')
                     ->withTimestamps();
     }
+    public function transaksi()
+    {
+        return $this->belongsToMany(Transaksi::class, 'detail_transaksi', 'IdProduk', 'IdTransaksi')
+            ->withPivot(['QtyProduk', 'SubTotal'])
+            ->withTimestamps()
+        ;
+    }
+
 }

@@ -110,7 +110,8 @@ CIME | Halaman Dashboard E-Commerce
         </div>
         <!-- / Content -->
 
-        
+    
+    <!-- Section Produk Terlaris -->
     <div class="container mt-4">
     <h3 class="mb-4 fw-bold" style="color: #2B3674; font-size: 23px;">Product Terlaris</h3>
     <div class="row">
@@ -128,11 +129,11 @@ CIME | Halaman Dashboard E-Commerce
         @endphp
         <div class="col-md-4 mb-4">
             <div class="card h-100 shadow-sm border-0 p-4" style="background-color: #ffffff; border-radius: 15px;">
-                <img src="{{ asset('storage/' . ($item->Img ?? 'default.jpg')) }}" 
+                <img src="{{ asset('storage/' . ($item->Img ?? 'assets/images/poster1.jpeg')) }}" 
                      class="img-fluid" 
                      alt="{{ $item->NamaProduk }}"
                      style="height: 280px; width: 100%; object-fit: cover; border-radius: 15px;"
-                     onerror="this.onerror=null; this.src='{{ asset('storage/default.jpg') }}';">
+                     onerror="this.onerror=null; this.src='{{ asset('assets/images/poster1.jpeg') }}';">
                 <div class="card-body" style="padding: 15px;">
                     <h5 class="fw-bold mb-1" style="color: #2B3674;">{{ $item->NamaProduk }}</h5>
                     <p class="text-muted mb-2">Digital Printing</p>
@@ -173,11 +174,11 @@ CIME | Halaman Dashboard E-Commerce
             @endphp
             <div class="col-md-4 mb-4">
                 <div class="card h-100 shadow-sm border-0 p-4" style="background-color: #ffffff; border-radius: 15px;">
-                <img src="{{ asset('storage/' . ($item->Img ?? 'default.jpg')) }}" alt="Gambar Produk" 
+                <img src="{{ asset('storage/' . ($item->Img ?? 'assets/images/poster1.jpeg')) }}" alt="Gambar Produk" 
                      class="img-fluid" 
                      alt="Foto Produk"
                      style="height: 280px; width: 100%; object-fit: cover; border-radius: 15px;"
-                     onerror="this.onerror=null; this.src='{{ asset('storage/default.jpg') }}';">
+                     onerror="this.onerror=null; this.src='{{ asset('assets/images/poster1.jpeg') }}';">
                     <div class="card-body" style="padding: 15px;">
                         <h5 class="fw-bold mb-1" style="color: #2B3674;">{{$item->NamaProduk}}</h5>
                         <p class="text-muted mb-2">Digital Printing</p>

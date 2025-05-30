@@ -15,6 +15,8 @@
     </div>
 @endsection
 
+
+
 <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -67,6 +69,7 @@
                     @endif
                 </div>
                 <div class="col-md-6">
+
                     <div>
                         <h1> <b style="font-size: 2em; color: black;">
                                 {{ $produk->NamaProduk ?? 'Detail Produk' }}
@@ -263,7 +266,307 @@
 @endsection
 
 
+<script>
+$(document).ready(function () {
+    $('#beliSekarangBtn2').click(function () {
+        let productId = $(this).data('id');
+        let productNama = $(this).data('nama');
+        let productHarga = $(this).data('harga');
+        let productImg = $(this).data('img');
+
+        $.ajax({
+            url: "{{ route('cart.add') }}",
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                id: productId,
+                nama: productNama,
+                harga: productHarga,
+                img: productImg
+            },
+            success: function (response) {
+                if (response.success) {
+                    // Tutup modal konfirmasi pembelian
+                    $('#beliSekarangModal').removeClass("show");
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: 'Produk berhasil ditambahkan ke keranjang.',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log('Error:', error);
+            }
+        });
+    });
+});
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const mainImage = document.getElementById('main-image');
+        const thumbnailScrollWrapper = document.getElementById('thumbnailScrollWrapper');
+        const beliSekarangBtn = document.getElementById('beliSekarangBtn');
+        const beliSekarangModal = document.getElementById('beliSekarangModal');
+        const closeButton = document.querySelector('.close-button');
+        const batalBeliBtn = document.getElementById('batalBeliBtn');
+
+        // Quantity calculation elements
+        const jumlahOrderInput = document.getElementById('jumlahOrderInput');
+        const plusButton = document.getElementById('plusButton');
+        const minusButton = document.getElementById('minusButton');
+        const summaryJumlahOrder = document.getElementById('summaryJumlahOrder');
+        const summaryTotalPembayaran = document.getElementById('summaryTotalPembayaran');
+        const hargaSatuanDisplay = document.getElementById('hargaSatuanDisplay');
+
+        // Input elements for modal
+        const ukuranProdukSelect = document.getElementById('ukuran_produk_select');
+        const ukuranProdukCustom = document.getElementById('ukuran_produk_custom');
+        const catatanInput = document.getElementById('catatan');
+        const uploadFileInput = document.getElementById('uploadFile');
+        const nomorHPInput = document.getElementById('nomorHP');
+
+        // Modal display elements
+        const modalProductImage = document.getElementById('modalProductImage');
+        const modalUkuran = document.getElementById('modalUkuran');
+        const modalCatatan = document.getElementById('modalCatatan');
+        const modalNomorHP = document.getElementById('modalNomorHP');
+        const modalHargaSatuan = document.getElementById('modalHargaSatuan');
+        const modalJumlah = document.getElementById('modalJumlah');
+        const modalDiskonPersen = document.getElementById('modalDiskonPersen');
+        const modalDiskonNominal = document.getElementById('modalDiskonNominal');
+        const modalSubtotal = document.getElementById('modalSubtotal');
+
+
+        // Get the initial product price and discount from your Blade variables
+        const basePrice = {{ $produk->HargaProduk }};
+        const discountPercentage = {{ $produk->diskon ?? 0 }};
+
+        function formatRupiah(amount) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount).replace('Rp', ''); // Remove 'Rp' as it's added manually
+        }
+
+        function updateTotal() {
+            let quantity = parseInt(jumlahOrderInput.value);
+            if (isNaN(quantity) || quantity < 1) {
+                quantity = 1;
+                jumlahOrderInput.value = 1;
+            }
+
+            // Calculate price after discount
+            let priceAfterDiscount = basePrice;
+            let discountAmount = 0;
+            if (discountPercentage > 0) {
+                discountAmount = basePrice * discountPercentage / 100;
+                priceAfterDiscount = basePrice - discountAmount;
+            }
+
+            const totalPrice = priceAfterDiscount * quantity;
+
+            summaryJumlahOrder.textContent = quantity;
+            summaryTotalPembayaran.textContent = formatRupiah(totalPrice);
+            hargaSatuanDisplay.textContent = formatRupiah(priceAfterDiscount); // Update harga satuan display
+        }
+
+        // Event Listeners for quantity buttons
+        plusButton.addEventListener('click', () => {
+            jumlahOrderInput.value = parseInt(jumlahOrderInput.value) + 1;
+            updateTotal();
+        });
+
+        minusButton.addEventListener('click', () => {
+            if (parseInt(jumlahOrderInput.value) > 1) {
+                jumlahOrderInput.value = parseInt(jumlahOrderInput.value) - 1;
+                updateTotal();
+            }
+        });
+
+        jumlahOrderInput.addEventListener('input', updateTotal);
+
+        // Initial update when the page loads
+        updateTotal();
+
+
+        if (mainImage && thumbnailScrollWrapper) {
+            const mainImageWidth = mainImage.offsetWidth;
+            thumbnailScrollWrapper.style.maxWidth = mainImageWidth + 'px';
+            thumbnailScrollWrapper.style.overflowX = 'auto';
+        }
+
+        // Ubah display modal dengan menambah/menghapus class "show"
+        beliSekarangBtn.addEventListener('click', function () {
+            // Populate modal with current values
+            const selectedUkuran = ukuranProdukSelect.value === 'custom' ? ukuranProdukCustom.value : ukuranProdukSelect.value;
+            const catatan = catatanInput.value || '-'; // Display '-' if empty
+            const nomorHP = nomorHPInput.value || '-'; // Display '-' if empty
+            const quantity = parseInt(jumlahOrderInput.value);
+
+            let priceAfterDiscount = basePrice;
+            let discountAmount = 0;
+            if (discountPercentage > 0) {
+                discountAmount = basePrice * discountPercentage / 100;
+                priceAfterDiscount = basePrice - discountAmount;
+            }
+            const totalPrice = priceAfterDiscount * quantity;
+
+
+            modalUkuran.textContent = selectedUkuran;
+            modalCatatan.textContent = catatan;
+            modalNomorHP.textContent = nomorHP;
+            modalHargaSatuan.textContent = formatRupiah(basePrice); // Original base price
+            modalJumlah.textContent = quantity;
+            modalDiskonPersen.textContent = discountPercentage > 0 ? `${discountPercentage}%` : '0%';
+            modalDiskonNominal.textContent = formatRupiah(discountAmount * quantity); // Total diskon
+            modalSubtotal.textContent = formatRupiah(totalPrice);
+
+            // Handle uploaded image
+            if (uploadFileInput.files.length > 0) {
+                const uploadedFile = uploadFileInput.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    modalProductImage.src = e.target.result;
+                };
+                reader.readAsDataURL(uploadedFile);
+            } else {
+                // If no file uploaded, revert to the original product image
+                modalProductImage.src = "{{ asset('storage/' . $produk->Img) }}";
+            }
+
+
+            beliSekarangModal.classList.add("show");
+        });
+
+        closeButton.addEventListener('click', function () {
+            beliSekarangModal.classList.remove("show");
+        });
+
+        batalBeliBtn.addEventListener('click', function () {
+            beliSekarangModal.classList.remove("show");
+        });
+
+        window.addEventListener('click', function (event) {
+            if (event.target === beliSekarangModal) {
+                beliSekarangModal.classList.remove("show");
+                
+            }
+        });
+
+
+    });
+
+    
+
+</script>
+
+<script>
+    function highlightStars(selectedStar) {
+        const stars = document.querySelectorAll('.star-filter');
+        const rating = parseInt(selectedStar.getAttribute('data-rating'));
+
+        stars.forEach(star => {
+            const starRating = parseInt(star.getAttribute('data-rating'));
+            if (starRating <= rating) {
+                star.style.color = 'gold'; // Warna emas yang lebih pekat adalah default
+            } else {
+                star.style.color = '#ccc';
+            }
+        });
+    }
+         
+</script>
+
+<script>
+    function highlightStars(selectedStar) {
+        const stars = document.querySelectorAll('.star-filter');
+        const rating = parseInt(selectedStar.getAttribute('data-rating'));
+
+        stars.forEach(star => {
+            const starRating = parseInt(star.getAttribute('data-rating'));
+            if (starRating <= rating) {
+                star.style.color = 'gold'; // Warna emas yang lebih pekat adalah default
+            } else {
+                star.style.color = '#ccc';
+            }
+        });
+    }
+</script>
+
+@push('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const select = document.getElementById('ukuran_produk_select');
+            const customInput = document.getElementById('ukuran_produk_custom');
+            const hiddenInput = document.getElementById('ukuran_produk_final');
+
+            function updateFinalValue() {
+                if (select.value === 'custom') {
+                    customInput.classList.remove('d-none');
+                    hiddenInput.value = customInput.value;
+                } else {
+                    customInput.classList.add('d-none');
+                    hiddenInput.value = select.value;
+                }
+            }
+
+            select.addEventListener('change', updateFinalValue);
+            customInput.addEventListener('input', function () {
+                hiddenInput.value = customInput.value;
+            });
+
+            // Panggil saat pertama kali jika old value adalah custom
+            if (select.value === 'custom') {
+                customInput.classList.remove('d-none');
+            }
+        });
+    </script>
+@endpush
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const selectEl = document.getElementById('ukuran_produk_select');
+        const customInput = document.getElementById('ukuran_produk_custom');
+        const hiddenFinal = document.getElementById('ukuran_produk_final');
+
+        function handleChange() {
+            const selectedValue = selectEl.value;
+            if (selectedValue === 'custom') {
+                customInput.classList.remove('d-none');
+                hiddenFinal.value = customInput.value; // Isi sementara
+            } else {
+                customInput.classList.add('d-none');
+                hiddenFinal.value = selectedValue;
+            }
+        }
+
+        selectEl.addEventListener('change', handleChange);
+
+        // Update hidden field saat user mengetik ukuran custom
+        customInput.addEventListener('input', function () {
+            hiddenFinal.value = this.value;
+        });
+    });
+</script>
+
 <style>
+
+    .modal {
+    display: none;
+    /* lainnya... */
+}
+
+.modal.show {
+    display: block;
+    /* lainnya... */
+}
     .product-image-container {
         width: 100%;
         /* Mengisi lebar parent (misalnya, col-md-4) */

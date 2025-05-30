@@ -1,15 +1,14 @@
 @extends('admin.layouts.template')
 
 @section('page_title')
-CIME | Halaman Daftar Transaksi
+    CIME | Daftar Transaksi
 @endsection
-@section('search')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+@section('search')
     <div class="navbar-nav align-items-center">
         <div class="nav-item d-flex align-items-center">
             <i class="bx bx-search fs-4 lh-0"></i>
-            {{-- <form method="GET" action={{ route('searchitem') }}> --}}
+            {{-- <form method="GET" action={{ route('searchitem') }}>
             <input type="text" name="search" class="form-control border-0 shadow-none ps-1 ps-sm-2 w-100"
                 placeholder="Pencarian id atau nama..." value="{{ isset($search) ? $search : '' }}" aria-label="Pencarian..."
                 style="600px" />
@@ -27,34 +26,33 @@ CIME | Halaman Daftar Transaksi
     </div>
 @endif
 <div class="card">
-    <h5 class="card-header fw-bold">Daftar Transaksi</h5>
+    <h5 class="card-header">Daftar Transaksi</h5>
     <div class="table-responsive text-nowrap">
-        <table class="table table-striped">
+        <table class="table">
             <thead class="table-light">
                 <tr>
-                  <th style="text-align: center; font-weight: bold;">Id</th>
-                <th style="text-align: center; font-weight: bold;">Nama Customer</th>
-                <th style="text-align: center; font-weight: bold;">Qty Orderan</th>
-                <th style="text-align: center; font-weight: bold;">Alamat</th>
-                <th style="text-align: center; font-weight: bold;">Jumlah yang dibayarkan</th>
-                <th style="text-align: center; font-weight: bold;">Actions</th>
-                <th style="text-align: center; font-weight: bold;">Status Orderan</th>
+                    <th>Id</th>
+                    <th>Nama Customer</th>
+                    <th>Qty Orderan</th>
+                    <th>Alamat</th>
+                    <th>Jumlah yang dibayarkan</th>
+                    <th>Actions</th>
+                    <th>Status Orderan</th>
+                    
                 @foreach ($transaksi as $item)
-                   <tr>
-                        <td class="text-center">{{ $item->IdTransaksi }}</td>
-                        <td class="text-center">{{ $item->detail->f_name }}</td>
-                        <td class="text-center">{{ $item->Bayar }}</td>
-                        <td class="text-center">{{ $item->detail->alamat }}</td>
-                        <td class="text-center">{{ $item->bayar }}</td>
-                       <td class="text-center">
-                            <a href="{{ route('terimaOrderan', $item->id) }}" class="btn btn-success btn-sm mx-1">
-                                <i class="fas fa-check me-1"></i> Terima
-                            </a>
-                            <a href="{{ route('tolakOrderan', $item->id) }}" class="btn btn-danger btn-sm mx-1">
-                                <i class="fas fa-times me-1"></i> Tolak
-                            </a>
+                    <tr>
+                        <td>{{ $item->IdTransaksi }}</td>
+                        <td>{{ $item->detail->f_name }}</td>
+                        <td>{{ $item->Bayar}}</td>
+                        <td>{{ $item->detail->alamat }}</td>
+                        <td>{{ $item->bayar }}</td>
+                        <td>
+                            <a href="{{ route('terimaOrderan', $item->id) }}" class="btn btn-success">Terima</a>
+                            <a href="{{ route('tolakOrderan', $item->id) }}" class="btn btn-danger">Tolak</a>
                         </td>
-                        <td class="text-center">{{ $item->StatusPesanan }}</td>
+
+                        <td>{{ $item->StatusPesanan }}</td>
+                        
                     </tr>
                 @endforeach
             </tbody>
