@@ -72,7 +72,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::controller(DetailProdukController::class)->group(function () {
     Route::get('/admin/detail-produk', 'index')->name('detail.produk');
     Route::get('/detail-produk/{id}', [DetailProdukController::class, 'show'])->name('detail.produk');
-    Route::get('/admin/produk', [DetailProdukController::class, 'indexAdmin'])->name('admin.produk.index');
+    Route::get('/admin/produk', [DetailProdukController::class, 'indexAdmin'])->name('admin.produk');
 });
 
 
@@ -449,6 +449,3 @@ Route::post('/set-payment-method', function (Illuminate\Http\Request $request) {
     session(['midtrans_paid' => $request->paid]);
     return response()->json(['success' => true]);
 });
-
-// Detail Produk Routes
-Route::post('/cart/add', [DetailProdukController::class, 'addToCart'])->name('cart.add');

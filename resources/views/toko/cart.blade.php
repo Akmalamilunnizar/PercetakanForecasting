@@ -76,13 +76,13 @@
               <!-- Gambar -->
               <div class="me-3">
                 @php
-                  $imagePath = $details['img'] ?? 'default.jpg';
+                  $imagePath = $details['img'] ?? 'assets/images/poster1.jpeg';
                   $fullPath = asset('storage/' . $imagePath);
                 @endphp
                 <img src="{{ $fullPath }}" 
                      alt="{{ $details['nama'] }}" 
                      style="width: 220px; height: auto; border-radius: 10px;"
-                     onerror="this.onerror=null; this.src='{{ asset('storage/default.jpg') }}';">
+                     onerror="this.onerror=null; this.src='{{ asset('assets/images/poster1.jpeg') }}';">
               </div>
 
               <!-- Detail Produk -->

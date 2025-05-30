@@ -28,9 +28,9 @@ class Produk extends Model
         'IdProduk',
         'NamaProduk',
         'HargaProduk',
-        'ukuran',       
-        'bahan',  
-        'custom',       
+        'ukuran',
+        'bahan',
+        'custom',
         'diskon',
         'id_bahan',
         'Img',
@@ -56,8 +56,16 @@ class Produk extends Model
         return $this->belongsTo(Size::class, 'ukuran', 'id_ukuran');
     }
 
-     public function laporantransaksi()
+    public function laporantransaksi()
     {
         return $this->hasMany(LaporanTransaksi::class, 'IdProduk', 'IdProduk');
     }
+    public function transaksi()
+    {
+        return $this->belongsToMany(Transaksi::class, 'detail_transaksi', 'IdProduk', 'IdTransaksi')
+            ->withPivot(['QtyProduk', 'SubTotal'])
+            ->withTimestamps()
+        ;
+    }
+
 }

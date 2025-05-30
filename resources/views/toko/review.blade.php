@@ -137,13 +137,13 @@
             <div class="border-bottom pb-4 mb-4 d-flex">
               <div class="me-3">
                 @php
-                  $imagePath = $details['img'] ?? 'default.jpg';
+                  $imagePath = $details['img'] ?? 'assets/images/poster1.jpeg';
                   $fullPath = asset('storage/' . $imagePath);
                 @endphp
                 <img src="{{ $fullPath }}" 
                      alt="{{ $details['nama'] }}" 
                      style="width: 220px; height: auto; border-radius: 10px;"
-                     onerror="this.onerror=null; this.src='{{ asset('storage/default.jpg') }}';" />
+                     onerror="this.onerror=null; this.src='{{ asset('assets/images/poster1.jpeg') }}';" />
               </div>
               <div class="flex-grow-1">
                 <h5 class="mb-1" style="font-size: 20px; font-weight: bold;">{{ $details['nama'] }}</h5>

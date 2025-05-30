@@ -19,26 +19,49 @@ class CartController extends Controller
     // Menambahkan item ke keranjang
     public function add(Request $request)
     {
-        $cart = session()->get('cart', []);
+        try {
+            $request->validate([
+                'id' => 'required|string',
+                'nama' => 'required|string',
+                'harga' => 'required|numeric',
+                'img' => 'required|string',
+                'quantity' => 'required|integer|min:1',
+                'ukuran' => 'nullable|string',
+                'catatan' => 'nullable|string',
+                'nomor_telepon' => 'nullable|string',
+            ]);
 
-        $productId = $request->id;
+            $cart = session()->get('cart', []);
+            $productId = $request->id;
 
-        if (isset($cart[$productId])) {
-            // Jika produk sudah ada, tambahkan jumlah
-            $cart[$productId]['quantity']++;
-        } else {
-            // Jika produk belum ada, tambahkan baru
-            $cart[$productId] = [
-                "nama" => $request->nama,
-                "harga" => $request->harga,
-                "img" => $request->img,
-                "quantity" => 1
-            ];
+            if (isset($cart[$productId])) {
+                $cart[$productId]['quantity'] += $request->quantity;
+            } else {
+                $cart[$productId] = [
+                    "nama" => $request->nama,
+                    "harga" => $request->harga,
+                    "img" => $request->img,
+                    "quantity" => $request->quantity,
+                    "ukuran" => $request->ukuran,
+                    "catatan" => $request->catatan,
+                    "nomor_telepon" => $request->nomor_telepon ?? null,
+                ];
+            }
+
+            session()->put('cart', $cart);
+
+            return response()->json([
+                'success' => true,
+                'cartCount' => array_sum(array_column($cart, 'quantity')),
+                'message' => 'Produk berhasil ditambahkan ke keranjang'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
         }
-
-        session()->put('cart', $cart);
-
-        return response()->json(['success' => true, 'cartCount' => count($cart)]);
     }
 
 
@@ -48,7 +71,7 @@ class CartController extends Controller
         $cart = session('cart', []);
         return view('toko.cart', compact('cart'));
 
-        
+
     }
 
     // Menghapus item dari keranjang
