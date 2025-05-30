@@ -27,7 +27,7 @@ CIME | Halaman Edit Satuan
                             <label class="col-sm-2 col-form-label" for="basic-default-name">Id Satuan</label>
                             <div class="col-sm-10">
                                 <input type="text" class="form-control" id="IdSatuan" name="IdSatuan"
-                                    value="{{ $satuaninfo->IdSatuan }}" />
+                                    value="{{ $satuaninfo->IdSatuan }}" readonly />
                             </div>
                         </div>
                         <div class="row mb-3">

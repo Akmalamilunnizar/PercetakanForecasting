@@ -2,21 +2,23 @@
 
 <html lang="en" class="light-style layout-menu-fixed layout-compact" dir="ltr" data-theme="theme-default"
     data-assets-path="{{ asset('dashboard2/assets/') }}" data-template="vertical-menu-template-free">
+<!DOCTYPE html>
+<html lang="en" class="light-style layout-menu-fixed layout-compact" dir="ltr" data-theme="theme-default"
+    data-assets-path="{{ asset('dashboard2/assets/') }}" data-template="vertical-menu-template-free">
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <title>@yield('page_title')</title>
 
     <meta name="description" content="" />
 
+    <link rel="shortcut icon" href="{{ asset('dashboard2/assets/img/icons/logocime.png') }}" type="image/png" />
 
-   <!-- Favicon -->
-  <link rel="shortcut icon" href="{{ asset('dashboard2/assets/img/icons/logocime.png') }}" type="image/png" />
-
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -25,24 +27,23 @@
 
     <link rel="stylesheet" href="{{ asset('dashboard2/assets/vendor/fonts/boxicons.css') }}" />
 
-    <!-- Core CSS -->
     <link rel="stylesheet" href="{{ asset('dashboard2/assets/vendor/css/core.css') }}"
         class="template-customizer-core-css" />
     <link rel="stylesheet" href="{{ asset('dashboard2/assets/vendor/css/theme-default.css') }}"
         class="template-customizer-theme-css" />
     <link rel="stylesheet" href="{{ asset('dashboard2/assets/css/demo.css') }}" />
 
-    <!-- Vendors CSS -->
     <link rel="stylesheet"
         href="{{ asset('dashboard2/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
     <link rel="stylesheet" href="{{ asset('dashboard2/assets/vendor/libs/apex-charts/apex-charts.css') }}" />
 
-    <!-- Page CSS -->
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/sass/style.scss'])
-    <!-- Helpers -->
     <script src="{{ asset('dashboard2/assets/vendor/js/helpers.js') }}"></script>
     <script src="{{ asset('dashboard2/assets/js/config.js') }}"></script>
 </head>
+<body>
+    </body>
+</html>
 
 <body>
     <!-- Layout wrapper -->
@@ -135,84 +136,34 @@
   </ul>
  <!-- Tombol Logout di bagian bawah sidebar -->
 <div style="position: absolute; bottom: 20px; left: 0; width: 100%; padding: 0 20px;">
-  <a href="{{ route('adminlogout') }}"
-     style="display: block; width: 100%; background-color: #2f80ed; color: white; text-align: center; border-radius: 8px; padding: 12px; font-weight: bold; font-size: 16px; text-decoration: none;">
-    Logout
-  </a>
+    <form id="logout-form" action="{{ route('adminlogout') }}" method="POST" style="display: none;">
+        @csrf
+    </form>
+
+    <a href="#" onclick="confirmLogout()"
+        style="display: block; width: 100%; background-color: #2f80ed; color: white; text-align: center; border-radius: 8px; padding: 12px; font-weight: bold; font-size: 16px; text-decoration: none;">
+        Logout
+    </a>
 </div>
 
-
-
-  <style>
-    /* Sidebar container */
-    #layout-menu {
-      overflow-y: auto;
-      max-height: 100vh;
-      background-color: #f0f4f8;
-      box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+<script>
+    function confirmLogout() {
+        Swal.fire({
+            title: 'Apakah kamu yakin ingin keluar?',
+            text: "Kamu akan keluar dari sesi ini.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, keluar!',
+            cancelButtonText: 'Tidak'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('logout-form').submit();
+            }
+        })
     }
-
-    /* Menu link style */
-    #layout-menu .menu-link {
-      display: flex;
-      align-items: center;
-      padding: 12px 20px;
-      color: #333 !important;
-      font-weight: 600;
-      border-radius: 8px;
-      transition: background-color 0.3s ease, color 0.3s ease;
-      font-size: 1rem;
-    }
-
-    /* Icon spacing */
-    #layout-menu .menu-link i {
-      margin-right: 12px;
-      font-size: 1.25rem;
-    }
-
-    /* Active menu item */
-    #layout-menu .menu-item.active .menu-link {
-      background-color: #d0e7ff;
-      color: #007bff !important;
-      box-shadow: 0 0 8px rgba(0,123,255,0.4);
-    }
-
-    /* Hover effect */
-    #layout-menu .menu-link:hover {
-      background-color: #e8f4fd;
-      color: #007bff !important;
-      text-decoration: none;
-    }
-
-    /* Spacing between menu items */
-    #layout-menu .menu-inner li {
-      margin-bottom: 8px;
-    }
-
-    /* Brand logo */
-    .app-brand-link img {
-      border-radius: 8px;
-      transition: transform 0.3s ease;
-    }
-
-    .app-brand-link img:hover {
-      transform: scale(1.05);
-    }
-
-    /* Scrollbar styling for sidebar (optional, modern) */
-    #layout-menu::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    #layout-menu::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    #layout-menu::-webkit-scrollbar-thumb {
-      background-color: rgba(0, 123, 255, 0.3);
-      border-radius: 10px;
-    }
-  </style>
+</script>
 </aside>
 
 
