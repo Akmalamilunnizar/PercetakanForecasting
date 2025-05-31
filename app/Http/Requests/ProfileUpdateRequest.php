@@ -29,7 +29,7 @@ class ProfileUpdateRequest extends FormRequest
             'nomor_telepon' => ['nullable', 'string', 'max:20'], // 'nullable' jika tidak wajib diisi, 'max:20' untuk panjang maksimal nomor telepon
 
             // Tambahkan validasi untuk alamat
-            'alamat' => ['nullable', 'string', 'max:500'], // 'nullable' jika tidak wajib diisi, 'max:500' untuk panjang maksimal teks alamat
+            'alamat' => ['required', 'string', 'max:500'], // 'nullable' jika tidak wajib diisi, 'max:500' untuk panjang maksimal teks alamat
 
             // Tambahkan validasi untuk gambar profil (jika Anda mengizinkan unggahan gambar)
             'img' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:2048'], // 'nullable' jika tidak wajib diunggah, 'image' memastikan itu file gambar, 'mimes' untuk format yang diizinkan, 'max' untuk ukuran file dalam KB

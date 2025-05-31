@@ -94,7 +94,7 @@
         <div class="dropdown">
           <a class="nav-link p-0" href="#" role="button" id="profileDropdown" data-bs-toggle="dropdown"
             aria-expanded="false">
-            <img src="https://i.pravatar.cc/40" alt="Profile" class="rounded-circle" width="40" height="40">
+            <img src="{{ Auth::user()->img ? asset('storage/' . Auth::user()->img) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->f_name) . '&color=FFFFFF&background=C2185B' }}" alt="Profile" class="rounded-circle" width="40" height="40">
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
             <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Profile</a></li>

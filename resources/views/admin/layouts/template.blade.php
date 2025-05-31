@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en" class="light-style layout-menu-fixed layout-compact" dir="ltr" data-theme="theme-default"
     data-assets-path="{{ asset('dashboard2/assets/') }}" data-template="vertical-menu-template-free">
 
@@ -13,10 +12,8 @@
     <meta name="description" content="" />
 
 
-   <!-- Favicon -->
-  <link rel="shortcut icon" href="{{ asset('dashboard2/assets/img/icons/logocime.png') }}" type="image/png" />
+   <link rel="shortcut icon" href="{{ asset('dashboard2/assets/img/icons/logocime.png') }}" type="image/png" />
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -25,201 +22,242 @@
 
     <link rel="stylesheet" href="{{ asset('dashboard2/assets/vendor/fonts/boxicons.css') }}" />
 
-    <!-- Core CSS -->
     <link rel="stylesheet" href="{{ asset('dashboard2/assets/vendor/css/core.css') }}"
         class="template-customizer-core-css" />
     <link rel="stylesheet" href="{{ asset('dashboard2/assets/vendor/css/theme-default.css') }}"
         class="template-customizer-theme-css" />
     <link rel="stylesheet" href="{{ asset('dashboard2/assets/css/demo.css') }}" />
 
-    <!-- Vendors CSS -->
     <link rel="stylesheet"
         href="{{ asset('dashboard2/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
     <link rel="stylesheet" href="{{ asset('dashboard2/assets/vendor/libs/apex-charts/apex-charts.css') }}" />
 
-    <!-- Page CSS -->
     @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/sass/style.scss'])
-    <!-- Helpers -->
     <script src="{{ asset('dashboard2/assets/vendor/js/helpers.js') }}"></script>
     <script src="{{ asset('dashboard2/assets/js/config.js') }}"></script>
-</head>
 
-<body>
-    <!-- Layout wrapper -->
-    <div class="layout-wrapper layout-content-navbar">
-        <div class="layout-container">
+    {{-- Kustom CSS untuk Layout dan Scrolling --}}
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            
+            
+            /* overflow: hidden; Dihapus karena bisa mengunci scroll global */
+        }
+        .layout-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            /* overflow: hidden; Dihapus untuk memberikan kesempatan scroll pada body jika perlu */
+        }
+        .layout-container {
+            display: flex;
+            flex-grow: 1; /* Memungkinkan kontainer mengambil sisa ruang vertikal */
+            /* overflow: hidden; Dihapus */
+        }
+        .layout-page {
+            display: flex;
+            flex-direction: column; /* Menumpuk navbar dan content-wrapper secara vertikal */
+            flex-grow: 1; /* Memungkinkan halaman mengambil sisa ruang horizontal */
+            /* overflow: hidden; Dihapus */
+        }
+        .layout-navbar {
+            flex-shrink: 0; /* Pastikan navbar tidak menyusut */
+            /* Anda mungkin perlu menyesuaikan nilai height ini jika navbar Anda memiliki tinggi yang berbeda */
+            height: 65px; /* Contoh tinggi navbar, bisa diukur dengan Inspect Element */
+            z-index: 10; /* Pastikan navbar tetap di atas konten */
+            position: sticky; /* Coba sticky jika fixed membuat masalah */
+            top: 0; /* Penting untuk sticky/fixed */
+            width: 100%; /* Penting untuk sticky/fixed */
+        }
+        .content-wrapper {
+            flex-grow: 1; /* PENTING: Memungkinkan content-wrapper mengambil sisa tinggi */
+            overflow-y: auto; /* AKTIFKAN SCROLL VERTIKAL DI SINI */
+            -webkit-overflow-scrolling: touch; /* Untuk iOS */
+            padding-bottom: 20px; /* Tambahkan sedikit padding di bawah untuk spasi */
+            /* Padding atas untuk mengimbangi tinggi navbar */
+            padding-top: 65px; /* Nilai ini HARUS SAMA dengan height .layout-navbar */
+            box-sizing: border-box; /* Pastikan padding tidak menambah total tinggi */
+        }
 
-            <!-- Menu -->
-            <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme" style="background-color: #f0f4f8; box-shadow: 2px 0 5px rgba(0,0,0,0.05); height: 100vh; overflow-y: auto;">
-            <div class="main-sidebar sidebar-style-2" style="padding: 20px; display: flex; justify-content: center; border-bottom: 1px solid #d1d9e6;">
-                <a href="http://127.0.0.1:8000" class="app-brand-link" style="display: flex; justify-content: center; width: 100%;">
-            <img
-                src="{{ asset('dashboard2/assets/img/icons/logocime.png') }}"
-                alt="Logo"
-                class="logo-zoom-out"
-                style="width: 140px; height: auto; border-radius: 8px;"
-            />
-            </a>
+        /* Override padding bawaan Bootstrap/Theme pada container-p-y */
+        .container-xxl.container-p-y {
+            padding-top: 0 !important; /* Hapus padding-top bawaan agar tidak double */
+            padding-bottom: 0 !important; /* Hapus padding-bottom bawaan */
+            padding-left: var(--bs-gutter-x, 1.5rem); /* Pertahankan padding horizontal */
+            padding-right: var(--bs-gutter-x, 1.5rem);
+        }
 
-            <style>
-            @keyframes zoomOut {
+        /* --- Perbaikan CSS Sidebar --- */
+        #layout-menu {
+            display: flex; /* Aktifkan Flexbox untuk sidebar */
+            flex-direction: column; /* Susun item secara vertikal */
+            height: 100vh; /* Sidebar mengambil tinggi penuh viewport */
+            background-color: #f0f4f8;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+            /* Pastikan tidak ada overflow-y: auto; di inline style pada tag aside */
+        }
+
+        #layout-menu .menu-inner {
+            flex-grow: 1; /* Memungkinkan daftar menu mengambil sisa ruang */
+            overflow-y: auto; /* Scrollbar hanya pada daftar menu */
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        /* Tombol Logout */
+        #layout-menu .menu-item.mt-auto {
+            padding: 0 20px;
+            margin-top: auto; /* Dorong ke bawah dalam flex container */
+        }
+
+        /* Scrollbar styling untuk sidebar (terapkan pada .menu-inner) */
+        #layout-menu .menu-inner::-webkit-scrollbar {
+            width: 6px;
+        }
+        #layout-menu .menu-inner::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        #layout-menu .menu-inner::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 123, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        /* Menu link style (tetap) */
+        #layout-menu .menu-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #333 !important;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-size: 1rem;
+        }
+        #layout-menu .menu-link i {
+            margin-right: 12px;
+            font-size: 1.25rem;
+        }
+        #layout-menu .menu-item.active .menu-link {
+            background-color: #d0e7ff;
+            color: #007bff !important;
+            box-shadow: 0 0 8px rgba(0,123,255,0.4);
+        }
+        #layout-menu .menu-link:hover {
+            background-color: #e8f4fd;
+            color: #007bff !important;
+            text-decoration: none;
+        }
+        #layout-menu .menu-inner li {
+            margin-bottom: 8px;
+        }
+
+        /* Brand logo (tetap) */
+        .app-brand-link img {
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+        .app-brand-link img:hover {
+            transform: scale(1.05);
+        }
+        @keyframes zoomOut {
             0% {
                 transform: scale(1);
             }
             100% {
                 transform: scale(0.8);
             }
-            }
-
-            .logo-zoom-out {
+        }
+        .logo-zoom-out {
             animation: zoomOut 1.5s ease-in-out infinite alternate;
-            }
-            </style>
-     </div>
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="layout-wrapper layout-content-navbar">
+        <div class="layout-container">
 
-  <ul class="menu-inner py-3" style="padding-left: 10px; padding-right: 10px;">
-    <li class="menu-item {{ request()->is('admin/dashboard') ? 'active' : '' }}">
-      <a href="{{ route('admindashboard') }}" class="menu-link">
-        <i class="menu-icon tf-icons bx bx-home"></i>
-        <div>Dashboard</div>
-      </a>
-    </li>
-   <li class="menu-item {{ request()->is('admin/all-satuan*') || request()->is('admin/edit-satuan*') || request()->is('admin/add-satuan') ? 'active' : '' }}">
-      <a href="{{ route('allsatuan') }}" class="menu-link">
-        <i class="menu-icon tf-icons bx bx-table"></i>
-        <div>Daftar Satuan</div>
-      </a>
-    </li>
-    <li class="menu-item {{ request()->is('admin/all-type*') || request()->is('admin/edit-type*') || request()->is('admin/add-type') ? 'active' : '' }}">
-      <a href="{{ route('alltype') }}" class="menu-link">
-        <i class='menu-icon tf-icons bx bx-package'></i>
-        <div>Daftar Jenis Barang</div>
-      </a>
-    </li>
-   <li class="menu-item {{ request()->is('admin/all-item*') || request()->is('admin/add-items*') || request()->is('admin/keluar-barang') || request()->is('admin/edit-item*') ? 'active' : '' }}">
-      <a href="{{ route('allitems') }}" class="menu-link">
-        <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
-        <div>Daftar Barang</div>
-      </a>
-    </li>
-    <li class="menu-item {{ request()->is('admin/all-produk*') || request()->is('admin/add-produk*') || request()->is('admin/edit-produk') ? 'active' : '' }}">
-      <a href="{{ route('allproduk') }}" class="menu-link">
-        <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
-        <div>Daftar Produk</div>
-      </a>
-    </li>
-    <li class="menu-item {{ request()->is('admin/daftar-supplier*') || request()->is('admin/add-supplier*') || request()->is('admin/edit-supplier') ? 'active' : '' }}">
-      <a href="{{ route('allsuppliers') }}" class="menu-link">
-        <i class="menu-icon tf-icons bx bx-store"></i>
-        <div>Data Supplier</div>
-      </a>
-    </li>
-   <li class="menu-item {{ request()->is('admin/daftar-customer*') ? 'active' : '' }}">
-      <a href="{{ route('allcustomer') }}" class="menu-link">
-        <i class="menu-icon tf-icons bx bx-table"></i>
-        <div>Daftar Customer</div>
-      </a>
-    </li>
-    <li class="menu-item {{ request()->is('admin/laporanbarang*') || request()->is('admin/detaillaporanbarang*') || request()->is('admin/laporantransaksi') || request()->is('admin/detail-laporantransaksi*') ? 'active' : '' }}">
-      <a href="{{ route('laporanbarang') }}" class="menu-link">
-        <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
-        <div>Laporan</div>
-      </a>
-    </li>
-    <li class="menu-item {{ request()->is('admin/all-transaksi*') ? 'active' : '' }}">
-      <a href="{{ route('alltransaksi') }}" class="menu-link">
-        <i class="menu-icon tf-icons bx bx-collection"></i>
-        <div>Data Transaksi</div>
-      </a>
-    </li>
-  </ul>
- <!-- Tombol Logout di bagian bawah sidebar -->
-<div style="position: absolute; bottom: 20px; left: 0; width: 100%; padding: 0 20px;">
-  <a href="{{ route('adminlogout') }}"
-     style="display: block; width: 100%; background-color: #2f80ed; color: white; text-align: center; border-radius: 8px; padding: 12px; font-weight: bold; font-size: 16px; text-decoration: none;">
-    Logout
-  </a>
-</div>
+            <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme" style="background-color: #f0f4f8; box-shadow: 2px 0 5px rgba(0,0,0,0.05); height: 100vh;">
+                <div class="main-sidebar sidebar-style-2" style="padding: 20px; display: flex; justify-content: center; border-bottom: 1px solid #d1d9e6;">
+                    <a href="http://127.0.0.1:8000" class="app-brand-link" style="display: flex; justify-content: center; width: 100%;">
+                        <img
+                            src="{{ asset('dashboard2/assets/img/icons/logocime.png') }}"
+                            alt="Logo"
+                            class="logo-zoom-out"
+                            style="width: 140px; height: auto; border-radius: 8px;"
+                        />
+                    </a>
+                </div>
 
+                <ul class="menu-inner py-3" style="padding-left: 10px; padding-right: 10px; flex-grow: 1; overflow-y: auto;">
+                    <li class="menu-item {{ request()->is('admin/dashboard') ? 'active' : '' }}">
+                        <a href="{{ route('admindashboard') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-home"></i>
+                            <div>Dashboard</div>
+                        </a>
+                    </li>
+                    <li class="menu-item {{ request()->is('admin/all-satuan*') || request()->is('admin/edit-satuan*') || request()->is('admin/add-satuan') ? 'active' : '' }}">
+                        <a href="{{ route('allsatuan') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-table"></i>
+                            <div>Daftar Satuan</div>
+                        </a>
+                    </li>
+                    <li class="menu-item {{ request()->is('admin/all-type*') || request()->is('admin/edit-type*') || request()->is('admin/add-type') ? 'active' : '' }}">
+                        <a href="{{ route('alltype') }}" class="menu-link">
+                            <i class='menu-icon tf-icons bx bx-package'></i>
+                            <div>Daftar Jenis Barang</div>
+                        </a>
+                    </li>
+                    <li class="menu-item {{ request()->is('admin/all-item*') || request()->is('admin/add-items*') || request()->is('admin/keluar-barang') || request()->is('admin/edit-item*') ? 'active' : '' }}">
+                        <a href="{{ route('allitems') }}" class="menu-link">
+                            <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
+                            <div>Daftar Barang</div>
+                        </a>
+                    </li>
+                    <li class="menu-item {{ request()->is('admin/all-produk*') || request()->is('admin/add-produk*') || request()->is('admin/edit-produk') ? 'active' : '' }}">
+                        <a href="{{ route('allproduk') }}" class="menu-link">
+                            <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
+                            <div>Daftar Produk</div>
+                        </a>
+                    </li>
+                    <li class="menu-item {{ request()->is('admin/daftar-supplier*') || request()->is('admin/add-supplier*') || request()->is('admin/edit-supplier') ? 'active' : '' }}">
+                        <a href="{{ route('allsuppliers') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-store"></i>
+                            <div>Data Supplier</div>
+                        </a>
+                    </li>
+                    <li class="menu-item {{ request()->is('admin/daftar-customer*') ? 'active' : '' }}">
+                        <a href="{{ route('allcustomer') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-table"></i>
+                            <div>Daftar Customer</div>
+                        </a>
+                    </li>
+                    <li class="menu-item {{ request()->is('admin/laporanbarang*') || request()->is('admin/detaillaporanbarang*') || request()->is('admin/laporantransaksi') || request()->is('admin/detail-laporantransaksi*') ? 'active' : '' }}">
+                        <a href="{{ route('laporanbarang') }}" class="menu-link">
+                            <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
+                            <div>Laporan</div>
+                        </a>
+                    </li>
+                    <li class="menu-item {{ request()->is('admin/all-transaksi*') ? 'active' : '' }}">
+                        <a href="{{ route('alltransaksi') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-collection"></i>
+                            <div>Data Transaksi</div>
+                        </a>
+                    </li>
+                    {{-- Tombol Logout di bagian bawah sidebar --}}
+                    <li class="menu-item mt-auto" style="padding: 0 20px;">
+                        <a href="{{ route('adminlogout') }}"
+                           class="menu-link" style="background-color: #2f80ed; color: white; text-align: center; border-radius: 8px; padding: 12px; font-weight: bold; font-size: 16px; text-decoration: none;">
+                            Logout
+                        </a>
+                    </li>
+                </ul>
+            </aside>
 
-
-  <style>
-    /* Sidebar container */
-    #layout-menu {
-      overflow-y: auto;
-      max-height: 100vh;
-      background-color: #f0f4f8;
-      box-shadow: 2px 0 5px rgba(0,0,0,0.05);
-    }
-
-    /* Menu link style */
-    #layout-menu .menu-link {
-      display: flex;
-      align-items: center;
-      padding: 12px 20px;
-      color: #333 !important;
-      font-weight: 600;
-      border-radius: 8px;
-      transition: background-color 0.3s ease, color 0.3s ease;
-      font-size: 1rem;
-    }
-
-    /* Icon spacing */
-    #layout-menu .menu-link i {
-      margin-right: 12px;
-      font-size: 1.25rem;
-    }
-
-    /* Active menu item */
-    #layout-menu .menu-item.active .menu-link {
-      background-color: #d0e7ff;
-      color: #007bff !important;
-      box-shadow: 0 0 8px rgba(0,123,255,0.4);
-    }
-
-    /* Hover effect */
-    #layout-menu .menu-link:hover {
-      background-color: #e8f4fd;
-      color: #007bff !important;
-      text-decoration: none;
-    }
-
-    /* Spacing between menu items */
-    #layout-menu .menu-inner li {
-      margin-bottom: 8px;
-    }
-
-    /* Brand logo */
-    .app-brand-link img {
-      border-radius: 8px;
-      transition: transform 0.3s ease;
-    }
-
-    .app-brand-link img:hover {
-      transform: scale(1.05);
-    }
-
-    /* Scrollbar styling for sidebar (optional, modern) */
-    #layout-menu::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    #layout-menu::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    #layout-menu::-webkit-scrollbar-thumb {
-      background-color: rgba(0, 123, 255, 0.3);
-      border-radius: 10px;
-    }
-  </style>
-</aside>
-
-
-            <!-- Layout container -->
             <div class="layout-page" style="background-color: rgb(240, 246, 250);">
 
-                <!-- Navbar -->
                 <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
                     id="layout-navbar" style="background: linear-gradient(135deg,rgb(255, 255, 255),rgb(255, 255, 255));">
                     <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
@@ -231,11 +269,9 @@
                     </div>
 
                     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
-                        <!-- Search -->
                         @yield('search')
 
                         <ul class="navbar-nav flex-row align-items-center ms-auto">
-                            <!-- User -->
                             <li class="nav-item navbar-dropdown dropdown-user dropdown">
                                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);"
                                     data-bs-toggle="dropdown">
@@ -266,53 +302,33 @@
                                     </li>
                                 </ul>
                             </li>
-                            <!--/ User -->
-                        </ul>
+                            </ul>
                     </div>
                 </nav>
-                <!-- / Navbar -->
 
-
-                <!-- / Navbar -->
-
-                <!-- Content wrapper -->
                 <div class="content-wrapper">
                     @yield('content')
                 </div>
-                <!-- Content wrapper -->
+                </div>
             </div>
-            <!-- / Layout page -->
-        </div>
 
-        <!-- Overlay -->
         <div class="layout-overlay layout-menu-toggle"></div>
     </div>
-    <!-- / Layout wrapper -->
-
-
-    <!-- Core JS -->
-    <!-- build:js assets/vendor/js/core.js -->
-
     <script src="jquery.js"></script>
     <script src="popper.js"></script>
     <script src="bootstrap.js"></script>
     <script src="{{ asset('dashboard2/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
     <script src="{{ asset('dashboard2/assets/vendor/js/menu.js') }}"></script>
     @yield('js')
-    <!-- endbuild -->
 
-    <!-- Vendors JS -->
     <script src="{{ asset('dashboard2/assets/vendor/libs/apex-charts/apexcharts.js') }}"></script>
 
-    <!-- Main JS -->
     <script src="{{ asset('dashboard2/assets/js/main.js') }}"></script>
 
-    <!-- Page JS -->
     <script src="{{ asset('dashboard2/assets/js/dashboards-analytics.js') }}"></script>
 
-    <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     @stack('scripts')
 </body>
-
 </html>
+
