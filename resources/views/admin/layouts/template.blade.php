@@ -127,7 +127,7 @@
         <div>Daftar Customer</div>
       </a>
     </li>
-    <li class="menu-item {{ request()->is('admin/laporanbarang*') || request()->is('admin/detaillaporanbarang*') || request()->is('admin/laporantransaksi') || request()->is('admin/detail-laporantransaksi*') ? 'active' : '' }}">
+    <li class="menu-item {{ request()->is('admin/laporanbarang*') || request()->is('admin/detaillaporanbarang*') || request()->is('admin/laporantransaksi') || request()->is('admin/detail-laporantransaksi*') || request()->is('admin/forecast*') ? 'active' : '' }}">
       <a href="{{ route('laporanbarang') }}" class="menu-link">
         <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
         <div>Laporan</div>
