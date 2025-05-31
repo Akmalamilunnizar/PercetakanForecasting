@@ -19,8 +19,6 @@ class DetailMasuk extends Model
         'SubTotal'
     ];
 
-    public $timestamps = false;
-
     // relasi ke laporan
     public function laporan()
     {

@@ -17,7 +17,6 @@ class BarangMasuk extends Model
         'tglMasuk',
     ];
 
-    public $timestamps = false;
 
     public function laporan()
     {

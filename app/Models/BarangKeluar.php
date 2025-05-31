@@ -17,7 +17,6 @@ class BarangKeluar extends Model
         'tglKeluar',
     ];
 
-    public $timestamps = false;
 
     public function laporan()
     {

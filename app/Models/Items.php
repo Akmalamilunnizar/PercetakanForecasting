@@ -19,7 +19,6 @@ class Items extends Model
         'IdSatuan'
     ];
 
-    public $timestamps = false;  // Karena tabel jenis_koi tidak menggunakan created_at dan updated_at
     public function jenisBarang()
     {
         return $this->belongsTo(TypeItems::class, 'IdJenisBarang', 'IdJenisBarang');
