@@ -3,6 +3,7 @@
 
 
 <head>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <meta charset="utf-8" />
 
   <title>CIME | Website Percetakan</title>
@@ -124,12 +125,33 @@
                     Dashboard
                   </a>
                 @endif
-                <form method="POST" action="{{ route('logout') }}" class="d-inline">
-                  @csrf
-                  <button type="submit" class="main-btn wow fadeInUp" data-wow-duration="1s">
-                    Logout
-                  </button>
-                </form>
+                <form id="logout-form" method="POST" action="{{ route('logout') }}" class="d-inline">
+    @csrf
+    <button type="button" id="logout-button" class="main-btn wow fadeInUp" data-wow-duration="1s">
+        Logout
+    </button>
+</form>
+
+<script>
+    document.getElementById('logout-button').addEventListener('click', function(event) {
+        event.preventDefault(); // Mencegah form disubmit langsung
+
+        Swal.fire({
+            title: 'Konfirmasi Logout',
+            text: "Anda yakin ingin keluar?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Logout!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('logout-form').submit(); // Submit form jika dikonfirmasi
+            }
+        })
+    });
+</script>
               @else
                 <a href="{{ url('/login')}}" class="main-btn wow fadeInUp" data-wow-duration="1s" style="margin-right: 10px;">
                   Login

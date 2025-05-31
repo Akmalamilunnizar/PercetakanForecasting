@@ -143,7 +143,7 @@
   </ul>
  <!-- Tombol Logout di bagian bawah sidebar -->
 <div style="position: absolute; bottom: 20px; left: 0; width: 100%; padding: 0 20px;">
-    <form id="logout-form" action="{{ route('adminlogout') }}" method="POST" style="display: none;">
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
         @csrf
     </form>
 
