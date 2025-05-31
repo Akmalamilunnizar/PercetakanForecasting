@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Transaksi;
+use App\Models\DetailTransaksi;
 
 class OrderController extends Controller
 {
@@ -44,21 +45,38 @@ class OrderController extends Controller
             // Determine payment status
             $isPaid = session('midtrans_paid', false);
             $total = 0;
-            foreach ($cart as $item) {
-                $total += $item['harga'] * $item['quantity'];
+            foreach ($cart as $id => $details) {
+                $isCustom = ($details['ukuran'] === 'custom');
+                $detailData = [
+                    'IdTransaksi' => $transactionId,
+                    'IdProduk' => $details['id'],
+                    'id_ukuran' => $isCustom ? null : $details['ukuran'],
+                    'CustomUkuran' => $isCustom ? ($details['custom_ukuran'] ?? null) : null,
+                    'QtyProduk' => $details['quantity'],
+                    'SubTotal' => $details['harga'] * $details['quantity'],
+                    'design_file' => $details['design_file'] ?? null,
+                ];
+                $detail = DetailTransaksi::create($detailData);
+                $total += $details['harga'] * $details['quantity'];
             }
+
+            $shippingCost = session('shipping_cost', 0);
+            $total += $shippingCost;
+
+            $selectedAddressId = session('selected_address_id');
+            $address = \App\Models\Address::find($selectedAddressId);
 
             $transaction = new Transaksi();
             $transaction->IdTransaksi = $transactionId;
             $transaction->username = $user->username;
             $transaction->id = $user->id;
             $transaction->Bayar = $isPaid ? $total : 0;
-            $transaction->SisaBayar = $isPaid ? 0 : $total;
-            $transaction->Kembali = 0;
             $transaction->GrandTotal = $total;
             $transaction->tglTransaksi = now();
             $transaction->StatusPembayaran = $isPaid ? 'Lunas' : 'Belum Lunas';
             $transaction->StatusPesanan = 'Menunggu Konfirmasi';
+            $transaction->address_id = $address ? $address->id : null;
+            $transaction->alamat_pengiriman = $address ? $address->full_address : null;
             $transaction->save();
 
             // ... existing code ...

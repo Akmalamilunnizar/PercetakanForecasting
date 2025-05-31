@@ -100,6 +100,9 @@
             <a href="{{ route('details') }}" class="btn btn-secondary">Back</a>
             <button id="proceedButton" class="btn btn-danger" disabled>
               <i class="bi bi-credit-card me-2"></i> Proses Checkout
+              @if($selectedAddress)
+                {{ $selectedAddress->full_address }}
+              @endif
             </button>
           </div>
         </div>
@@ -114,7 +117,8 @@
         @php $total = 0; $total_berat = 0; @endphp
 
         @if(session('cart') && count(session('cart')) > 0)
-            @foreach (session('cart') as $id => $details)
+            @php $cart = session('cart', []); @endphp
+            @foreach ($cart as $id => $details)
                 @php 
                     $subtotal = $details['harga'] * $details['quantity'];
                     $total += $subtotal;
@@ -122,14 +126,14 @@
                 @endphp
                 <div class="d-flex mb-3 border-bottom pb-2">
                     @php
-                        $imagePath = $details['img'] ?? 'default.jpg';
+                        $imagePath = $details['img'] ?? 'assets/images/poster1.jpeg';
                         $fullPath = asset('storage/' . $imagePath);
                     @endphp
                     <img src="{{ $fullPath }}" 
                          alt="{{ $details['nama'] }}" 
                          style="width: 55px; height: 55px; object-fit: cover; border-radius: 8px;"
                          class="me-3"
-                         onerror="this.onerror=null; this.src='{{ asset('storage/default.jpg') }}';">
+                         onerror="this.onerror=null; this.src='{{ asset('assets/images/poster1.jpeg') }}';">
                     <div class="flex-grow-1">
                         <div class="fw-semibold">{{ $details['nama'] }}</div>
                         <div class="text-primary">Rp {{ number_format($details['harga'], 0, ',', '.') }} 
@@ -145,10 +149,7 @@
                     <span class="text-muted">Subtotal:</span>
                     <span class="fw-semibold">Rp {{ number_format($total, 0, ',', '.') }}</span>
                 </div>
-                <div class="d-flex justify-content-between">
-                    <span class="text-muted">Berat:</span>
-                    <span>{{ number_format($total_berat / 1000, 2) }} Kg</span>
-                </div>
+                
                 <div class="d-flex justify-content-between" id="shippingCost" style="display: none;">
                     <span class="text-muted">Biaya Pengiriman:</span>
                     <span class="fw-semibold">Rp <span id="shippingAmount">0</span></span>
@@ -158,6 +159,9 @@
                     <span class="fw-bold">Total:</span>
                     <span class="fw-bold" id="grandTotal">Rp {{ number_format($total, 0, ',', '.') }}</span>
                 </div>
+                  {{-- Debug: --}}
+  Selected Address ID: {{ session('selected_address_id') }}
+
             </div>
         @else
             <div class="alert alert-warning">
@@ -241,7 +245,8 @@ document.addEventListener('DOMContentLoaded', function() {
   proceedButton.addEventListener('click', function() {
     const shippingData = {
       method: selectedMethod,
-      cost: selectedMethod === 'kurir' ? parseInt(selectedOption) : 0
+      cost: selectedMethod === 'kurir' ? parseInt(selectedOption) : 0,
+      address_id: '{{ session('selected_address_id') }}'
     };
     
     // Store shipping data in session

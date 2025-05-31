@@ -39,14 +39,19 @@ use App\Http\Controllers\Api\V1\LaporanTransaksiController;
 use App\Http\Controllers\Api\V1\ForecastController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Api\V1\AddressController;
+use App\Http\Controllers\Api\V1\PesananController;
 use App\Http\Controllers\Api\V1\PaymentController;
-
 use App\Http\Controllers\Api\V1\DetailProdukController;
+use App\Http\Controllers\Api\V1\SizeController;
+use App\Http\Controllers\Api\V1\DiskonController;
 
 
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+
+Route::get('/customer/{id}', [CustomerController::class, 'show'])->name('customerDetails');
+
 Route::get('/', function () {
     $produk = Produk::orderBy('IdProduk', 'desc')->take(8)->get();
     $produkTerlaris = Produk::orderBy('IdProduk', 'desc')->take(4)->get();
@@ -67,6 +72,22 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/admin/admin-profile', 'Index')->name('profile');
         Route::post('/admin/store-profile', 'StoreProfile')->name('storeprofile');
     });
+
+    Route::get('/admin/all-ukuran', [SizeController::class, 'index'])->name('allukuran');
+    Route::get('/admin/add-ukuran', [SizeController::class, 'create'])->name('addukuran');
+    Route::post('/admin/store-ukuran', [SizeController::class, 'store'])->name('storeukuran');
+    Route::get('/admin/edit-ukuran/{id}', [SizeController::class, 'edit'])->name('editukuran');
+    Route::put('/admin/update-ukuran/{id}', [SizeController::class, 'update'])->name('updateukuran');
+    Route::delete('/admin/delete-ukuran/{id}', [SizeController::class, 'destroy'])->name('deleteukuran');
+
+    Route::get('/admin/all-diskon', [DiskonController::class, 'index'])->name('alldiskon');
+    Route::get('/admin/add-diskon', [DiskonController::class, 'create'])->name('adddiskon');
+    Route::post('/admin/store-diskon', [DiskonController::class, 'store'])->name('storediskon');
+    Route::get('/admin/edit-diskon/{id}', [DiskonController::class, 'edit'])->name('editdiskon');
+    Route::put('/admin/update-diskon/{id}', [DiskonController::class, 'update'])->name('updatediskon');
+    Route::delete('/admin/delete-diskon/{id}', [DiskonController::class, 'destroy'])->name('deletediskon');
+
+    Route::post('/admin/store-produk', [ProdukController::class, 'storeProduk'])->name('storeproduk');
 });
 
 
@@ -161,27 +182,15 @@ Route::controller(ItemsController::class)->group(function () { /* */
 });
 
 Route::controller(TokoController::class)->group(function () {
-    Route::get('/tokodashboard', function () {
-        return view('toko.dashboardToko');
-    })->name('tokodashboard');
+    Route::get('/tokodashboard', function () {return view('toko.dashboardToko');})->name('tokodashboard');
     Route::get('/tokodashboard', [TokoController::class, 'tokodashboard'])->name('tokodashboard');
 
 
-    Route::get('/shop', function () {
-        return view('toko.dashboardToko');
-    })->name('shop');
-    Route::get('/keranjang', function () {
-        return view('toko.dashboardToko');
-    })->name('keranjang');
-    Route::get('/faq', function () {
-        return view('toko.dashboardToko');
-    })->name('faq');
-    Route::get('/lacak', function () {
-        return view('toko.dashboardToko');
-    })->name('lacak');
-    Route::get('/kontak', function () {
-        return view('toko.dashboardToko');
-    })->name('kontak');
+    Route::get('/shop', function () {return view('toko.dashboardToko');})->name('shop');
+    Route::get('/keranjang', function () {return view('toko.dashboardToko');})->name('keranjang');
+    Route::get('/faq', function () {return view('toko.dashboardToko');})->name('faq');
+    Route::get('/lacak', function () {return view('toko.dashboardToko');})->name('lacak');
+    Route::get('/kontak', function () {return view('toko.dashboardToko');})->name('kontak');
 });
 Route::controller(LaporanController::class)->group(function () {
     Route::get('/admin/laporanbarang', 'index')->name('laporanbarang');
@@ -267,13 +276,30 @@ Route::controller(SupplierController::class)->group(function () {
 });
 
 Route::controller(CustomerController::class)->group(function () {
-    // Tampilkan semua customer
+    // Tampilkan semua supplier
     Route::get('/admin/daftar-customer', 'index')->name('allcustomer');
-    // Rute baru untuk detail customer
-    Route::get('/admin/customer-details/{id}', 'customerDetails')->name('customerDetails');
-    // Hapus customer
-    Route::delete('/admin/daftar-customer/{id}', 'deleteCustomer')->name('deletecustomer');
-    // Cari customer (jika ada)
+    // Tampilkan form tambah supplier
+    // Hapus supplier
+    Route::delete('/admin/daftar-supplier/{id}', 'deleteCustomer')->name('deletecustomer');
+    // Cari supplier
+});
+Route::controller(CustomerController::class)->group(function () {
+    // Tampilkan semua supplier
+    Route::get('/admin/daftar-customer', 'index')->name('allcustomer');
+    // Tampilkan form tambah supplier
+    Route::get('/admin/daftar-supplier/add', 'addSupplier')->name('addsupplier');
+    // Proses form tambah supplier
+    Route::post('/admin/daftar-supplier/add', 'storeSupplier')->name('storesupplier');
+    // Form edit supplier
+    Route::get('/admin/daftar-supplier/{id}/edit', 'editSupplier')->name('editsupplier');
+    // Update supplier
+    Route::put('/admin/daftar-supplier/{id}/update', 'updateSupplier')->name('updatesupplier');
+    // Hapus supplier
+    Route::delete('/admin/daftar-supplier/{id}', 'deleteCustomer')->name('deletecustomer');
+    // Cari supplier
+    Route::get('/admin/search-supplier', 'searchSupplier')->name('searchsupplier');
+    // API get list supplier (JSON)
+    Route::get('/api/suppliers', 'get_supplier_list')->name('getsuppliers');
 });
 
 
@@ -351,24 +377,16 @@ Route::get('/routes', function () {
 Route::controller(TokoController::class)->group(function () {
     // Route::get('/tokodashboard', function () {return view('toko.dashboardToko');})->name('tokodashboard');
     Route::get('/tokodashboard', [TokoController::class, 'tokodashboard'])->name('tokodashboard');
-    Route::get('/search', [TokoController::class, 'search'])->name('searchProduct');
-    Route::get('/shop', function () {
-        return view('toko.dashboardToko');
-    })->name('shop');
-    Route::get('/cart', function () {
-        return view('toko.cart');
-    })->name('cart');
-    Route::get('/faq', function () {
-        return view('toko.dashboardToko');
-    })->name('faq');
-    Route::get('/lacak', function () {
-        return view('toko.dashboardToko');
-    })->name('lacak');
-    Route::get('/kontak', function () {
-        return view('toko.dashboardToko');
-    })->name('kontak');
+    Route::get('/search', [ProductController::class, 'search'])->name('searchProduct');
+    Route::get('/pesanan', [TokoController::class, 'pesanan'])->middleware('auth')->name('pesanan');
+    Route::get('/kontak', function () {return view('toko.kontak');})->name('kontak');
+
 
 });
+
+Route::get('/pesanan/{id}', [PesananController::class, 'detail'])->name('pesanan.detail');
+
+
 
 // Cart and Order routes
 Route::middleware(['auth'])->group(function () {
@@ -377,9 +395,9 @@ Route::middleware(['auth'])->group(function () {
         Route::match(['get', 'post'], '/details', 'details')->name('details');
         Route::post('/save-address', 'saveAddress')->name('save.address');
         Route::post('/save-shipping', 'saveShipping')->name('save.shipping');
-        Route::get('/shipping', fn() => view('toko.shipping'))->name('shipping');
-        Route::get('/payment', fn() => view('toko.payment'))->name('payment');
-        Route::get('/review', fn() => view('toko.review'))->name('review');
+        Route::get('/shipping', [CartController::class, 'shipping'])->name('shipping');
+        Route::get('/payment', [\App\Http\Controllers\Api\V1\PaymentController::class, 'payment'])->name('payment');
+        Route::get('/review', [\App\Http\Controllers\Api\V1\OrderController::class, 'review'])->name('review');
 
         // API Cart
         Route::post('/cart/add', 'add')->name('cart.add');
@@ -398,6 +416,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/addresses', 'store')->name('addresses.store');
         Route::post('/addresses/{address}/default', 'setDefault')->name('addresses.default');
         Route::delete('/addresses/{address}', 'destroy')->name('addresses.destroy');
+        Route::post('/addresses/{address}', [AddressController::class, 'update'])->name('addresses.update');
     });
 });
 
@@ -468,4 +487,6 @@ Route::post('/set-payment-method', function (Illuminate\Http\Request $request) {
 });
 
 // Detail Produk Routes
-Route::post('/cart/add', [DetailProdukController::class, 'addToCart'])->name('cart.add');
+Route::post('/cart/add', [App\Http\Controllers\Api\V1\CartController::class, 'add'])->name('cart.add');
+
+Route::post('/set-selected-address', [AddressController::class, 'setSelectedAddress'])->name('set.selected.address');

@@ -69,18 +69,15 @@
       </form>
 
 
-      <div class="d-none d-lg-block me-4">
-        <ul class="navbar-nav flex-row gap-3">
-          <li class="nav-item"><a class="nav-link text-primary fw-semibold"
-              href="{{ route('tokodashboard') }}">Beranda</a></li>
-          <li class="nav-item"><a class="nav-link text-primary fw-semibold" href="{{ route('cart') }}">Cart</a></li>
-          <li class="nav-item"><a class="nav-link text-primary fw-semibold" href="{{ route('faq') }}">FAQ</a></li>
-          <li class="nav-item"><a class="nav-link text-primary fw-semibold" href="{{ route('lacak') }}">Lacak
-              Pesanan</a></li>
-          <li class="nav-item"><a class="nav-link text-primary fw-semibold" href="{{ route('kontak') }}">Kontak Kami</a>
-          </li>
-        </ul>
-      </div>
+    <!-- Menu Navigasi -->
+    <div class="d-none d-lg-block me-4">
+      <ul class="navbar-nav flex-row gap-3">
+        <li class="nav-item"><a class="nav-link text-primary fw-semibold" href="{{ route('tokodashboard') }}">Beranda</a></li>
+        <li class="nav-item"><a class="nav-link text-primary fw-semibold" href="{{ route('cart') }}">Cart</a></li>
+        <li class="nav-item"><a class="nav-link text-primary fw-semibold" href="{{ route('pesanan') }}">Pesanan</a></li>
+        <li class="nav-item"><a class="nav-link text-primary fw-semibold" href="{{ route('kontak') }}">Kontak Kami</a></li>
+      </ul>
+    </div>
 
       <div class="d-flex align-items-center gap-3" style="margin-right: 40px;">
         <a href="{{ route('cart') }}" class="text-muted position-relative">

@@ -22,19 +22,22 @@
         <div class="col-md-6">
             <h1 class="fw-bold mb-3" style="color: #2B3674;">{{ $produk->NamaProduk }}</h1>
             
-            <!-- Price -->
+            <!-- Price & Size Selection -->
             <div class="mb-4">
-                @if($produk->diskon)
-                    <span class="text-decoration-line-through text-muted me-2">Rp {{ number_format($produk->HargaProduk, 0, ',', '.') }}</span>
-                    <span class="fw-bold text-danger" style="font-size: 1.5rem;">
-                        Rp {{ number_format($hargaSetelahDiskon, 0, ',', '.') }}
-                    </span>
-                    <span class="badge bg-danger ms-2">{{ $produk->diskon }}% OFF</span>
-                @else
-                    <span class="fw-bold" style="font-size: 1.5rem; color: #4318FF;">
-                        Rp {{ number_format($produk->HargaProduk, 0, ',', '.') }}
-                    </span>
-                @endif
+                <label class="form-label fw-bold">Pilih Ukuran</label>
+                <select class="form-select" id="sizeSelect" name="size_id" onchange="updatePrice()">
+                    @foreach($produk->sizes as $size)
+                        <option value="{{ $size->id_ukuran }}" data-harga="{{ $size->pivot->harga }}">
+                            {{ $size->nama }} ({{ $size->panjang }} x {{ $size->lebar }} {{ $size->satuan->Satuan }}) - Rp {{ number_format($size->pivot->harga, 0, ',', '.') }}
+                        </option>
+                    @endforeach
+                    <option value="custom" data-harga="{{ $produk->custom_harga }}">Custom Ukuran - Rp {{ number_format($produk->custom_harga, 0, ',', '.') }}</option>
+                </select>
+            </div>
+            <div class="mb-4">
+                <span class="fw-bold" id="displayPrice" style="font-size: 1.5rem; color: #4318FF;">
+                    Rp {{ isset($produk->sizes[0]) ? number_format($produk->sizes[0]->pivot->harga, 0, ',', '.') : number_format($produk->custom_harga, 0, ',', '.') }}
+                </span>
             </div>
 
             <!-- Description -->
@@ -49,7 +52,7 @@
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $produk->IdProduk }}">
                     <input type="hidden" name="product_name" value="{{ $produk->NamaProduk }}">
-                    <input type="hidden" name="product_price" value="{{ $produk->HargaProduk }}">
+                    <input type="hidden" name="product_price" id="product_price" value="{{ isset($produk->sizes[0]) ? $produk->sizes[0]->pivot->harga : $produk->custom_harga }}">
                     <input type="hidden" name="product_image" value="{{ $produk->Img }}">
 
                     <!-- File Upload -->
@@ -84,13 +87,6 @@
                         <textarea class="form-control" name="notes" rows="3" placeholder="Tambahkan catatan khusus untuk pesanan Anda..."></textarea>
                     </div>
 
-                    <!-- File Upload -->
-                    <div class="mb-4">
-                        <label class="form-label fw-bold">File Desain</label>
-                        <input type="file" class="form-control" name="design_file" accept=".pdf,.jpg,.jpeg,.png,.ai,.psd">
-                        <small class="text-muted">Format yang didukung: PDF, JPG, PNG, AI, PSD</small>
-                    </div>
-
                     <!-- Action Buttons -->
                     <div class="d-grid gap-2">
                         <button type="button" class="btn btn-danger btn-lg" onclick="addToCart()">
@@ -107,6 +103,16 @@
 </div>
 
 <script>
+function updatePrice() {
+    var select = document.getElementById('sizeSelect');
+    var harga = select.options[select.selectedIndex].getAttribute('data-harga');
+    document.getElementById('displayPrice').innerText = 'Rp ' + Number(harga).toLocaleString('id-ID');
+    document.getElementById('product_price').value = harga;
+}
+document.addEventListener('DOMContentLoaded', function() {
+    updatePrice();
+});
+
 function increaseQuantity() {
     const input = document.getElementById('quantity');
     input.value = parseInt(input.value) + 1;
@@ -122,10 +128,7 @@ function decreaseQuantity() {
 function addToCart() {
     const form = document.getElementById('orderForm');
     const formData = new FormData(form);
-    
-    // Add product ID to form data
     formData.append('product_id', '{{ $produk->IdProduk }}');
-    
     fetch('{{ route("cart.add") }}', {
         method: 'POST',
         headers: {
@@ -166,10 +169,7 @@ function addToCart() {
 function buyNow() {
     const form = document.getElementById('orderForm');
     const formData = new FormData(form);
-    
-    // Add product ID to form data
     formData.append('product_id', '{{ $produk->IdProduk }}');
-    
     fetch('{{ route("cart.add") }}', {
         method: 'POST',
         headers: {

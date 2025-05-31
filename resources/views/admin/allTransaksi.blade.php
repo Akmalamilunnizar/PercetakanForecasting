@@ -1,15 +1,15 @@
+
 @extends('admin.layouts.template')
 
 @section('page_title')
-CIME | Halaman Daftar Transaksi
+    CIME | Daftar Transaksi
 @endsection
-@section('search')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+@section('search')
     <div class="navbar-nav align-items-center">
         <div class="nav-item d-flex align-items-center">
             <i class="bx bx-search fs-4 lh-0"></i>
-            {{-- <form method="GET" action={{ route('searchitem') }}> --}}
+             <form method="GET" action={{ route('searchitem') }}>
             <input type="text" name="search" class="form-control border-0 shadow-none ps-1 ps-sm-2 w-100"
                 placeholder="Pencarian id atau nama..." value="{{ isset($search) ? $search : '' }}" aria-label="Pencarian..."
                 style="600px" />
@@ -27,9 +27,9 @@ CIME | Halaman Daftar Transaksi
     </div>
 @endif
 <div class="card">
-    <h5 class="card-header fw-bold">Daftar Transaksi</h5>
+    <h5 class="card-header">Daftar Transaksi</h5>
     <div class="table-responsive text-nowrap">
-        <table class="table table-striped">
+        <table class="table">
             <thead class="table-light">
                 <tr>
                   <th style="text-align: center; font-weight: bold;">Id</th>
@@ -66,7 +66,9 @@ CIME | Halaman Daftar Transaksi
                                 <i class="fas fa-times me-1"></i> Tolak
                             </a>
                         </td>
-                        <td class="text-center">{{ $item->StatusPesanan }}</td>
+
+                        <td>{{ $item->StatusPesanan }}</td>
+                        
                     </tr>
                 @endforeach
             </tbody>

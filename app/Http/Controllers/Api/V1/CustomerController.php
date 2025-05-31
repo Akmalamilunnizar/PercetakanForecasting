@@ -67,4 +67,10 @@ class CustomerController extends Controller
     //     }
     //     return redirect()->back()->with('error', 'Pelanggan tidak ditemukan!');
     // }
+    public function show($id)
+    {
+        $customer = Customer::findOrFail($id);
+        return view('admin.customerdetails', compact('customer'));
+    }
+
 }

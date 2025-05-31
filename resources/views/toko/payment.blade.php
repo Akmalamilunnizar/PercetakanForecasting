@@ -73,6 +73,15 @@
                                 Continue to Review <i class="bi bi-arrow-right ms-2"></i>
                             </button>
                         </div>
+
+                        <div class="mt-4">
+                            <div>Subtotal: Rp {{ number_format($subtotal, 0, ',', '.') }}</div>
+                            <div>Biaya Pengiriman: Rp {{ number_format($shippingCost, 0, ',', '.') }}</div>
+                            <div><strong>Total: Rp {{ number_format($grandTotal, 0, ',', '.') }}</strong></div>
+                        {{-- Debug: --}}
+  Selected Address ID: {{ session('selected_address_id') }}
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -117,20 +126,14 @@
                             });
                         },
                         onPending: function(result) {
-                            // Only redirect for certain payment types (e.g., bank_transfer)
-                            if (result.payment_type === 'bank_transfer') {
-                                window.location.href = '{{ route("review") }}';
-                            } else {
-                                // For QRIS/GoPay, show a message and let user refresh manually
-                                Swal.fire({
-                                    icon: 'info',
-                                    title: 'Payment Pending',
-                                    text: 'Please complete your payment in your e-wallet app. This page will update automatically once payment is confirmed.',
-                                    confirmButtonText: 'OK'
-                                });
-                                button.disabled = false;
-                                button.innerHTML = 'Continue to Review <i class="bi bi-arrow-right ms-2"></i>';
-                            }
+                            Swal.fire({
+                                icon: 'info',
+                                title: 'Payment Pending',
+                                text: 'Please complete your payment using the provided virtual account. This page will update automatically once payment is confirmed.',
+                                confirmButtonText: 'OK'
+                            });
+                            button.disabled = false;
+                            button.innerHTML = 'Continue to Review <i class="bi bi-arrow-right ms-2"></i>';
                         },
                         onError: function(result) {
                             Swal.fire({

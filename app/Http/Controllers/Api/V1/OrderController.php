@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
 
 class OrderController extends Controller
 {
@@ -78,30 +81,36 @@ class OrderController extends Controller
             $isPaid = session('midtrans_paid', false);
             $paymentMethod = session('payment_method', 'cod'); // default to cod
             $total = 0;
+            $shippingCost = session('shipping_cost', 0);
             foreach ($cart as $item) {
                 $total += $item['harga'] * $item['quantity'];
             }
+            $total += $shippingCost;
             Log::info('Calculated total:', ['total' => $total]);
+
+            // Get selected address
+            $selectedAddressId = session('selected_address_id'); // or from request
+            $address = \App\Models\Address::find($selectedAddressId);
 
             // Create transaction
             $transaction = new Transaksi();
             $transaction->IdTransaksi = $transactionId;
             $transaction->username = $user->username;
             $transaction->id = $user->id;
+            $transaction->address_id = $address ? $address->id : null;
+            $transaction->alamat_pengiriman = $address ? $address->full_address : null;
 
             if ($paymentMethod === 'midtrans' && $isPaid) {
                 $transaction->Bayar = $total;
-                $transaction->SisaBayar = 0;
                 $transaction->StatusPembayaran = 'Lunas';
             } else {
                 $transaction->Bayar = 0;
-                $transaction->SisaBayar = $total;
                 $transaction->StatusPembayaran = 'Belum Lunas';
             }
 
-            $transaction->Kembali = 0;
             $transaction->GrandTotal = $total;
             $transaction->tglTransaksi = now();
+            $transaction->tglUpdate = now();
             $transaction->StatusPesanan = 'Menunggu Konfirmasi';
             $transaction->save();
             
@@ -109,26 +118,19 @@ class OrderController extends Controller
 
             // Create transaction details
             foreach ($cart as $id => $details) {
-                $detail = DetailTransaksi::create([
+                $isCustom = ($details['ukuran'] === 'custom');
+                $detailData = [
                     'IdTransaksi' => $transactionId,
-                    'IdProduk' => $id,
+                    'IdProduk' => $details['id'],
+                    'id_ukuran' => $isCustom ? null : $details['ukuran'],
+                    // 'CustomUkuran' => $isCustom ? $details['ukuran_label'] : null,
                     'QtyProduk' => $details['quantity'],
-                    'SubTotal' => $details['harga'] * $details['quantity']
-                ]);
-                Log::info('Transaction detail created:', ['detail' => $detail->toArray()]);
-
-                // Create laporan_transaksis record
-                \App\Models\LaporanTransaksi::create([
-                    'kode_transaksi' => $transactionId,
-                    'nama_pelanggan' => $user->f_name,
-                    'produk' => $details['nama'],
-                    'jumlah' => $details['quantity'],
-                    'harga_satuan' => $details['harga'],
-                    'total_harga' => $details['harga'] * $details['quantity'],
-                    'tanggal_transaksi' => now()->toDateString(),
-                    'status_pembayaran' => $transaction->StatusPembayaran,
-                    'keterangan' => 'Pesanan baru'
-                ]);
+                    'SubTotal' => $details['harga'] * $details['quantity'],
+                    'design_file' => $details['design_file'] ?? null,
+                ];
+                $detailData['CustomUkuran'] = $details['custom_ukuran'] ?? null;
+                DetailTransaksi::create($detailData);
+                Log::info('Transaction detail created:', ['detail' => $detailData]);
             }
 
             // Clear cart and payment flags
@@ -136,6 +138,8 @@ class OrderController extends Controller
             session()->forget('midtrans_paid');
             session()->forget('payment_method');
             Log::info('Cart cleared from session');
+
+            
 
             DB::commit();
 
@@ -156,5 +160,33 @@ class OrderController extends Controller
                 'error' => 'Terjadi kesalahan: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    public function review()
+    {
+        $cart = session('cart', []);
+        $orderNotes = session('order_notes', '');
+        $shippingCost = session('shipping_cost', 0);
+
+        // Get selected address from session or default
+        $selectedAddressId = session('selected_address_id');
+        $selectedAddress = null;
+        if ($selectedAddressId) {
+            $selectedAddress = \App\Models\Address::find($selectedAddressId);
+        }
+        if (!$selectedAddress) {
+            $selectedAddress = \App\Models\Address::where('user_id', auth()->id())
+                ->where('is_default', true)
+                ->first();
+        }
+
+        // Calculate subtotal and grand total
+        $subtotal = 0;
+        foreach ($cart as $item) {
+            $subtotal += $item['harga'] * $item['quantity'];
+        }
+        $grandTotal = $subtotal + $shippingCost;
+
+        return view('toko.review', compact('cart', 'orderNotes', 'selectedAddress', 'shippingCost', 'subtotal', 'grandTotal'));
     }
 } 

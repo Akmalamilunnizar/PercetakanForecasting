@@ -81,6 +81,16 @@
                         data-address-id="{{ $address->id }}">
                   Pilih Alamat Ini
                 </button>
+                <button class="btn btn-warning btn-sm mt-2 edit-address" 
+                        data-address-id="{{ $address->id }}"
+                        data-label="{{ $address->label }}"
+                        data-recipient="{{ $address->recipient_name }}"
+                        data-phone="{{ $address->phone_number }}"
+                        data-city="{{ $address->city }}"
+                        data-postal="{{ $address->postal_code }}"
+                        data-fulladdress="{{ $address->full_address }}">
+                  Edit
+                </button>
               </div>
             </div>
           </div>
@@ -147,6 +157,52 @@
   </div>
 </div>
 
+<!-- Modal Edit Alamat -->
+<div class="modal fade" id="editAddressModal" tabindex="-1" aria-labelledby="editAddressModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="editAddressForm" method="POST">
+      @csrf
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editAddressModalLabel">Edit Alamat</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="address_id" id="editAddressId">
+          <div class="mb-3">
+            <label class="form-label">Label</label>
+            <input type="text" class="form-control" name="label" id="editLabel" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Nama Penerima</label>
+            <input type="text" class="form-control" name="recipient_name" id="editRecipient" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Nomor Telepon</label>
+            <input type="text" class="form-control" name="phone_number" id="editPhone" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Kota/Kecamatan</label>
+            <input type="text" class="form-control" name="city" id="editCity" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Kode Pos</label>
+            <input type="text" class="form-control" name="postal_code" id="editPostal" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Alamat Lengkap</label>
+            <textarea class="form-control" name="full_address" id="editFullAddress" rows="2" required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
@@ -174,19 +230,57 @@
     // Handle "Pilih Alamat Ini" button click
     document.querySelectorAll('.select-address').forEach(button => {
       button.addEventListener('click', function(e) {
-        e.stopPropagation(); // Prevent card click event
+        e.preventDefault();
         const addressId = this.dataset.addressId;
-        
-        // Highlight the card
-        const card = this.closest('.address-card');
-        addressCards.forEach(c => c.classList.remove('selected'));
-        card.classList.add('selected');
-        
-        // Store selected address ID
-        selectedAddressId = addressId;
-        
-        // Show next button
-        nextButton.style.display = 'block';
+        fetch('/set-selected-address', {
+          method: 'POST',
+          headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({ address_id: addressId })
+        }).then(() => {
+          window.location.href = '{{ route('shipping') }}';
+        });
+      });
+    });
+
+    // Saat tombol edit diklik, isi modal dengan data alamat
+    document.querySelectorAll('.edit-address').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        document.getElementById('editAddressId').value = btn.dataset.addressId;
+        document.getElementById('editLabel').value = btn.dataset.label;
+        document.getElementById('editRecipient').value = btn.dataset.recipient;
+        document.getElementById('editPhone').value = btn.dataset.phone;
+        document.getElementById('editCity').value = btn.dataset.city;
+        document.getElementById('editPostal').value = btn.dataset.postal;
+        document.getElementById('editFullAddress').value = btn.dataset.fulladdress;
+        var modal = new bootstrap.Modal(document.getElementById('editAddressModal'));
+        modal.show();
+      });
+    });
+
+    // Submit form edit alamat
+    document.getElementById('editAddressForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var addressId = document.getElementById('editAddressId').value;
+      var formData = new FormData(this);
+      fetch('/addresses/' + addressId, {
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': '{{ csrf_token() }}',
+          'Accept': 'application/json'
+        },
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          location.reload();
+        } else {
+          alert('Gagal update alamat');
+        }
       });
     });
   });

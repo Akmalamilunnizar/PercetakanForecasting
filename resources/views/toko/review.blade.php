@@ -126,48 +126,38 @@
       <!-- Daftar Produk (Kiri) -->
       <div class="col-lg-8">
         <h4 class="fw-bold mb-4">Review Produk</h4>
-
-        @if(session('cart') && count(session('cart')) > 0)
-          @php $total = 0; @endphp
-          @foreach(session('cart') as $id => $details)
-            @php
-              $subtotal = $details['harga'] * $details['quantity'];
-              $total += $subtotal;
-            @endphp
+        @if($cart && count($cart) > 0)
+          @foreach($cart as $id => $details)
             <div class="border-bottom pb-4 mb-4 d-flex">
               <div class="me-3">
                 @php
                   $imagePath = $details['img'] ?? 'default.jpg';
                   $fullPath = asset('storage/' . $imagePath);
                 @endphp
-                <img src="{{ $fullPath }}" 
-                     alt="{{ $details['nama'] }}" 
-                     style="width: 220px; height: auto; border-radius: 10px;"
-                     onerror="this.onerror=null; this.src='{{ asset('storage/default.jpg') }}';" />
+                <img src="{{ $fullPath }}" alt="{{ $details['nama'] }}" style="width: 220px; height: 220px; object-fit: cover; border-radius: 10px;">
               </div>
               <div class="flex-grow-1">
                 <h5 class="mb-1" style="font-size: 20px; font-weight: bold;">{{ $details['nama'] }}</h5>
-                <div class="text-muted small mb-1" style="font-size: 16px;">File: <span class="text-danger">{{ $details['file'] ?? 'buklet.jpg' }}</span></div>
-                <div class="text-muted small mb-1" style="font-size: 16px;">Cetak: {{ $details['cetak'] ?? '1 Sisi' }}</div>
-                <div class="text-muted small mb-1" style="font-size: 16px;">Tipe: {{ $details['tipe'] ?? 'Standard' }}</div>
-                <div class="text-muted small mb-1" style="font-size: 16px;">Finishing: {{ $details['finishing'] ?? '-' }}</div>
-
-                <div class="fw-bold text-primary mt-2" style="font-size: 24px;">
-                  Rp {{ number_format($subtotal, 0, ',', '.') }}
-                </div>
+                @if(isset($details['design_file']))
+                  <div class="text-muted small mb-1" style="font-size: 16px;">File: <span class="text-danger">{{ basename($details['design_file']) }}</span></div>
+                @endif
+                @if(isset($details['print_option']))
+                  <div class="text-muted small mb-1" style="font-size: 16px;">Cetak: {{ $details['print_option'] }}</div>
+                @endif
+                @if(isset($details['notes']))
+                  <div class="text-muted small mb-1" style="font-size: 16px;">Catatan: {{ $details['notes'] }}</div>
+                @endif
+                <div><strong>Ukuran:</strong> {{ $details['ukuran_label'] ?? ($details['ukuran'] ?? 'Ukuran tidak tersedia') }}</div>
+                <div class="fw-bold text-primary mt-2" style="font-size: 24px;">Rp {{ number_format($details['harga'] * $details['quantity'], 0, ',', '.') }}</div>
               </div>
               <div class="text-center ms-4">
                 <label class="fw-bold">Jumlah</label>
-                <div class="form-control text-center" style="width: 100px; margin: auto;">
-                  {{ $details['quantity'] }}
-                </div>
+                <div class="form-control text-center" style="width: 100px; margin: auto;">{{ $details['quantity'] }}</div>
               </div>
             </div>
           @endforeach
         @else
-          <div class="alert alert-info">
-            Keranjang kosong. <a href="{{ route('tokodashboard') }}">Kembali ke Katalog</a>
-          </div>
+          <div class="alert alert-info">Keranjang kosong. <a href="{{ route('tokodashboard') }}">Kembali ke Katalog</a></div>
         @endif
       </div>
 
@@ -175,16 +165,21 @@
       <div class="col-lg-4">
         <div class="card shadow-sm rounded-4 p-4 sticky-top" style="top: 100px;">
           <h6 class="text-muted mb-2">Subtotal</h6>
-          <h4 class="fw-bold">Rp {{ number_format($total ?? 0, 0, ',', '.') }}</h4>
+          <h4 class="fw-bold">Rp {{ number_format($subtotal ?? 0, 0, ',', '.') }}</h4>
+          <div class="d-flex justify-content-between mt-2">
+            <span class="text-muted">Biaya Pengiriman:</span>
+            <span class="fw-semibold">Rp {{ number_format($shippingCost, 0, ',', '.') }}</span>
+          </div>
           <hr />
-          <div class="mb-3">
+          <div class="d-flex justify-content-between">
+            <span class="fw-bold">Grand Total:</span>
+            <span class="fw-bold text-primary">Rp {{ number_format($grandTotal ?? 0, 0, ',', '.') }}</span>
+          </div>
+          <div class="mb-3 mt-3">
             <span class="badge bg-primary">Note</span>
             <small class="text-muted">Catatan untuk pesanan</small>
-            <div class="form-control mt-2" style="min-height: 100px;">
-              {{ session('order_notes') ? session('order_notes') : 'Tidak ada catatan' }}
-            </div>
+            <div class="form-control mt-2" style="min-height: 100px;">{{ $orderNotes ? $orderNotes : 'Tidak ada catatan' }}</div>
           </div>
-
           <!-- Informasi Kontak -->
           <div class="mb-3">
             <span class="badge bg-primary">Kontak</span>
@@ -196,7 +191,29 @@
               </div>
             </div>
           </div>
-
+          <!-- Alamat Pengiriman -->
+          <div class="mb-3">
+            <span class="badge bg-primary">Alamat Pengiriman</span>
+            <small class="text-muted">Informasi alamat pengiriman</small>
+            <div class="form-control mt-2">
+              @if($shippingCost > 0)
+                @php
+                  $selectedAddressId = session('selected_address_id');
+                  $selectedAddress = null;
+                  if ($selectedAddressId) {
+                      $selectedAddress = \App\Models\Address::find($selectedAddressId);
+                  }
+                @endphp
+                @if($selectedAddress && $selectedAddress->full_address)
+                  Alamat Pengiriman: {{ $selectedAddress->full_address }}
+                @else
+                  <span class="text-danger">Alamat pengiriman belum dipilih! Silakan pilih alamat pada langkah sebelumnya.</span>
+                @endif
+              @else
+                <span class="text-muted">Tidak ada pengiriman (pickup/self pickup)</span>
+              @endif
+            </div>
+          </div>
           <div class="d-flex justify-content-between">
             <a href="{{ route('payment') }}" class="btn btn-secondary me-2 w-50">Back</a>
             <form action="{{ route('confirm.order') }}" method="POST" class="w-50" id="confirmOrderForm">
@@ -209,6 +226,7 @@
       </div>
     </div>
   </div>
+
 
 </body>
 </html>
