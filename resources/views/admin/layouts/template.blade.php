@@ -197,70 +197,100 @@
                     </a>
                 </div>
 
-                <ul class="menu-inner py-3" style="padding-left: 10px; padding-right: 10px; flex-grow: 1; overflow-y: auto;">
-                    <li class="menu-item {{ request()->is('admin/dashboard') ? 'active' : '' }}">
-                        <a href="{{ route('admindashboard') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-home"></i>
-                            <div>Dashboard</div>
-                        </a>
-                    </li>
-                    <li class="menu-item {{ request()->is('admin/all-satuan*') || request()->is('admin/edit-satuan*') || request()->is('admin/add-satuan') ? 'active' : '' }}">
-                        <a href="{{ route('allsatuan') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-table"></i>
-                            <div>Daftar Satuan</div>
-                        </a>
-                    </li>
-                    <li class="menu-item {{ request()->is('admin/all-type*') || request()->is('admin/edit-type*') || request()->is('admin/add-type') ? 'active' : '' }}">
-                        <a href="{{ route('alltype') }}" class="menu-link">
-                            <i class='menu-icon tf-icons bx bx-package'></i>
-                            <div>Daftar Jenis Barang</div>
-                        </a>
-                    </li>
-                    <li class="menu-item {{ request()->is('admin/all-item*') || request()->is('admin/add-items*') || request()->is('admin/keluar-barang') || request()->is('admin/edit-item*') ? 'active' : '' }}">
-                        <a href="{{ route('allitems') }}" class="menu-link">
-                            <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
-                            <div>Daftar Barang</div>
-                        </a>
-                    </li>
-                    <li class="menu-item {{ request()->is('admin/all-produk*') || request()->is('admin/add-produk*') || request()->is('admin/edit-produk') ? 'active' : '' }}">
-                        <a href="{{ route('allproduk') }}" class="menu-link">
-                            <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
-                            <div>Daftar Produk</div>
-                        </a>
-                    </li>
-                    <li class="menu-item {{ request()->is('admin/daftar-supplier*') || request()->is('admin/add-supplier*') || request()->is('admin/edit-supplier') ? 'active' : '' }}">
-                        <a href="{{ route('allsuppliers') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-store"></i>
-                            <div>Data Supplier</div>
-                        </a>
-                    </li>
-                    <li class="menu-item {{ request()->is('admin/daftar-customer*') ? 'active' : '' }}">
-                        <a href="{{ route('allcustomer') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-table"></i>
-                            <div>Daftar Customer</div>
-                        </a>
-                    </li>
-                    <li class="menu-item {{ request()->is('admin/laporanbarang*') || request()->is('admin/detaillaporanbarang*') || request()->is('admin/laporantransaksi') || request()->is('admin/detail-laporantransaksi*') ? 'active' : '' }}">
-                        <a href="{{ route('laporanbarang') }}" class="menu-link">
-                            <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
-                            <div>Laporan</div>
-                        </a>
-                    </li>
-                    <li class="menu-item {{ request()->is('admin/all-transaksi*') ? 'active' : '' }}">
-                        <a href="{{ route('alltransaksi') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-collection"></i>
-                            <div>Data Transaksi</div>
-                        </a>
-                    </li>
-                    {{-- Tombol Logout di bagian bawah sidebar --}}
-                    <li class="menu-item mt-auto" style="padding: 0 20px;">
-                        <a href="{{ route('adminlogout') }}"
-                           class="menu-link" style="background-color: #2f80ed; color: white; text-align: center; border-radius: 8px; padding: 12px; font-weight: bold; font-size: 16px; text-decoration: none;">
-                            Logout
-                        </a>
-                    </li>
-                </ul>
-            </aside>
+  <ul class="menu-inner py-3" style="padding-left: 10px; padding-right: 10px;">
+    <li class="menu-item {{ request()->is('admin/dashboard') ? 'active' : '' }}">
+      <a href="{{ route('admindashboard') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-home"></i>
+        <div>Dashboard</div>
+      </a>
+    </li>
+   <li class="menu-item {{ request()->is('admin/all-satuan*') || request()->is('admin/edit-satuan*') || request()->is('admin/add-satuan') ? 'active' : '' }}">
+      <a href="{{ route('allsatuan') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-table"></i>
+        <div>Daftar Satuan</div>
+      </a>
+    </li>
+    <li class="menu-item {{ request()->is('admin/all-type*') || request()->is('admin/edit-type*') || request()->is('admin/add-type') ? 'active' : '' }}">
+      <a href="{{ route('alltype') }}" class="menu-link">
+        <i class='menu-icon tf-icons bx bx-package'></i>
+        <div>Daftar Jenis Barang</div>
+      </a>
+    </li>
+    <li class="menu-item {{ request()->is('admin/all-ukuran*') || request()->is('admin/edit-ukuran*') || request()->is('admin/add-ukuran') ? 'active' : '' }}">
+      <a href="{{ route('allukuran') }}" class="menu-link">
+        <i class='menu-icon tf-icons bx bx-ruler'></i>
+        <div>Daftar Ukuran</div>
+      </a>
+    </li>
+   <li class="menu-item {{ request()->is('admin/all-item*') || request()->is('admin/add-items*') || request()->is('admin/keluar-barang') || request()->is('admin/edit-item*') ? 'active' : '' }}">
+      <a href="{{ route('allitems') }}" class="menu-link">
+        <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
+        <div>Daftar Barang</div>
+      </a>
+    </li>
+    <li class="menu-item {{ request()->is('admin/all-produk*') || request()->is('admin/add-produk*') || request()->is('admin/edit-produk') ? 'active' : '' }}">
+      <a href="{{ route('allproduk') }}" class="menu-link">
+        <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
+        <div>Daftar Produk</div>
+      </a>
+    </li>
+    <li class="menu-item {{ request()->is('admin/daftar-supplier*') || request()->is('admin/add-supplier*') || request()->is('admin/edit-supplier') ? 'active' : '' }}">
+      <a href="{{ route('allsuppliers') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-store"></i>
+        <div>Data Supplier</div>
+      </a>
+    </li>
+   <li class="menu-item {{ request()->is('admin/daftar-customer*') ? 'active' : '' }}">
+      <a href="{{ route('allcustomer') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-table"></i>
+        <div>Daftar Customer</div>
+      </a>
+    </li>
+    <li class="menu-item {{ request()->is('admin/laporanbarang*') || request()->is('admin/detaillaporanbarang*') || request()->is('admin/laporantransaksi') || request()->is('admin/detail-laporantransaksi*') || request()->is('admin/forecast*') ? 'active' : '' }}">
+      <a href="{{ route('laporanbarang') }}" class="menu-link">
+        <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
+        <div>Laporan</div>
+      </a>
+    </li>
+    <li class="menu-item {{ request()->is('admin/all-transaksi*') ? 'active' : '' }}">
+      <a href="{{ route('alltransaksi') }}" class="menu-link">
+        <i class="menu-icon tf-icons bx bx-collection"></i>
+        <div>Data Transaksi</div>
+      </a>
+    </li>
+    
+  </ul>
+ <!-- Tombol Logout di bagian bawah sidebar -->
+<div style="position: absolute; bottom: 20px; left: 0; width: 100%; padding: 0 20px;">
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+        @csrf
+    </form>
+
+    <a href="#" onclick="confirmLogout()"
+        style="display: block; width: 100%; background-color: #2f80ed; color: white; text-align: center; border-radius: 8px; padding: 12px; font-weight: bold; font-size: 16px; text-decoration: none;">
+        Logout
+    </a>
+</div>
+
+<script>
+    function confirmLogout() {
+        Swal.fire({
+            title: 'Apakah kamu yakin ingin keluar?',
+            text: "Kamu akan keluar dari sesi ini.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, keluar!',
+            cancelButtonText: 'Tidak'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('logout-form').submit();
+            }
+        })
+    }
+</script>
+</aside>
 
             <div class="layout-page" style="background-color: rgb(240, 246, 250);">
 

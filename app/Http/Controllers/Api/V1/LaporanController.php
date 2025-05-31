@@ -30,6 +30,25 @@ class LaporanController extends Controller
             })
             ->get();
 
+        // Mapping data laporan ke array associative untuk table dinamis
+        $dataLaporan = [];
+
+        foreach ($laporanbarang as $laporan) {
+            $dataLaporan[] = [
+                'No' => $laporan->IdLaporan,
+                'Nama Barang' => optional($laporan->databarang)->NamaBarang,
+                'Nama Supplier' => optional($laporan->supplier)->NamaSupplier,
+                'Qty Masuk' => optional($laporan->detailBarangMasuk)->QtyMasuk ?? 0,
+                'Qty Keluar' => optional($laporan->detailBarangKeluar)->QtyKeluar ?? 0,
+                'Sisa Stok' => (optional($laporan->databarang)->JumlahStok ?? 0) . ' ' . (optional($laporan->databarang?->satuan)->Satuan ?? ''),
+                'Harga Satuan' => optional($laporan->detailBarangMasuk)->HargaSatuan ?? '-',
+                'Sub Total' => optional($laporan->detailBarangMasuk)->SubTotal ?? '-',
+                'Jenis Barang' => optional($laporan->databarang?->jenisBarang)->JenisBarang ?? '-',
+                'Id Masuk' => optional($laporan->detailBarangMasuk)->IdMasuk ?? '-',
+                'Id Keluar' => optional($laporan->detailBarangKeluar)->IdKeluar ?? '-',
+            ];
+        }
+
         $databarang = Items::all();
         $supplier = Supplier::all();
         $detailBarangMasuk = DetailMasuk::all();
@@ -39,13 +58,14 @@ class LaporanController extends Controller
 
         return view('admin.laporanbarang', [
             'laporanbarang' => $laporanbarang,
+            'dataLaporan' => $dataLaporan,
             'databarang' => $databarang,
             'supplier' => $supplier,
             'detailBarangMasuk' => $detailBarangMasuk,
             'detailBarangKeluar' => $detailBarangKeluar,
             'barangmasuk' => $barangmasuk,
             'barangkeluar' => $barangkeluar,
-            'search' => $request->input('search'), // jika ada search input
+            'search' => $request->input('search'),
         ]);
     }
 
