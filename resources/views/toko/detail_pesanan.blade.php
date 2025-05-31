@@ -34,7 +34,11 @@
 
             <div class="row mb-3">
                 <div class="col-sm-4 fw-semibold text-secondary">Alamat Pembeli</div>
-                <div class="col-sm-8">{{ $pesanan->user ? $pesanan->user->alamat : '-' }}</div>
+                <div class="col-sm-8">
+                    {{ $pesanan->address ? $pesanan->address->full_address : '-' }}
+
+                </div>
+
             </div>
 
             <div class="row mb-3">

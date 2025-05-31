@@ -4,6 +4,7 @@
 CIME | Halaman Dashboard E-Commerce
     @endsection
     @section('js')
+    
         <!-- Load jQuery terlebih dahulu -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -14,7 +15,6 @@ CIME | Halaman Dashboard E-Commerce
         <!-- Load ApexCharts setelahnya -->
         <script src="{{ asset('assets/apexcharts/dist/apexcharts.js') }}"></script>
         <link rel="stylesheet" href="{{ asset('assets/apexcharts/dist/apexcharts.css') }}" />
-        <link rel="shortcut icon" href="{{ asset('dashboard2/assets/img/icons/logocime.png') }}" type="image/png" />
         <link rel="stylesheet" href="{{ URL::asset('assets/apexcharts/dist/apexcharts.css') }}">
         <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
         <script src="{{ URL('assets/apexcharts/dist/apexcharts.min.js') }}"></script>
@@ -138,15 +138,8 @@ CIME | Halaman Dashboard E-Commerce
                     <h5 class="fw-bold mb-1" style="color: #2B3674;">{{ $item->NamaProduk }}</h5>
                     <p class="text-muted mb-2">Digital Printing</p>
                     <div class="d-flex justify-content-between align-items-center mt-3">
-                        <span class="fw-bold" style="color: #4318FF;">Rp {{ number_format($minHarga, 0, ',', '.') }}</span>
-                        <button type="button" class="btn pesan-btn" 
-                            data-id="{{ $item->IdProduk }}" 
-                            data-nama="{{ $item->NamaProduk }}" 
-                            data-harga="{{ $minHarga }}" 
-                            data-img="{{ $item->Img }}" 
-                            style="background-color: #1D1E94; color: white; border-radius: 30px; padding: 5px 20px;">
-                            Pesan
-                        </button>
+                            <span class="fw-bold" style="color: #4318FF;">Rp {{ number_format($minHarga, 0, ',', '.') }}</span>
+                            <a href="{{ route('detail.produk', ['id' => $item->IdProduk]) }}" class="btn" style="background-color: #1D1E94; color: white; border-radius: 30px; padding: 5px 20px;">Pesan</a>
                     </div>
                 </div>
             </div>

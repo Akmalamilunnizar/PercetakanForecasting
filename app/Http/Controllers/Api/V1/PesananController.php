@@ -17,8 +17,9 @@ class PesananController extends Controller
     }
     public function show($id)
     {
-        $pesanan = Transaksi::with(['produk', 'user'])->findOrFail($id);
+        $pesanan = Transaksi::with(['produk', 'user', 'address'])->findOrFail($id);
         return view('nama-folder.detail-pesanan', compact('pesanan'));
     }
+
 
 }

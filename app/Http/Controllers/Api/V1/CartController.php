@@ -19,47 +19,48 @@ class CartController extends Controller
     // Menambahkan item ke keranjang
     public function add(Request $request)
     {
-        // Validate file if present
-        if ($request->hasFile('design_file')) {
-            $request->validate([
-                'design_file' => 'file|mimes:jpg,jpeg,png,webp,pdf,rar,zip|max:10240', // 10240 KB = 10 MB
-            ], [
-                'design_file.mimes' => 'File harus berupa jpg, jpeg, png, webp, pdf, rar, atau zip.',
-                'design_file.max' => 'Ukuran file maksimal 10MB.',
-            ]);
-        }
+        try {   
+            // Validate file if present
+            if ($request->hasFile('design_file')) {
+                $request->validate([
+                    'design_file' => 'file|mimes:jpg,jpeg,png,webp,pdf,rar,zip|max:10240', // 10240 KB = 10 MB
+                ], [
+                    'design_file.mimes' => 'File harus berupa jpg, jpeg, png, webp, pdf, rar, atau zip.',
+                    'design_file.max' => 'Ukuran file maksimal 10MB.',
+                ]);
+            }
 
-        $cart = session()->get('cart', []);
+            $cart = session()->get('cart', []);
 
-        $productId = $request->id;
-        $ukuran = $request->ukuran; // ukuran id or custom string
-        $ukuran_label = $request->ukuran_label ?? null; // label for display (optional)
-        // Make a unique key for product+ukuran
-        $cartKey = $productId . '|' . $ukuran;
+            $productId = $request->id;
+            $ukuran = $request->ukuran; // ukuran id or custom string
+            $ukuran_label = $request->ukuran_label ?? null; // label for display (optional)
+            // Make a unique key for product+ukuran
+            $cartKey = $productId . '|' . $ukuran;
 
-        if (isset($cart[$cartKey])) {
-            // Jika produk+ukuran sudah ada, tambahkan jumlah
-            $cart[$cartKey]['quantity']++;
-        } else {
-            // Jika produk+ukuran belum ada, tambahkan baru
-            $cart[$cartKey] = [
-                "id" => $request->id,
-                "quantity" => $request->quantity,
-                "nama" => $request->nama,
-                "harga" => $request->harga,
-                "img" => $request->img,
-                "ukuran" => $ukuran,
-                "ukuran_label" => $ukuran_label,
-                "subtotal" => $request->subtotal,
-            ];
-        }
+            if (isset($cart[$cartKey])) {
+                // Jika produk+ukuran sudah ada, tambahkan jumlah
+                $cart[$cartKey]['quantity']++;
+            } else {
+                // Jika produk+ukuran belum ada, tambahkan baru
+                $cart[$cartKey] = [
+                    "id" => $request->id,
+                    "quantity" => $request->quantity,
+                    "nama" => $request->nama,
+                    "harga" => $request->harga,
+                    "img" => $request->img,
+                    "ukuran" => $ukuran,
+                    "ukuran_label" => $ukuran_label,
+                    "subtotal" => $request->subtotal,
+                ];
+            }
 
-        // Handle file upload
-        if ($request->hasFile('design_file')) {
-            $file = $request->file('design_file');
-            $filePath = $file->store('designs', 'public');
-            $cart[$cartKey]['design_file'] = $filePath;
-        }
+            // Handle file upload
+            if ($request->hasFile('design_file')) {
+                $file = $request->file('design_file');
+                $filePath = $file->store('designs', 'public');
+                $cart[$cartKey]['design_file'] = $filePath;
+            }
 
             session()->put('cart', $cart);
 
