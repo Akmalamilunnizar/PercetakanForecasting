@@ -308,163 +308,222 @@ $(document).ready(function () {
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const mainImage = document.getElementById('main-image');
-        const thumbnailScrollWrapper = document.getElementById('thumbnailScrollWrapper');
+        const sizeSelect = document.getElementById('ukuran_produk_select');
+        const jumlahInput = document.getElementById('jumlahOrderInput');
+        const plusButton = document.getElementById('plusButton');
+        const minusButton = document.getElementById('minusButton');
+        const hargaSatuanDisplay = document.getElementById('hargaSatuanDisplay');
+        const summaryTotalPembayaran = document.getElementById('summaryTotalPembayaran');
+        const summaryJumlahOrder = document.getElementById('summaryJumlahOrder');
+
+        // Modal elements
         const beliSekarangBtn = document.getElementById('beliSekarangBtn');
         const beliSekarangModal = document.getElementById('beliSekarangModal');
         const closeButton = document.querySelector('.close-button');
         const batalBeliBtn = document.getElementById('batalBeliBtn');
-
-        // Quantity calculation elements
-        const jumlahOrderInput = document.getElementById('jumlahOrderInput');
-        const plusButton = document.getElementById('plusButton');
-        const minusButton = document.getElementById('minusButton');
-        const summaryJumlahOrder = document.getElementById('summaryJumlahOrder');
-        const summaryTotalPembayaran = document.getElementById('summaryTotalPembayaran');
-        const hargaSatuanDisplay = document.getElementById('hargaSatuanDisplay');
-
-        // Input elements for modal
-        const ukuranProdukSelect = document.getElementById('ukuran_produk_select');
         const ukuranProdukCustom = document.getElementById('ukuran_produk_custom');
         const catatanInput = document.getElementById('catatan');
         const uploadFileInput = document.getElementById('uploadFile');
         const nomorHPInput = document.getElementById('nomorHP');
-
-        // Modal display elements
         const modalProductImage = document.getElementById('modalProductImage');
         const modalUkuran = document.getElementById('modalUkuran');
         const modalCatatan = document.getElementById('modalCatatan');
         const modalNomorHP = document.getElementById('modalNomorHP');
         const modalHargaSatuan = document.getElementById('modalHargaSatuan');
         const modalJumlah = document.getElementById('modalJumlah');
-        const modalDiskonPersen = document.getElementById('modalDiskonPersen');
-        const modalDiskonNominal = document.getElementById('modalDiskonNominal');
         const modalSubtotal = document.getElementById('modalSubtotal');
+        const modalBeliSekarangBtn = document.getElementById('customModalBeliSekarangBtn');
 
-
-        // Get the initial product price and discount from your Blade variables
-        const basePrice = {{ $produk->HargaProduk }};
-        const discountPercentage = {{ $produk->diskon ?? 0 }};
-
-        function formatRupiah(amount) {
-            return new Intl.NumberFormat('id-ID', {
-                style: 'currency',
-                currency: 'IDR',
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-            }).format(amount).replace('Rp', ''); // Remove 'Rp' as it's added manually
+        function updateHargaDanTotal() {
+            const selectedOption = sizeSelect.options[sizeSelect.selectedIndex];
+            const harga = parseInt(selectedOption.getAttribute('data-harga')) || 0;
+            const jumlah = parseInt(jumlahInput.value) || 1;
+            if (hargaSatuanDisplay) hargaSatuanDisplay.innerText = harga.toLocaleString('id-ID');
+            if (summaryTotalPembayaran) summaryTotalPembayaran.innerText = (harga * jumlah).toLocaleString('id-ID');
+            if (summaryJumlahOrder) summaryJumlahOrder.innerText = jumlah;
+            // Update modal if open
+            if (modalHargaSatuan && modalSubtotal && modalJumlah) {
+                modalHargaSatuan.textContent = harga.toLocaleString('id-ID');
+                modalJumlah.textContent = jumlah;
+                modalSubtotal.textContent = (harga * jumlah).toLocaleString('id-ID');
+            }
         }
 
-        function updateTotal() {
-            let quantity = parseInt(jumlahOrderInput.value);
-            if (isNaN(quantity) || quantity < 1) {
-                quantity = 1;
-                jumlahOrderInput.value = 1;
+        function handleCustomUkuranRequired() {
+            if (sizeSelect.value === 'custom' && ukuranProdukCustom) {
+                ukuranProdukCustom.required = true;
+                ukuranProdukCustom.classList.remove('d-none');
+            } else if (ukuranProdukCustom) {
+                ukuranProdukCustom.required = false;
+                ukuranProdukCustom.classList.add('d-none');
             }
-
-            // Calculate price after discount
-            let priceAfterDiscount = basePrice;
-            let discountAmount = 0;
-            if (discountPercentage > 0) {
-                discountAmount = basePrice * discountPercentage / 100;
-                priceAfterDiscount = basePrice - discountAmount;
-            }
-
-            const totalPrice = priceAfterDiscount * quantity;
-
-            summaryJumlahOrder.textContent = quantity;
-            summaryTotalPembayaran.textContent = formatRupiah(totalPrice);
-            hargaSatuanDisplay.textContent = formatRupiah(priceAfterDiscount); // Update harga satuan display
         }
-
-        // Event Listeners for quantity buttons
-        plusButton.addEventListener('click', () => {
-            jumlahOrderInput.value = parseInt(jumlahOrderInput.value) + 1;
-            updateTotal();
+        sizeSelect.addEventListener('change', function() {
+            handleCustomUkuranRequired();
+            updateHargaDanTotal();
         });
+        // Initial state
+        handleCustomUkuranRequired();
 
-        minusButton.addEventListener('click', () => {
-            if (parseInt(jumlahOrderInput.value) > 1) {
-                jumlahOrderInput.value = parseInt(jumlahOrderInput.value) - 1;
-                updateTotal();
-            }
-        });
-
-        jumlahOrderInput.addEventListener('input', updateTotal);
-
-        // Initial update when the page loads
-        updateTotal();
-
-
-        if (mainImage && thumbnailScrollWrapper) {
-            const mainImageWidth = mainImage.offsetWidth;
-            thumbnailScrollWrapper.style.maxWidth = mainImageWidth + 'px';
-            thumbnailScrollWrapper.style.overflowX = 'auto';
+        jumlahInput.addEventListener('input', updateHargaDanTotal);
+        if (plusButton) {
+            plusButton.addEventListener('click', function () {
+                jumlahInput.value = parseInt(jumlahInput.value) + 1;
+                updateHargaDanTotal();
+            });
         }
+        if (minusButton) {
+            minusButton.addEventListener('click', function () {
+                if (parseInt(jumlahInput.value) > 1) {
+                    jumlahInput.value = parseInt(jumlahInput.value) - 1;
+                    updateHargaDanTotal();
+                }
+            });
+        }
+        // Initial update
+        updateHargaDanTotal();
 
-        // Ubah display modal dengan menambah/menghapus class "show"
-        beliSekarangBtn.addEventListener('click', function () {
-            // Populate modal with current values
-            const selectedUkuran = ukuranProdukSelect.value === 'custom' ? ukuranProdukCustom.value : ukuranProdukSelect.value;
-            const catatan = catatanInput.value || '-'; // Display '-' if empty
-            const nomorHP = nomorHPInput.value || '-'; // Display '-' if empty
-            const quantity = parseInt(jumlahOrderInput.value);
-
-            let priceAfterDiscount = basePrice;
-            let discountAmount = 0;
-            if (discountPercentage > 0) {
-                discountAmount = basePrice * discountPercentage / 100;
-                priceAfterDiscount = basePrice - discountAmount;
+        // Modal logic for Beli Sekarang
+        if (beliSekarangBtn && beliSekarangModal) {
+            beliSekarangBtn.addEventListener('click', function () {
+                // Update modal fields with current values
+                const selectedOption = sizeSelect.options[sizeSelect.selectedIndex];
+                const harga = parseInt(selectedOption.getAttribute('data-harga')) || 0;
+                const jumlah = parseInt(jumlahInput.value) || 1;
+                const catatan = catatanInput ? catatanInput.value : '-';
+                const nomorHP = nomorHPInput ? nomorHPInput.value : '-';
+                modalUkuran.textContent = sizeSelect.value === 'custom' && ukuranProdukCustom ? ukuranProdukCustom.value : selectedOption.text;
+                if (modalCatatan) modalCatatan.textContent = catatan;
+                if (modalNomorHP) modalNomorHP.textContent = nomorHP;
+                if (modalHargaSatuan) modalHargaSatuan.textContent = harga.toLocaleString('id-ID');
+                if (modalJumlah) modalJumlah.textContent = jumlah;
+                if (modalSubtotal) modalSubtotal.textContent = (harga * jumlah).toLocaleString('id-ID');
+                // Handle uploaded image
+                if (uploadFileInput && uploadFileInput.files.length > 0) {
+                    const uploadedFile = uploadFileInput.files[0];
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        if (modalProductImage) modalProductImage.src = e.target.result;
+                    };
+                    reader.readAsDataURL(uploadedFile);
+                } else if (modalProductImage) {
+                    modalProductImage.src = "{{ asset('storage/' . $produk->Img) }}";
+                }
+                beliSekarangModal.classList.add("show");
+                if (modalBeliSekarangBtn && uploadFileInput) {
+                    modalBeliSekarangBtn.disabled = uploadFileInput.files.length === 0;
+                }
+            });
+            if (closeButton) closeButton.addEventListener('click', function () { beliSekarangModal.classList.remove("show"); });
+            if (batalBeliBtn) batalBeliBtn.addEventListener('click', function () { beliSekarangModal.classList.remove("show"); });
+            window.addEventListener('click', function (event) {
+                if (event.target === beliSekarangModal) {
+                    beliSekarangModal.classList.remove("show");
+                }
+            });
+            // Modal Pesan Sekarang button logic
+            if (modalBeliSekarangBtn) {
+                modalBeliSekarangBtn.addEventListener('click', function() {
+                    const selectedOption = sizeSelect.options[sizeSelect.selectedIndex];
+                    const harga = parseInt(selectedOption.getAttribute('data-harga')) || 0;
+                    const jumlah = parseInt(jumlahInput.value) || 1;
+                    if (harga === 0) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Harga Tidak Valid',
+                            text: 'Silakan pilih ukuran yang benar. Produk dengan harga 0 tidak dapat dipesan.'
+                        });
+                        modalBeliSekarangBtn.disabled = false;
+                        modalBeliSekarangBtn.innerHTML = 'Pesan Sekarang';
+                        return;
+                    }
+                    var productId = '{{ $produk->IdProduk }}';
+                    var productName = '{{ $produk->NamaProduk }}';
+                    var size = sizeSelect.value;
+                    var ukuranLabel = selectedOption.text;
+                    var fileInput = uploadFileInput;
+                    var designFile = fileInput && fileInput.files.length > 0 ? fileInput.files[0] : null;
+                    var subtotal = harga * jumlah;
+                    var customUkuran = '';
+                    if (sizeSelect.value === 'custom' && ukuranProdukCustom) {
+                        customUkuran = ukuranProdukCustom.value;
+                        if (!customUkuran) {
+                            Swal.fire({
+                                icon: 'warning',
+                                title: 'Ukuran custom harus diisi!',
+                                text: 'Silakan masukkan ukuran custom.'
+                            });
+                            modalBeliSekarangBtn.disabled = false;
+                            modalBeliSekarangBtn.innerHTML = 'Pesan Sekarang';
+                            return;
+                        }
+                    }
+                    var formData = new FormData();
+                    formData.append('_token', '{{ csrf_token() }}');
+                    formData.append('id', productId);
+                    formData.append('nama', productName);
+                    formData.append('harga', harga);
+                    formData.append('img', '{{ $produk->Img }}');
+                    formData.append('quantity', jumlah);
+                    formData.append('ukuran', size);
+                    formData.append('ukuran_label', ukuranLabel);
+                    formData.append('subtotal', subtotal);
+                    formData.append('custom_ukuran', customUkuran);
+                    if (designFile) {
+                        formData.append('design_file', designFile);
+                    }
+                    // Show loading state
+                    modalBeliSekarangBtn.disabled = true;
+                    modalBeliSekarangBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Memproses...';
+                    // Add to cart via AJAX
+                    fetch('{{ route("cart.add") }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'Accept': 'application/json'
+                        },
+                        body: formData
+                    })
+                    .then(async response => {
+                        if (response.ok) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Berhasil!',
+                                text: 'Produk berhasil ditambahkan ke keranjang',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(() => {
+                                window.location.href = '{{ route("cart") }}';
+                            });
+                        } else {
+                            let errorMsg = 'Terjadi kesalahan saat menambahkan ke keranjang';
+                            if (response.status === 422) {
+                                const data = await response.json();
+                                errorMsg = Object.values(data.errors).join('<br>');
+                            }
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                html: errorMsg
+                            });
+                            modalBeliSekarangBtn.disabled = false;
+                            modalBeliSekarangBtn.innerHTML = 'Pesan Sekarang';
+                        }
+                    })
+                    .catch(async error => {
+                        let errorMsg = error.message || 'Terjadi kesalahan saat menambahkan ke keranjang';
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            html: errorMsg
+                        });
+                        modalBeliSekarangBtn.disabled = false;
+                        modalBeliSekarangBtn.innerHTML = 'Pesan Sekarang';
+                    });
+                });
             }
-            const totalPrice = priceAfterDiscount * quantity;
-
-
-            modalUkuran.textContent = selectedUkuran;
-            modalCatatan.textContent = catatan;
-            modalNomorHP.textContent = nomorHP;
-            modalHargaSatuan.textContent = formatRupiah(basePrice); // Original base price
-            modalJumlah.textContent = quantity;
-            modalDiskonPersen.textContent = discountPercentage > 0 ? `${discountPercentage}%` : '0%';
-            modalDiskonNominal.textContent = formatRupiah(discountAmount * quantity); // Total diskon
-            modalSubtotal.textContent = formatRupiah(totalPrice);
-
-            // Handle uploaded image
-            if (uploadFileInput.files.length > 0) {
-                const uploadedFile = uploadFileInput.files[0];
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    modalProductImage.src = e.target.result;
-                };
-                reader.readAsDataURL(uploadedFile);
-            } else {
-                // If no file uploaded, revert to the original product image
-                modalProductImage.src = "{{ asset('storage/' . $produk->Img) }}";
-            }
-
-
-            beliSekarangModal.classList.add("show");
-        });
-
-        closeButton.addEventListener('click', function () {
-            beliSekarangModal.classList.remove("show");
-        });
-
-        batalBeliBtn.addEventListener('click', function () {
-            beliSekarangModal.classList.remove("show");
-        });
-
-        window.addEventListener('click', function (event) {
-            if (event.target === beliSekarangModal) {
-                beliSekarangModal.classList.remove("show");
-                
-            }
-        });
-
-
+        }
     });
-
-    
-
 </script>
 
 <script>
@@ -1330,294 +1389,42 @@ $(document).ready(function () {
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const mainImage = document.getElementById('main-image');
-        const thumbnailScrollWrapper = document.getElementById('thumbnailScrollWrapper');
-        const beliSekarangBtn = document.getElementById('beliSekarangBtn');
-        const beliSekarangModal = document.getElementById('beliSekarangModal');
-        const closeButton = document.querySelector('.close-button');
-        const batalBeliBtn = document.getElementById('batalBeliBtn');
-
-        // Quantity calculation elements
-        const jumlahOrderInput = document.getElementById('jumlahOrderInput');
+        const sizeSelect = document.getElementById('ukuran_produk_select');
+        const jumlahInput = document.getElementById('jumlahOrderInput');
         const plusButton = document.getElementById('plusButton');
         const minusButton = document.getElementById('minusButton');
-        const summaryJumlahOrder = document.getElementById('summaryJumlahOrder');
-        const summaryTotalPembayaran = document.getElementById('summaryTotalPembayaran');
         const hargaSatuanDisplay = document.getElementById('hargaSatuanDisplay');
-
-        // Input elements for modal
-        const ukuranProdukSelect = document.getElementById('ukuran_produk_select');
-        const ukuranProdukCustom = document.getElementById('ukuran_produk_custom');
-        const uploadFileInput = document.getElementById('uploadFile');
-        const nomorHPInput = document.getElementById('nomorHP');
-
-        // Modal display elements
-        const modalProductImage = document.getElementById('modalProductImage');
-        const modalUkuran = document.getElementById('modalUkuran');
-        const modalNomorHP = document.getElementById('modalNomorHP');
-        const modalHargaSatuan = document.getElementById('modalHargaSatuan');
-        const modalJumlah = document.getElementById('modalJumlah');
-        const modalSubtotal = document.getElementById('modalSubtotal');
-
-
-        // Get the initial product price and discount from your Blade variables
-        const basePrice = Number('{{ $produk->HargaProduk ?? 0 }}');
-
-        function formatRupiah(amount) {
-            return new Intl.NumberFormat('id-ID', {
-                style: 'currency',
-                currency: 'IDR',
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-            }).format(amount).replace('Rp', ''); // Remove 'Rp' as it's added manually
-        }
+        const summaryTotalPembayaran = document.getElementById('summaryTotalPembayaran');
+        const summaryJumlahOrder = document.getElementById('summaryJumlahOrder');
 
         function updateHargaDanTotal() {
-            var select = document.getElementById('ukuran_produk_select');
-            var harga = 0;
-            if (select && select.selectedIndex >= 0) {
-                harga = parseInt(select.options[select.selectedIndex].getAttribute('data-harga')) || 0;
-            }
-
-            var jumlahInput = document.getElementById('jumlahOrderInput');
-            var jumlah = parseInt(jumlahInput.value) || 1;
-
-            // Calculate total
-            var total = harga * jumlah;
-
-            // Update all price displays
-            document.getElementById('displayHargaSatuan').innerText = harga.toLocaleString('id-ID');
-            var hargaSatuanDisplay = document.getElementById('hargaSatuanDisplay');
-            if (hargaSatuanDisplay) {
-                hargaSatuanDisplay.innerText = harga.toLocaleString('id-ID');
-            }
-
-            // Update total pembayaran
-            var summaryTotalPembayaran = document.getElementById('summaryTotalPembayaran');
-            if (summaryTotalPembayaran) {
-                summaryTotalPembayaran.innerText = total.toLocaleString('id-ID');
-            }
-
-            // Update jumlah order
-            var summaryJumlahOrder = document.getElementById('summaryJumlahOrder');
-            if (summaryJumlahOrder) {
-                summaryJumlahOrder.innerText = jumlah;
-            }
-
-            // Disable Beli Sekarang if harga is 0
-            var beliBtn = document.getElementById('beliSekarangBtn');
-            if (beliBtn) {
-                beliBtn.disabled = (harga === 0);
-            }
+            const selectedOption = sizeSelect.options[sizeSelect.selectedIndex];
+            const harga = parseInt(selectedOption.getAttribute('data-harga')) || 0;
+            const jumlah = parseInt(jumlahInput.value) || 1;
+            if (hargaSatuanDisplay) hargaSatuanDisplay.innerText = harga.toLocaleString('id-ID');
+            if (summaryTotalPembayaran) summaryTotalPembayaran.innerText = (harga * jumlah).toLocaleString('id-ID');
+            if (summaryJumlahOrder) summaryJumlahOrder.innerText = jumlah;
         }
 
-        // Event Listeners for quantity buttons
-        plusButton.addEventListener('click', () => {
-            jumlahOrderInput.value = parseInt(jumlahOrderInput.value) + 1;
-            updateHargaDanTotal();
-        });
-
-        minusButton.addEventListener('click', () => {
-            if (parseInt(jumlahOrderInput.value) > 1) {
-                jumlahOrderInput.value = parseInt(jumlahOrderInput.value) - 1;
+        sizeSelect.addEventListener('change', updateHargaDanTotal);
+        jumlahInput.addEventListener('input', updateHargaDanTotal);
+        if (plusButton) {
+            plusButton.addEventListener('click', function () {
+                jumlahInput.value = parseInt(jumlahInput.value) + 1;
                 updateHargaDanTotal();
-            }
-        });
-
-        jumlahOrderInput.addEventListener('input', updateHargaDanTotal);
-
-        // Initial update when the page loads
-        updateHargaDanTotal();
-
-
-        if (mainImage && thumbnailScrollWrapper) {
-            const mainImageWidth = mainImage.offsetWidth;
-            thumbnailScrollWrapper.style.maxWidth = mainImageWidth + 'px';
-            thumbnailScrollWrapper.style.overflowX = 'auto';
-        }
-
-        // Ubah display modal dengan menambah/menghapus class "show"
-        beliSekarangBtn.addEventListener('click', function () {
-            // Get selected size price
-            let harga = 0;
-            if (ukuranProdukSelect.value === 'custom') {
-                harga = parseInt(ukuranProdukCustom.value) || 0;
-            } else {
-                harga = parseInt(ukuranProdukSelect.options[ukuranProdukSelect.selectedIndex].getAttribute('data-harga')) || 0;
-            }
-
-            // Get quantity
-            var jumlahOrderInputEl = document.getElementById('jumlahOrderInput');
-            var quantity = jumlahOrderInputEl ? parseInt(jumlahOrderInputEl.value) || 1 : 1;
-
-            // Update modal fields
-            var ukuranLabel = ukuranProdukSelect.options[ukuranProdukSelect.selectedIndex].text;
-            modalUkuran.textContent = ukuranProdukSelect.value === 'custom' ? ukuranProdukCustom.value : ukuranProdukSelect.options[ukuranProdukSelect.selectedIndex].text;
-            modalNomorHP.textContent = nomorHPInput.value || '-';
-            modalHargaSatuan.textContent = harga.toLocaleString('id-ID');
-            modalJumlah.textContent = quantity;
-            modalSubtotal.textContent = harga * quantity;
-
-            // Handle uploaded image
-            if (uploadFileInput.files.length > 0) {
-                const uploadedFile = uploadFileInput.files[0];
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    modalProductImage.src = e.target.result;
-                };
-                reader.readAsDataURL(uploadedFile);
-            } else {
-                modalProductImage.src = "{{ asset('storage/' . $produk->Img) }}";
-            }
-
-            beliSekarangModal.classList.add("show");
-
-            var fileInput = document.getElementById('uploadFile');
-            var pesanBtn = document.getElementById('customModalBeliSekarangBtn');
-            if (fileInput && pesanBtn) {
-                pesanBtn.disabled = fileInput.files.length === 0;
-            }
-        });
-
-        closeButton.addEventListener('click', function () {
-            beliSekarangModal.classList.remove("show");
-        });
-
-        batalBeliBtn.addEventListener('click', function () {
-            beliSekarangModal.classList.remove("show");
-        });
-
-        window.addEventListener('click', function (event) {
-            if (event.target === beliSekarangModal) {
-                beliSekarangModal.classList.remove("show");
-            }
-        });
-
-        // Add click handler for the modal's Beli Sekarang button
-        const modalBeliSekarangBtn = document.getElementById('customModalBeliSekarangBtn');
-        if (modalBeliSekarangBtn) {
-            modalBeliSekarangBtn.addEventListener('click', function() {
-                var select = document.getElementById('ukuran_produk_select');
-                var harga = select.options[select.selectedIndex].getAttribute('data-harga');
-                harga = parseInt(harga) || 0;
-
-                if (harga === 0) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Harga Tidak Valid',
-                        text: 'Silakan pilih ukuran yang benar. Produk dengan harga 0 tidak dapat dipesan.'
-                    });
-                    modalBeliSekarangBtn.disabled = false;
-                    modalBeliSekarangBtn.innerHTML = 'Beli Sekarang';
-                    return;
-                }
-
-                var productId = '{{ $produk->IdProduk }}';
-                var productName = '{{ $produk->NamaProduk }}';
-                var quantity = parseInt(document.getElementById('jumlahOrderInput').value) || 1;
-                var size = select.value;
-                var ukuranLabel = select.options[select.selectedIndex].text;
-                var fileInput = document.getElementById('uploadFile');
-                var designFile = fileInput.files[0];
-
-                var subtotal = harga * quantity;
-                var formData = new FormData();
-                formData.append('_token', '{{ csrf_token() }}');
-                formData.append('id', productId);
-                formData.append('nama', productName);
-                formData.append('harga', harga);
-                formData.append('img', '{{ $produk->Img }}');
-                formData.append('quantity', quantity);
-                formData.append('ukuran', size);
-                formData.append('ukuran_label', ukuranLabel);
-                formData.append('subtotal', subtotal);
-                if (designFile) {
-                    formData.append('design_file', designFile);
-                }
-
-                // Show loading state
-                modalBeliSekarangBtn.disabled = true;
-                modalBeliSekarangBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Memproses...';
-
-                // Add to cart via AJAX
-                fetch('{{ route("cart.add") }}', {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json'
-                    },
-                    body: formData
-                })
-                .then(async response => {
-                    if (response.ok) {
-                        // Show success message
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil!',
-                            text: 'Produk berhasil ditambahkan ke keranjang',
-                            showConfirmButton: false,
-                            timer: 1500
-                        }).then(() => {
-                            // Redirect to cart page
-                            window.location.href = '{{ route("cart") }}';
-                        });
-                    } else {
-                        let errorMsg = 'Terjadi kesalahan saat menambahkan ke keranjang';
-                        if (response.status === 422) {
-                            const data = await response.json();
-                            errorMsg = Object.values(data.errors).join('<br>');
-                        }
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            html: errorMsg
-                        });
-                        modalBeliSekarangBtn.disabled = false;
-                        modalBeliSekarangBtn.innerHTML = 'Beli Sekarang';
-                    }
-                })
-                .catch(async error => {
-                    let errorMsg = error.message || 'Terjadi kesalahan saat menambahkan ke keranjang';
-                    if (error.response && error.response.status === 422) {
-                        const data = await error.response.json();
-                        errorMsg = Object.values(data.errors).join('<br>');
-                    }
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        html: errorMsg
-                    });
-                    modalBeliSekarangBtn.disabled = false;
-                    modalBeliSekarangBtn.innerHTML = 'Beli Sekarang';
-                });
             });
         }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            var fileInput = document.getElementById('uploadFile');
-            var pesanBtn = document.getElementById('customModalBeliSekarangBtn');
-            if (fileInput && pesanBtn) {
-                fileInput.addEventListener('change', function() {
-                    pesanBtn.disabled = fileInput.files.length === 0;
-                });
-                // Also check on page load
-                pesanBtn.disabled = fileInput.files.length === 0;
-            }
-        });
-
-        document.getElementById('jumlahOrderInput').addEventListener('input', function() {
-            // recalculate subtotal and update modalSubtotal.innerText
-            let harga = 0;
-            if (ukuranProdukSelect.value === 'custom') {
-                harga = parseInt(ukuranProdukCustom.value) || 0;
-            } else {
-                harga = parseInt(ukuranProdukSelect.options[ukuranProdukSelect.selectedIndex].getAttribute('data-harga')) || 0;
-            }
-            let quantity = parseInt(this.value) || 1;
-            document.getElementById('modalSubtotal').innerText = harga * quantity;
-        });
+        if (minusButton) {
+            minusButton.addEventListener('click', function () {
+                if (parseInt(jumlahInput.value) > 1) {
+                    jumlahInput.value = parseInt(jumlahInput.value) - 1;
+                    updateHargaDanTotal();
+                }
+            });
+        }
+        // Initial update
+        updateHargaDanTotal();
     });
-
 </script>
 
 <script>
@@ -1766,7 +1573,7 @@ $(document).ready(function () {
             formData.append('img', productImg);
             formData.append('quantity', quantity);
             formData.append('ukuran', size);
-            formData.append('ukuran_label', sizeSelect.options[sizeSelect.selectedIndex].text);
+            formData.append('ukuran_label', sizeSelect.value === 'custom' ? customInput.value : sizeSelect.options[sizeSelect.selectedIndex].text);
             formData.append('subtotal', subtotal);
             if (designFile) {
                 formData.append('design_file', designFile);

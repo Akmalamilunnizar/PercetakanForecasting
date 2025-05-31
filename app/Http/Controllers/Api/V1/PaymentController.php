@@ -63,12 +63,12 @@ class PaymentController extends Controller
             }
 
             // Add shipping cost if exists
-            $shipping = session('shipping');
-            if ($shipping && isset($shipping['cost'])) {
-                $total += $shipping['cost'];
+            $shippingCost = session('shipping_cost', 0);
+            if ($shippingCost > 0) {
+                $total += $shippingCost;
                 $items[] = [
                     'id' => 'shipping',
-                    'price' => $shipping['cost'],
+                    'price' => $shippingCost,
                     'quantity' => 1,
                     'name' => 'Shipping Cost'
                 ];
@@ -143,5 +143,17 @@ class PaymentController extends Controller
         }
 
         return response()->json(['status' => 'success']);
+    }
+
+    public function payment()
+    {
+        $cart = session('cart', []);
+        $subtotal = 0;
+        foreach ($cart as $item) {
+            $subtotal += $item['harga'] * $item['quantity'];
+        }
+        $shippingCost = session('shipping_cost', 0);
+        $grandTotal = $subtotal + $shippingCost;
+        return view('toko.payment', compact('cart', 'subtotal', 'shippingCost', 'grandTotal'));
     }
 }

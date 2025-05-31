@@ -73,6 +73,15 @@
                                 Continue to Review <i class="bi bi-arrow-right ms-2"></i>
                             </button>
                         </div>
+
+                        <div class="mt-4">
+                            <div>Subtotal: Rp {{ number_format($subtotal, 0, ',', '.') }}</div>
+                            <div>Biaya Pengiriman: Rp {{ number_format($shippingCost, 0, ',', '.') }}</div>
+                            <div><strong>Total: Rp {{ number_format($grandTotal, 0, ',', '.') }}</strong></div>
+                        {{-- Debug: --}}
+  Selected Address ID: {{ session('selected_address_id') }}
+
+                        </div>
                     </div>
                 </div>
             </div>

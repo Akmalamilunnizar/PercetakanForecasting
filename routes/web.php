@@ -386,9 +386,9 @@ Route::middleware(['auth'])->group(function () {
         Route::match(['get', 'post'], '/details', 'details')->name('details');
         Route::post('/save-address', 'saveAddress')->name('save.address');
         Route::post('/save-shipping', 'saveShipping')->name('save.shipping');
-        Route::get('/shipping', fn () => view('toko.shipping'))->name('shipping');
-        Route::get('/payment', fn () => view('toko.payment'))->name('payment');
-        Route::get('/review', fn () => view('toko.review'))->name('review');
+        Route::get('/shipping', [CartController::class, 'shipping'])->name('shipping');
+        Route::get('/payment', [\App\Http\Controllers\Api\V1\PaymentController::class, 'payment'])->name('payment');
+        Route::get('/review', [\App\Http\Controllers\Api\V1\OrderController::class, 'review'])->name('review');
 
         // API Cart
         Route::post('/cart/add', 'add')->name('cart.add');
@@ -407,6 +407,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/addresses', 'store')->name('addresses.store');
         Route::post('/addresses/{address}/default', 'setDefault')->name('addresses.default');
         Route::delete('/addresses/{address}', 'destroy')->name('addresses.destroy');
+        Route::post('/addresses/{address}', [AddressController::class, 'update'])->name('addresses.update');
     });
 });
 
@@ -471,3 +472,5 @@ Route::post('/set-payment-method', function (Illuminate\Http\Request $request) {
 
 // Detail Produk Routes
 Route::post('/cart/add', [App\Http\Controllers\Api\V1\CartController::class, 'add'])->name('cart.add');
+
+Route::post('/set-selected-address', [AddressController::class, 'setSelectedAddress'])->name('set.selected.address');
