@@ -129,11 +129,7 @@
                     <div class="d-flex justify-content-between">
                         <span>Subtotal:</span>
                         <span>Rp {{ number_format(collect($cartItems)->sum(function($i){return ($i['price'] ?? 0)*($i['qty'] ?? 0);}), 0, ',', '.') }}</span>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <span>Berat:</span>
-                        <span>{{ number_format(collect($cartItems)->sum('weight'), 2) }} Kg</span>
-                    </div>
+                    </div>                    
                     <div class="d-flex justify-content-between">
                         <span>Shipping:</span>
                         <span>Rp 0</span>

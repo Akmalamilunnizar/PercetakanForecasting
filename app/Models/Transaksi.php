@@ -20,6 +20,8 @@ class Transaksi extends Model
         'IdTransaksi',
         'username',
         'id',
+        'address_id',
+        'alamat_pengiriman',
         'Bayar',
         'GrandTotal',
         'tglTransaksi',
@@ -59,6 +61,11 @@ class Transaksi extends Model
             ->withPivot(['QtyProduk', 'SubTotal']) // alias pivot
             // ->withTimestamps()
         ;
+    }
+
+    public function address()
+    {
+        return $this->belongsTo(Address::class, 'address_id');
     }
 
 }

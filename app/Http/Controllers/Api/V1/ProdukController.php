@@ -38,22 +38,22 @@ class ProdukController extends Controller
     // Menyimpan produk baru
     public function storeProduk(Request $request)
     {
-        // Validasi input
-        $request->validate([
-            'NamaProduk' => 'required',
-            'sizes' => 'required|array',
-            'sizes.*' => 'exists:size,id_ukuran',
-            'harga_per_size' => 'required|array',
-            'harga_per_size.*' => 'required|integer',
-            'custom_harga' => 'required|integer',
-            'diskon' => 'nullable|exists:diskon,id',
-            'id_bahan' => 'nullable|exists:databarang,IdBarang',
-            'Img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'deskripsi' => 'required|string|max:1500',
-        ]);
-
-        DB::beginTransaction();
         try {
+            // Validasi input
+            $request->validate([
+                'NamaProduk' => 'required',
+                'sizes' => 'required|array',
+                'sizes.*' => 'exists:size,id_ukuran',
+                'harga_per_size' => 'required|array',
+                'harga_per_size.*' => 'required|integer',
+                'custom_harga' => 'required|integer',
+                'diskon' => 'nullable|exists:diskon,id',
+                'id_bahan' => 'nullable|exists:databarang,IdBarang',
+                'Img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'deskripsi' => 'required|string|max:1500',
+            ]);
+
+            DB::beginTransaction();
             // Ambil ID produk terakhir dari database
             $lastProduk = Produk::orderBy('IdProduk', 'desc')->first();
             $newId = $lastProduk ? 'P' . str_pad((substr($lastProduk->IdProduk, 1) + 1), 4, '0', STR_PAD_LEFT) : 'P0001';
