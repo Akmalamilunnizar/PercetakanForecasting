@@ -34,8 +34,6 @@ use App\Http\Controllers\Api\V1\ProdukController;
 use App\Http\Controllers\Api\V1\DeliveryShoppingController;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Api\V1\CartController;
-use App\Http\Controllers\Api\V1\LaporanController;
-use App\Http\Controllers\Api\V1\LaporanTransaksiController;
 use App\Http\Controllers\Api\V1\ForecastController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Api\V1\AddressController;
@@ -157,9 +155,6 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
-Route::get('/admin/all-laporan', [LaporanController::class, 'index'])->name('alllaporan');
-
-
 
 Route::controller(ItemsController::class)->group(function () { /* */
     Route::get('/admin/daftar-barang', 'index')->name('daftarbarang');
@@ -195,22 +190,6 @@ Route::controller(TokoController::class)->group(function () {
     Route::get('/lacak', function () {return view('toko.dashboardToko');})->name('lacak');
     Route::get('/kontak', function () {return view('toko.dashboardToko');})->name('kontak');
 });
-Route::controller(LaporanController::class)->group(function () {
-    Route::get('/admin/laporanbarang', 'index')->name('laporanbarang');
-    Route::get('admin/detaillaporanbarang/{id}', 'show')->name('admin.detaillaporanbarang');
-    Route::get('/admin/laporanbarang/export-pdf', 'exportPdf')->name('laporanbarang.exportpdf');
-    Route::get('/admin/laporanbarang/{id}/export-pdf', 'exportPdfDetail')->name('laporanbarang.exportpdf.detail');
-    Route::delete('/admin/laporanbarang/{id}', 'destroy')->name('laporanbarang.destroy');
-});
-
-Route::controller(LaporanTransaksiController::class)->group(function () {
-    Route::get('/admin/laporantransaksi', 'index')->name('laporantransaksi');
-    Route::get('admin/detail-laporantransaksi/{id}', 'show')->name('admin.detail-laporantransaksi');
-    Route::get('/admin/laporantransaksi/export-pdf', 'exportPdf')->name('laporantransaksi.exportpdf');
-    Route::get('/admin/laporantransaksi/{id}/export-pdf', 'exportPdfDetail')->name('laporantransaksi.exportpdf.detail');
-    Route::delete('/admin/laporantransaksi/{id}', 'destroy')->name('laporantransaksi.destroy');
-});
-
 
 Route::controller(ParameterReportController::class)->group(function () {
     Route::get('/admin/parameter-report', 'Index')->name('parameterreport');
