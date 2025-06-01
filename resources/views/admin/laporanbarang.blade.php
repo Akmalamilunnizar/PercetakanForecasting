@@ -52,7 +52,6 @@ CIME | Halaman Laporan Barang
                         <option value="{{ $key }}" {{ request('bulan') == $key ? 'selected' : '' }}>{{ $value }}</option>
                         @endforeach
                     </select>
-
                     <select name="tahun" class="form-select" style="width: 120px;">
                         <option value="">Tahun</option>
                         @for ($tahun = 2020; $tahun <= date('Y'); $tahun++)

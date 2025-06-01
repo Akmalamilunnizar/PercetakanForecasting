@@ -100,6 +100,9 @@ Route::controller(DetailProdukController::class)->group(function () {
 
 Route::controller(ItemsController::class)->group(function () {
     Route::get('/admin/all-item', 'Index')->name('allitems'); /* */
+    Route::get('/admin/all-item/exportpdf', 'exportPdf')->name('allitems.exportpdf');
+    Route::get('/admin/all-item/detail/{id}', 'detail')->name('admin.detail_allitems');
+    Route::get('/admin/all-item/exportpdf/{id}', 'exportPdfDetail')->name('allitems.exportpdf.detail'); 
     Route::get('/admin/manage-item', 'ManageItems')->name('manageitems');
     Route::get('/admin/all-item/search', 'SearchItem')->name('searchitem');
     Route::get('/admin/add-items', 'AddItems')->name('additems');
@@ -234,28 +237,12 @@ Route::controller(ProdukController::class)->group(function () {
 });
 
 Route::controller(TransaksiController::class)->group(function () {
-    // Tampilkan semua produk
     Route::get('/admin/all-transaksi', 'index')->name('alltransaksi');
-    // Tampilkan form tambah produk
+    Route::get('/admin/all-transaksi/exportpdf', 'exportPdf')->name('alltransaksi.exportpdf');
     Route::get('/admin/all-transaksi/{id}/terima', 'terimaOrderan')->name('terimaOrderan');
-    // Proses form tambah produk
     Route::post('/admin/all-transaksi/{id}/tolak', 'tolakOrderan')->name('tolakOrderan');
-    // Form edit produk
-
 });
 
-
-
-
-Route::controller(TransaksiController::class)->group(function () {
-    // Tampilkan semua produk
-    Route::get('/admin/all-transaksi', 'index')->name('alltransaksi');
-    // Tampilkan form tambah produk
-    Route::get('/admin/all-transaksi/{id}/terima', 'terimaOrderan')->name('terimaOrderan');
-    // Proses form tambah produk
-    Route::post('/admin/all-transaksi/{id}/tolak', 'tolakOrderan')->name('tolakOrderan');
-
-});
 Route::controller(SupplierController::class)->group(function () {
     // Tampilkan semua supplier
     Route::get('/admin/daftar-supplier', 'index')->name('allsuppliers');

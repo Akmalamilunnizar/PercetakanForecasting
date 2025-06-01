@@ -1,17 +1,13 @@
 @extends('admin.layouts.template')
-
-@section('page_title', 'Edit Ukuran')
-
+@section('page_title')
+CIME | Halaman Edit Ukuran
+@endsection
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
-    <h4 class="fw-bold py-3 mb-4">Edit Ukuran</h4>
-
+ <h4 class="py-3 mb-4"><span class="text-muted fw-light">Halaman/</span>Edit Ukuran</h4>
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Form Edit Ukuran</h5>
-            <a href="{{ route('allukuran') }}" class="btn btn-secondary">
-                <i class="bx bx-arrow-back"></i> Kembali
-            </a>
         </div>
         <div class="card-body">
             <form action="{{ route('updateukuran', $size->id_ukuran) }}" method="POST">
@@ -74,7 +70,7 @@
 
                 <div class="row">
                     <div class="col-md-6">
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-outline-primary">
                             <i class="bx bx-save"></i> Update
                         </button>
                     </div>

@@ -13,6 +13,7 @@ class Items extends Model
     protected $primaryKey = 'IdBarang'; // Specify the primary key
     public $incrementing = false; // Disable auto-incrementing for string primary key
     protected $keyType = 'string'; // Specify the key type as string
+    public $timestamps = true;
 
     protected $table = 'databarang'; // Specify the table name
 
