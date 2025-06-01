@@ -7,7 +7,6 @@ CIME | Halaman Laporan Barang
 @section('search')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-
     <div class="navbar-nav align-items-center">
         <div class="nav-item d-flex align-items-center">
             <i class="bx bx-search fs-4 lh-0"></i>
@@ -102,31 +101,55 @@ CIME | Halaman Laporan Barang
                 <table class="table table-striped">
                     <thead class="table-primary">
                         <tr>
-                            @if(!empty($dataLaporan))
-                                @foreach(array_keys($dataLaporan[0]) as $key)
-                                    <th class="text-center fw-bold">{{ $key }}</th>
-                                @endforeach
-                                <th class="text-center fw-bold">Aksi</th>
-                            @else
-                                <th class="text-center">Tidak ada data</th>
-                            @endif
+                            <th style="text-align: center; font-weight: bold;">No</th>
+                            <th style="text-align: center; font-weight: bold;">Nama Barang</th>
+                            <th style="text-align: center; font-weight: bold;">Nama Supplier</th>
+                            <th style="text-align: center; font-weight: bold;">Qty Masuk</th>
+                            <th style="text-align: center; font-weight: bold;">Qty Keluar</th>
+                            <th style="text-align: center; font-weight: bold;">Sisa Stok</th>
+                            <th style="text-align: center; font-weight: bold;">Aksi</th>
                         </tr>
                     </thead>
+                    @php
+                        use Carbon\Carbon;
+                    @endphp
                     <tbody>
-                        @forelse($dataLaporan as $row)
+                        @if($laporanbarang->count() > 0)
+                            @foreach ($laporanbarang as $laporan)
+                                <tr>
+                                    <td class="text-center">{{ $loop->iteration }}</td>
+                                    <td class="text-center">{{ optional($laporan->databarang)->NamaBarang }}</td>
+                                    <td class="text-center">{{ optional($laporan->supplier)->NamaSupplier }}</td>
+                                    <td class="text-center">{{ optional($laporan->detailBarangMasuk)->QtyMasuk ?? 0 }}</td>
+                                    <td class="text-center">{{ optional($laporan->detailBarangKeluar)->QtyKeluar ?? 0 }}</td>
+                                    <td class="text-center">
+                                        {{ optional($laporan->databarang)->JumlahStok ?? 0 }}
+                                        {{ optional($laporan->databarang?->satuan)->Satuan ?? '' }}
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center" role="group" aria-label="Basic example">
+                                            <a href="{{ route('admin.detaillaporanbarang', $laporan->IdLaporan) }}"
+                                                class="btn btn-warning">
+                                                <i class="fas fa-edit me-1"></i> Detail
+                                            </a>
+                                            <form action="{{ route('laporanbarang.destroy', $laporan->IdLaporan) }}" method="POST" class="p-0">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="btn btn-danger mx-1 delete-confirm" {{-- Tambahkan class ini --}}
+                                                    style="background: linear-gradient(45deg, #dc3545, #ff6b6b); min-width: 100px;">
+                                                    <i class="fas fa-trash-alt me-2"></i> Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @else
                             <tr>
-                                @foreach($row as $value)
-                                    <td class="text-center">{{ $value }}</td>
-                                @endforeach
-                                <td class="text-center">
-                                    <a href="#" class="btn btn-warning">Detail</a>
-                                </td>
+                                <td colspan="8" class="text-center">Tidak ada data!</td>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="100%" class="text-center">Tidak ada data!</td>
-                            </tr>
-                        @endforelse
+                        @endif
                     </tbody>
                 </table>
             </div>
