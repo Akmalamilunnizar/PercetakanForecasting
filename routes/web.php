@@ -86,7 +86,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::delete('/admin/delete-diskon/{id}', [DiskonController::class, 'destroy'])->name('deletediskon');
 
     Route::post('/admin/store-produk', [ProdukController::class, 'storeProduk'])->name('storeproduk');
-});
+}); 
 
 
 Route::controller(DetailProdukController::class)->group(function () {
