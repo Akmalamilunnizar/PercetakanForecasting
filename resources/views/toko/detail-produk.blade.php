@@ -10,11 +10,11 @@
         <!-- Product Image -->
         <div class="col-md-6 mb-4">
             <div class="card border-0 shadow-sm">
-                <img src="{{ asset('storage/' . ($produk->Img ?? 'default.jpg')) }}" 
+                <img src="{{ asset('storage/' . ($produk->Img ?? 'assets/images/poster1.jpeg')) }}" 
                      alt="{{ $produk->NamaProduk }}" 
                      class="img-fluid rounded"
                      style="width: 100%; height: auto; object-fit: cover;"
-                     onerror="this.onerror=null; this.src='{{ asset('storage/default.jpg') }}';">
+                     onerror="this.onerror=null; this.src='{{ asset('assets/images/poster1.jpeg') }}';">
             </div>
         </div>
 

@@ -45,33 +45,32 @@ CIME | Halaman Daftar Produk
             <div class="card mt-3">
                 <h5 class="card-header">Produk Yang Terdaftar</h5>
                 <div class="table-responsive text-nowrap">
-                    <table class="table table-striped">
-                     <thead class="table-primary">
+                <table class="table table-striped">
+                    <thead class="table-primary">
                             <tr>
-                                <th>ID</th>
-                                <th>Gambar</th>
-                                <th>Nama Produk</th>
-                                <th>Harga</th>
-                                <th>Ukuran</th>
-                                <th>Bahan</th>
-                                <th>Custom</th>
-                                <th>Diskon</th>
-                                <th>Actions</th>
+                                <th class="fw-bold text-center">ID</th>
+                                <th class="fw-bold text-center">Gambar</th>
+                                <th class="fw-bold text-center">Nama Produk</th>
+                                <th class="fw-bold text-center">Harga</th>
+                                <th class="fw-bold text-center">Ukuran</th>
+                                <th class="fw-bold text-center">Bahan</th>
+                                <th class="fw-bold text-center">Custom</th>
+                                <th class="fw-bold text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="table-border-bottom-0">
                             @foreach ($dataProduk as $produk)
                                 <tr>
-                                    <td>{{ $produk->IdProduk }}</td>
-                                    <td>
+                                    <td class="text-center">{{ $produk->IdProduk }}</td>
+                                    <td class="text-center">
                                         @if ($produk->Img)
                                             <img src="{{ asset('storage/' . $produk->Img) }}" alt="{{ $produk->NamaProduk }}" class="img-thumbnail" style="max-width: 80px;">
                                         @else
                                             <span class="text-muted">No Image</span>
                                         @endif
                                     </td>
-                                    <td>{{ $produk->NamaProduk }}</td>
-                                    <td>
+                                    <td class="text-center">{{ $produk->NamaProduk }}</td>
+                                    <td class="text-center">
                                         @if($produk->sizes->count())
                                             @foreach ($produk->sizes as $size)
                                             <span class="badge bg-primary text-white mb-1 d-block">
@@ -82,7 +81,7 @@ CIME | Halaman Daftar Produk
                                             <span class="text-muted">-</span>
                                         @endif
                                     </td>
-                                    <td>
+                                    <td class="text-center">
                                         @if($produk->sizes->count())
                                             @foreach ($produk->sizes as $size)
                                                 <span class="badge bg-primary text-white mb-1 d-block">
@@ -93,21 +92,12 @@ CIME | Halaman Daftar Produk
                                             <span class="text-muted">-</span>
                                         @endif
                                     </td>
-                                    <td>{{ $produk->bahan ? $produk->bahan->NamaBarang : '-' }}</td>
+                                    <td class="text-center">{{ $produk->bahan ? $produk->bahan->NamaBarang : '-' }}</td>
                                     <td>
                                         @if($produk->custom_harga && $produk->custom_harga > 0)
                                             Rp {{ number_format($produk->custom_harga, 0, ',', '.') }}
                                         @else
                                             -
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if($produk->diskonRelasi && $produk->diskonRelasi->persentase !== null)
-                                            <span class="badge bg-label-success">
-                                                {{ $produk->diskonRelasi->persentase }}%
-                                            </span>
-                                        @else
-                                            <span class="text-muted">-</span>
                                         @endif
                                     </td>
                                     <td class="text-center">

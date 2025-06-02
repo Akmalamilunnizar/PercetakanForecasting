@@ -31,10 +31,10 @@
                 <div class="col-sm-4 fw-semibold text-secondary">Username</div>
                 <div class="col-sm-8">{{ $pesanan->username }}</div>
             </div>
-
+            
             <div class="row mb-3">
-                <div class="col-sm-4 fw-semibold text-secondary">Alamat Pembeli</div>
-                <div class="col-sm-8">{{ $pesanan->user ? $pesanan->user->alamat : '-' }}</div>
+                <div class="col-sm-4 fw-semibold text-secondary">Alamat Pengiriman</div>
+                <div class="col-sm-8">{{ $pesanan->alamat_pengiriman ?? '-' }}</div>
             </div>
 
             <div class="row mb-3">
@@ -116,7 +116,10 @@
                     <div class="col-6">
                         <h6 class="fw-bold">{{ $produk->NamaProduk }}</h6>
                         <p class="mb-1 text-muted">Jumlah: {{ $produk->pivot->QtyProduk }}</p>
-                        <p class="mb-1 text-muted">Harga Satuan: Rp {{ number_format($produk->HargaProduk, 0, ',', '.') }}</p>
+                        <p class="mb-1 text-muted">
+                            Harga Satuan: Rp 
+                            {{ number_format($produk->pivot->QtyProduk > 0 ? ($produk->pivot->SubTotal / $produk->pivot->QtyProduk) : 0, 0, ',', '.') }}
+                        </p>
                         <p class="mb-0 fw-semibold">Subtotal: Rp {{ number_format($produk->pivot->SubTotal, 0, ',', '.') }}</p>
                     </div>
                 </div>

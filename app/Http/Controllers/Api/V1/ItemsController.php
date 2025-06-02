@@ -15,19 +15,100 @@ use App\Models\Supplier;
 use App\Models\Items;
 use Illuminate\Validation\Rule;
 use Encore\Admin\Layout\Content;
-
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ItemsController extends Controller
 {
-    public function Index()
+    public function Index(Request $request)
     {
-        $items = Items::with(['detailBarangMasuk', 'jenisBarang', 'satuan', 'detailBarangKeluar'])->get();
+        $bulan = $request->bulan;
+        $tahun = $request->tahun;
 
+        $items = Items::with(['jenisBarang', 'satuan'])->get();
 
-        // Kirim data ke view
-        return view("admin.allitems", compact('items'));
+        foreach ($items as $item) {
+            $queryMasuk = DetailMasuk::where('IdBarang', $item->IdBarang)
+                ->when($bulan, function ($q) use ($bulan) {
+                    $q->whereMonth('created_at', $bulan);
+                })
+                ->when($tahun, function ($q) use ($tahun) {
+                    $q->whereYear('created_at', $tahun);
+                })
+                ->orderBy('created_at', 'desc')
+                ->first();
+
+            $item->latestDetailMasuk = $queryMasuk;
+
+            if ($item->latestDetailMasuk) {
+                $item->latestDetailMasuk->load('supplier');
+            }
+
+            $item->latestDetailKeluar = DB::table('detail_barangkeluar')
+                ->where('IdBarang', $item->IdBarang)
+                ->orderBy('created_at', 'desc')
+                ->first();
+        }
+
+        // Sorting items by latestDetailMasuk created_at
+        $items = $items->sortByDesc(function ($item) {
+            return optional($item->latestDetailMasuk)->created_at;
+        });
+
+        $riwayatStok = DB::table('detail_barangmasuk')
+            ->join('databarang', 'detail_barangmasuk.IdBarang', '=', 'databarang.IdBarang')
+            ->join('barangmasuk', 'detail_barangmasuk.IdMasuk', '=', 'barangmasuk.IdMasuk')
+            ->select(
+                'detail_barangmasuk.IdMasuk',
+                'databarang.NamaBarang',
+                'detail_barangmasuk.QtyMasuk',
+                'barangmasuk.tglMasuk as tanggal_masuk'
+            )
+            ->orderBy('barangmasuk.tglMasuk', 'desc')
+            ->orderBy('detail_barangmasuk.created_at', 'desc')
+            ->get();
+
+        return view("admin.allitems", compact('items', 'riwayatStok'));
     }
 
+    public function exportPdf(Request $request)
+    {
+        $bulan = $request->bulan;
+        $tahun = $request->tahun;
+
+        $items = Items::with(['jenisBarang', 'satuan'])->get();
+
+        foreach ($items as $item) {
+            $queryMasuk = DetailMasuk::where('IdBarang', $item->IdBarang)
+                ->when($bulan, function ($q) use ($bulan) {
+                    $q->whereMonth('created_at', $bulan);
+                })
+                ->when($tahun, function ($q) use ($tahun) {
+                    $q->whereYear('created_at', $tahun);
+                })
+                ->orderBy('created_at', 'desc')
+                ->first();
+
+            $item->latestDetailMasuk = $queryMasuk;
+
+            if ($item->latestDetailMasuk) {
+                $item->latestDetailMasuk->load('supplier');
+            }
+
+            $item->latestDetailKeluar = DB::table('detail_barangkeluar')
+                ->where('IdBarang', $item->IdBarang)
+                ->orderBy('created_at', 'desc')
+                ->first();
+        }
+
+        $items = $items->sortByDesc(function ($item) {
+            return optional($item->latestDetailMasuk)->created_at;
+        });
+
+        // Buat PDF pakai view khusus
+        $pdf = Pdf::loadView('admin.pdf_allitems', compact('items', 'bulan', 'tahun'));
+
+        return $pdf->download('laporan_barang_' . now()->format('Ymd_His') . '.pdf');
+    }
 
     public function SearchItem(Request $request)
     {
@@ -60,6 +141,7 @@ class ItemsController extends Controller
         return view("admin.additems", compact('typeid', 'typeS', 'newIdSupplier', 'newIdMasuk', 'typeid', 'typeS', 'suppliers', 'username'));
     }
 
+
     public function StoreItem(Request $request)
     {
         $request->validate([
@@ -75,8 +157,8 @@ class ItemsController extends Controller
             'SubTotal' => 'required|numeric',
         ]);
 
-        // Simpan ke tabel databarang
-        Items::insert([
+        // Simpan ke tabel databarang (timestamps auto)
+        Items::create([
             'IdBarang' => $request->IdBarang,
             'NamaBarang' => $request->NamaBarang,
             'IdJenisBarang' => $request->IdJenisBarang,
@@ -84,15 +166,15 @@ class ItemsController extends Controller
             'IdSatuan' => $request->IdSatuan,
         ]);
 
-        // Simpan ke tabel barangmasuk (master transaksi)
-        BarangMasuk::insert([
+        // Simpan ke tabel barangmasuk (master transaksi, no timestamps)
+        BarangMasuk::create([
             'IdMasuk' => $request->IdMasuk,
             'username' => $request->username,
             'tglMasuk' => Carbon::now(),
         ]);
 
-        // Simpan ke tabel detail_barangmasuk (detail transaksi)
-        DetailMasuk::insert([
+        // Simpan ke tabel detail_barangmasuk (timestamps auto)
+        DetailMasuk::create([
             'IdMasuk' => $request->IdMasuk,
             'IdSupplier' => $request->IdSupplier,
             'IdBarang' => $request->IdBarang,
@@ -102,6 +184,54 @@ class ItemsController extends Controller
         ]);
 
         return redirect()->route('allitems')->with('message', 'Barang telah berhasil ditambah!');
+    }
+
+    public function detail($IdBarang)
+    {
+        // Ambil data barang dengan relasi yang dibutuhkan
+        $item = Items::with(['jenisBarang', 'satuan'])
+            ->where('IdBarang', $IdBarang)
+            ->firstOrFail();
+
+        // Ambil histori detail barang masuk (DetailMasuk) yang terkait barang ini, terbaru dulu
+        $historiMasuk = DetailMasuk::with('supplier')
+            ->where('IdBarang', $IdBarang)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Ambil histori detail barang keluar dari tabel detail_barangkeluar
+        $historiKeluar = DB::table('detail_barangkeluar as dbk')
+            ->join('barangkeluar as bk', 'dbk.IdKeluar', '=', 'bk.IdKeluar')
+            ->select('dbk.*', 'bk.tglKeluar')
+            ->where('dbk.IdBarang', $IdBarang)
+            ->orderBy('bk.tglKeluar', 'desc')
+            ->get();
+
+        // Kirim ke view
+        return view('admin.detail_allitems', compact('item', 'historiMasuk', 'historiKeluar'));
+    }
+
+    // Export PDF Detail Barang
+    public function exportPdfDetail($id)
+    {
+        $item = Items::with(['jenisBarang', 'satuan'])->findOrFail($id);
+
+        $historiMasuk = DetailMasuk::with('supplier')
+                            ->where('IdBarang', $id)
+                            ->orderBy('created_at', 'desc')
+                            ->get();
+
+        $historiKeluar = DB::table('detail_barangkeluar as dbk')
+                            ->join('barangkeluar as bk', 'dbk.IdKeluar', '=', 'bk.IdKeluar')
+                            ->select('dbk.*', 'bk.tglKeluar')
+                            ->where('dbk.IdBarang', $id)
+                            ->orderBy('bk.tglKeluar', 'desc')
+                            ->get();
+
+        $pdf = PDF::loadView('admin.pdf_detail', compact('item', 'historiMasuk', 'historiKeluar'))
+                    ->setPaper('A4', 'portrait');
+
+        return $pdf->stream('Detail_Barang_'.$item->NamaBarang.'.pdf');
     }
 
 
@@ -173,9 +303,9 @@ class ItemsController extends Controller
         $username = Auth::user()->username;
         $lastKeluar = DB::table('barangkeluar')->orderBy('IdKeluar', 'desc')->first();
         $newIdKeluar = $lastKeluar ? 'BK' . str_pad((int) substr($lastKeluar->IdKeluar, 2) + 1, 4, '0', STR_PAD_LEFT) : 'BK0001';
-        
+
         $items = Items::with('jenisBarang', 'satuan')->get();
-        
+
         return view('admin.keluaritems', compact('items', 'newIdKeluar', 'username'));
     }
 
@@ -197,15 +327,15 @@ class ItemsController extends Controller
         // Begin transaction
         DB::beginTransaction();
         try {
-            // Insert into barangkeluar
-            DB::table('barangkeluar')->insert([
+            // Insert into barangkeluar (no timestamps)
+            \App\Models\BarangKeluar::create([
                 'IdKeluar' => $request->IdKeluar,
                 'username' => $request->username,
                 'tglKeluar' => Carbon::now(),
             ]);
 
-            // Insert into detail_barangkeluar
-            DB::table('detail_barangkeluar')->insert([
+            // Insert into detail_barangkeluar (timestamps auto)
+            \App\Models\DetailKeluar::create([
                 'IdKeluar' => $request->IdKeluar,
                 'IdBarang' => $request->IdBarang,
                 'QtyKeluar' => $request->QtyKeluar,
@@ -218,6 +348,54 @@ class ItemsController extends Controller
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
+
+    public function tambahQty(Request $request)
+    {
+        $request->validate([
+            'IdBarang' => 'required',
+            'QtyMasuk' => 'required|integer|min:1',
+        ]);
+
+        // Ambil IdMasuk terakhir dari tabel barangmasuk
+        $lastMasuk = DB::table('barangmasuk')->orderByDesc('IdMasuk')->first();
+
+        // Buat IdMasuk baru berdasarkan yang terakhir
+        $newIdMasuk = $lastMasuk
+            ? 'BM' . str_pad((int) substr($lastMasuk->IdMasuk, 2) + 1, 4, '0', STR_PAD_LEFT)
+            : 'BM0001';
+
+        // Ambil data detail masuk terakhir untuk IdBarang ini untuk mendapatkan HargaSatuan terbaru
+        $latestDetailMasuk = DetailMasuk::where('IdBarang', $request->IdBarang)
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        $hargaSatuan = $latestDetailMasuk ? $latestDetailMasuk->HargaSatuan : 0;
+        $subTotal = $request->QtyMasuk * $hargaSatuan;
+
+        // Ambil IdSupplier dari detail masuk terakhir, atau gunakan default jika tidak ada
+        $idSupplier = $latestDetailMasuk ? $latestDetailMasuk->IdSupplier : 'SP0001';
+
+        // Simpan data ke tabel barangmasuk
+        DB::table('barangmasuk')->insert([
+            'IdMasuk' => $newIdMasuk,
+            'username' => auth()->user()->username ?? 'admin',
+            'tglMasuk' => now(),
+        ]);
+
+        // Simpan data ke tabel detail_barangmasuk
+        DB::table('detail_barangmasuk')->insert([
+            'IdMasuk' => $newIdMasuk,
+            'IdSupplier' => $idSupplier, // Gunakan IdSupplier yang diambil
+            'IdBarang' => $request->IdBarang,
+            'QtyMasuk' => $request->QtyMasuk,
+            'HargaSatuan' => $hargaSatuan, // Gunakan HargaSatuan yang diambil
+            'SubTotal' => $subTotal, // Gunakan SubTotal yang dihitung
+        ]);
+
+        return redirect()->back()->with('message', 'Qty berhasil ditambahkan!');
+    }
+
+
 
     /**
      * Title for current resource.

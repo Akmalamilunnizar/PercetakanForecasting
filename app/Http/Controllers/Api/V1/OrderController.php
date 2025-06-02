@@ -81,16 +81,24 @@ class OrderController extends Controller
             $isPaid = session('midtrans_paid', false);
             $paymentMethod = session('payment_method', 'cod'); // default to cod
             $total = 0;
+            $shippingCost = session('shipping_cost', 0);
             foreach ($cart as $item) {
                 $total += $item['harga'] * $item['quantity'];
             }
+            $total += $shippingCost;
             Log::info('Calculated total:', ['total' => $total]);
+
+            // Get selected address
+            $selectedAddressId = session('selected_address_id'); // or from request
+            $address = \App\Models\Address::find($selectedAddressId);
 
             // Create transaction
             $transaction = new Transaksi();
             $transaction->IdTransaksi = $transactionId;
             $transaction->username = $user->username;
             $transaction->id = $user->id;
+            $transaction->address_id = $address ? $address->id : null;
+            $transaction->alamat_pengiriman = $address ? $address->full_address : null;
 
             if ($paymentMethod === 'midtrans' && $isPaid) {
                 $transaction->Bayar = $total;
@@ -102,6 +110,7 @@ class OrderController extends Controller
 
             $transaction->GrandTotal = $total;
             $transaction->tglTransaksi = now();
+            $transaction->tglUpdate = now();
             $transaction->StatusPesanan = 'Menunggu Konfirmasi';
             $transaction->save();
             
@@ -114,15 +123,14 @@ class OrderController extends Controller
                     'IdTransaksi' => $transactionId,
                     'IdProduk' => $details['id'],
                     'id_ukuran' => $isCustom ? null : $details['ukuran'],
-                    'CustomUkuran' => $isCustom ? $details['ukuran_label'] : null,
+                    // 'CustomUkuran' => $isCustom ? $details['ukuran_label'] : null,
                     'QtyProduk' => $details['quantity'],
                     'SubTotal' => $details['harga'] * $details['quantity'],
                     'design_file' => $details['design_file'] ?? null,
                 ];
+                $detailData['CustomUkuran'] = $details['custom_ukuran'] ?? null;
                 DetailTransaksi::create($detailData);
                 Log::info('Transaction detail created:', ['detail' => $detailData]);
-
-                
             }
 
             // Clear cart and payment flags
@@ -152,5 +160,33 @@ class OrderController extends Controller
                 'error' => 'Terjadi kesalahan: ' . $e->getMessage()
             ], 500);
         }
+    }
+
+    public function review()
+    {
+        $cart = session('cart', []);
+        $orderNotes = session('order_notes', '');
+        $shippingCost = session('shipping_cost', 0);
+
+        // Get selected address from session or default
+        $selectedAddressId = session('selected_address_id');
+        $selectedAddress = null;
+        if ($selectedAddressId) {
+            $selectedAddress = \App\Models\Address::find($selectedAddressId);
+        }
+        if (!$selectedAddress) {
+            $selectedAddress = \App\Models\Address::where('user_id', auth()->id())
+                ->where('is_default', true)
+                ->first();
+        }
+
+        // Calculate subtotal and grand total
+        $subtotal = 0;
+        foreach ($cart as $item) {
+            $subtotal += $item['harga'] * $item['quantity'];
+        }
+        $grandTotal = $subtotal + $shippingCost;
+
+        return view('toko.review', compact('cart', 'orderNotes', 'selectedAddress', 'shippingCost', 'subtotal', 'grandTotal'));
     }
 } 

@@ -79,4 +79,25 @@ class AddressController extends Controller
             'message' => 'Address deleted successfully'
         ]);
     }
+
+    public function update(Request $request, Address $address)
+    {
+        $request->validate([
+            'label' => 'required',
+            'recipient_name' => 'required',
+            'phone_number' => 'required',
+            'city' => 'required',
+            'postal_code' => 'required',
+            'full_address' => 'required',
+        ]);
+        $address->update($request->all());
+        return response()->json(['success' => true]);
+    }
+
+    public function setSelectedAddress(Request $request)
+    {
+        $request->validate(['address_id' => 'required|integer|exists:addresses,id']);
+        session(['selected_address_id' => $request->address_id]);
+        return response()->json(['success' => true]);
+    }
 } 
