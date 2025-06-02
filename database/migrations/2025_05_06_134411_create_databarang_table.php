@@ -17,9 +17,9 @@ return new class extends Migration
             $table->string('IdJenisBarang', 6)->nullable();
             $table->integer('JumlahStok')->default(0);
             $table->string('IdSatuan', 6)->nullable();
-            
             $table->foreign('IdJenisBarang')->references('IdJenisBarang')->on('jenisbarang');
             $table->foreign('IdSatuan')->references('IdSatuan')->on('satuan');
+            $table->timestamps();
         });
     }
 

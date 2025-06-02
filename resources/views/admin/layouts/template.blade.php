@@ -83,7 +83,6 @@
             -webkit-overflow-scrolling: touch; /* Untuk iOS */
             padding-bottom: 20px; /* Tambahkan sedikit padding di bawah untuk spasi */
             /* Padding atas untuk mengimbangi tinggi navbar */
-            padding-top: 65px; /* Nilai ini HARUS SAMA dengan height .layout-navbar */
             box-sizing: border-box; /* Pastikan padding tidak menambah total tinggi */
         }
 
@@ -224,13 +223,13 @@
     </li>
    <li class="menu-item {{ request()->is('admin/all-item*') || request()->is('admin/add-items*') || request()->is('admin/keluar-barang') || request()->is('admin/edit-item*') ? 'active' : '' }}">
       <a href="{{ route('allitems') }}" class="menu-link">
-        <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
+        <i class='menu-icon tf-icons bx bx-box'></i>
         <div>Daftar Barang</div>
       </a>
     </li>
     <li class="menu-item {{ request()->is('admin/all-produk*') || request()->is('admin/add-produk*') || request()->is('admin/edit-produk') ? 'active' : '' }}">
       <a href="{{ route('allproduk') }}" class="menu-link">
-        <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
+        <i class='menu-icon tf-icons bx bx-package'></i>
         <div>Daftar Produk</div>
       </a>
     </li>
@@ -246,16 +245,16 @@
         <div>Daftar Customer</div>
       </a>
     </li>
-    <li class="menu-item {{ request()->is('admin/laporanbarang*') || request()->is('admin/detaillaporanbarang*') || request()->is('admin/laporantransaksi') || request()->is('admin/detail-laporantransaksi*') || request()->is('admin/forecast*') ? 'active' : '' }}">
-      <a href="{{ route('laporanbarang') }}" class="menu-link">
-        <i class='menu-icon tf-icons bx bx-shopping-bag'></i>
-        <div>Laporan</div>
-      </a>
-    </li>
     <li class="menu-item {{ request()->is('admin/all-transaksi*') ? 'active' : '' }}">
       <a href="{{ route('alltransaksi') }}" class="menu-link">
         <i class="menu-icon tf-icons bx bx-collection"></i>
         <div>Data Transaksi</div>
+      </a>
+    </li>
+     <li class="menu-item {{ request()->is('admin/forecast*') ? 'active' : '' }}">
+      <a href="{{ route('forecast.form') }}"class="menu-link">
+        <i class='menu-icon tf-icons bx bx-line-chart'></i>
+        <div>Forecasting</div>
       </a>
     </li>
     
@@ -366,5 +365,12 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     @stack('scripts')
 </body>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ asset('path/to/bootstrap.bundle.min.js') }}"></script>
+
+
+
+
 </html>
 

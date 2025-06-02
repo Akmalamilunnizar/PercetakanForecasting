@@ -15,21 +15,30 @@ use App\Models\Supplier;
 use App\Models\Items;
 use Illuminate\Validation\Rule;
 use Encore\Admin\Layout\Content;
-
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ItemsController extends Controller
 {
-    public function Index()
+    public function Index(Request $request)
     {
-        // Get all items
+        $bulan = $request->bulan;
+        $tahun = $request->tahun;
+
         $items = Items::with(['jenisBarang', 'satuan'])->get();
 
-        // Manually load the latest detailBarangMasuk and detailBarangKeluar for each item
         foreach ($items as $item) {
-            $item->latestDetailMasuk = DetailMasuk::where('IdBarang', $item->IdBarang)
+            $queryMasuk = DetailMasuk::where('IdBarang', $item->IdBarang)
+                ->when($bulan, function ($q) use ($bulan) {
+                    $q->whereMonth('created_at', $bulan);
+                })
+                ->when($tahun, function ($q) use ($tahun) {
+                    $q->whereYear('created_at', $tahun);
+                })
                 ->orderBy('created_at', 'desc')
                 ->first();
-            // Penting: Pastikan Anda juga memuat relasi supplier di sini jika ingin menggunakannya
+
+            $item->latestDetailMasuk = $queryMasuk;
+
             if ($item->latestDetailMasuk) {
                 $item->latestDetailMasuk->load('supplier');
             }
@@ -40,15 +49,11 @@ class ItemsController extends Controller
                 ->first();
         }
 
-        // Urutkan koleksi $items berdasarkan tanggal masuk terbaru
-        // Jika Anda memiliki 'tglMasuk' di BarangMasuk yang lebih relevan, gunakan itu.
-        // Asumsi 'created_at' di DetailMasuk adalah indikator terbaik untuk "terbaru".
+        // Sorting items by latestDetailMasuk created_at
         $items = $items->sortByDesc(function ($item) {
             return optional($item->latestDetailMasuk)->created_at;
         });
 
-
-        // Tetap ambil riwayat stok secara terpisah untuk ditampilkan di tabel bawah.
         $riwayatStok = DB::table('detail_barangmasuk')
             ->join('databarang', 'detail_barangmasuk.IdBarang', '=', 'databarang.IdBarang')
             ->join('barangmasuk', 'detail_barangmasuk.IdMasuk', '=', 'barangmasuk.IdMasuk')
@@ -62,11 +67,48 @@ class ItemsController extends Controller
             ->orderBy('detail_barangmasuk.created_at', 'desc')
             ->get();
 
-
-        // Kirim kedua data ke view
         return view("admin.allitems", compact('items', 'riwayatStok'));
     }
 
+    public function exportPdf(Request $request)
+    {
+        $bulan = $request->bulan;
+        $tahun = $request->tahun;
+
+        $items = Items::with(['jenisBarang', 'satuan'])->get();
+
+        foreach ($items as $item) {
+            $queryMasuk = DetailMasuk::where('IdBarang', $item->IdBarang)
+                ->when($bulan, function ($q) use ($bulan) {
+                    $q->whereMonth('created_at', $bulan);
+                })
+                ->when($tahun, function ($q) use ($tahun) {
+                    $q->whereYear('created_at', $tahun);
+                })
+                ->orderBy('created_at', 'desc')
+                ->first();
+
+            $item->latestDetailMasuk = $queryMasuk;
+
+            if ($item->latestDetailMasuk) {
+                $item->latestDetailMasuk->load('supplier');
+            }
+
+            $item->latestDetailKeluar = DB::table('detail_barangkeluar')
+                ->where('IdBarang', $item->IdBarang)
+                ->orderBy('created_at', 'desc')
+                ->first();
+        }
+
+        $items = $items->sortByDesc(function ($item) {
+            return optional($item->latestDetailMasuk)->created_at;
+        });
+
+        // Buat PDF pakai view khusus
+        $pdf = Pdf::loadView('admin.pdf_allitems', compact('items', 'bulan', 'tahun'));
+
+        return $pdf->download('laporan_barang_' . now()->format('Ymd_His') . '.pdf');
+    }
 
     public function SearchItem(Request $request)
     {
@@ -142,6 +184,54 @@ class ItemsController extends Controller
         ]);
 
         return redirect()->route('allitems')->with('message', 'Barang telah berhasil ditambah!');
+    }
+
+    public function detail($IdBarang)
+    {
+        // Ambil data barang dengan relasi yang dibutuhkan
+        $item = Items::with(['jenisBarang', 'satuan'])
+            ->where('IdBarang', $IdBarang)
+            ->firstOrFail();
+
+        // Ambil histori detail barang masuk (DetailMasuk) yang terkait barang ini, terbaru dulu
+        $historiMasuk = DetailMasuk::with('supplier')
+            ->where('IdBarang', $IdBarang)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Ambil histori detail barang keluar dari tabel detail_barangkeluar
+        $historiKeluar = DB::table('detail_barangkeluar as dbk')
+            ->join('barangkeluar as bk', 'dbk.IdKeluar', '=', 'bk.IdKeluar')
+            ->select('dbk.*', 'bk.tglKeluar')
+            ->where('dbk.IdBarang', $IdBarang)
+            ->orderBy('bk.tglKeluar', 'desc')
+            ->get();
+
+        // Kirim ke view
+        return view('admin.detail_allitems', compact('item', 'historiMasuk', 'historiKeluar'));
+    }
+
+    // Export PDF Detail Barang
+    public function exportPdfDetail($id)
+    {
+        $item = Items::with(['jenisBarang', 'satuan'])->findOrFail($id);
+
+        $historiMasuk = DetailMasuk::with('supplier')
+                            ->where('IdBarang', $id)
+                            ->orderBy('created_at', 'desc')
+                            ->get();
+
+        $historiKeluar = DB::table('detail_barangkeluar as dbk')
+                            ->join('barangkeluar as bk', 'dbk.IdKeluar', '=', 'bk.IdKeluar')
+                            ->select('dbk.*', 'bk.tglKeluar')
+                            ->where('dbk.IdBarang', $id)
+                            ->orderBy('bk.tglKeluar', 'desc')
+                            ->get();
+
+        $pdf = PDF::loadView('admin.pdf_detail', compact('item', 'historiMasuk', 'historiKeluar'))
+                    ->setPaper('A4', 'portrait');
+
+        return $pdf->stream('Detail_Barang_'.$item->NamaBarang.'.pdf');
     }
 
 
