@@ -27,6 +27,7 @@ class ItemsController extends Controller
         $items = Items::with(['jenisBarang', 'satuan'])->get();
 
         foreach ($items as $item) {
+            // Try to get the latest stock-in for the selected month/year
             $queryMasuk = DetailMasuk::where('IdBarang', $item->IdBarang)
                 ->when($bulan, function ($q) use ($bulan) {
                     $q->whereMonth('created_at', $bulan);
@@ -36,6 +37,13 @@ class ItemsController extends Controller
                 })
                 ->orderBy('created_at', 'desc')
                 ->first();
+
+            // If not found, get the latest stock-in regardless of filter
+            if (!$queryMasuk) {
+                $queryMasuk = DetailMasuk::where('IdBarang', $item->IdBarang)
+                    ->orderBy('created_at', 'desc')
+                    ->first();
+            }
 
             $item->latestDetailMasuk = $queryMasuk;
 

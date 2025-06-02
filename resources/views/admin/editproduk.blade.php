@@ -126,23 +126,6 @@ CIME | Halaman Edit Produk
                     </div>
 
                     <div class="row mb-3">
-                        <label class="col-sm-2 col-form-label" for="diskon">Diskon</label>
-                        <div class="col-sm-10">
-                            <select class="form-select @error('diskon') is-invalid @enderror" id="diskon" name="diskon">
-                                <option value="">Pilih Diskon</option>
-                                @foreach($diskonList as $diskon)
-                                    <option value="{{ $diskon->id }}" {{ old('diskon', $produk->diskon) == $diskon->id ? 'selected' : '' }}>
-                                        {{ $diskon->nama }} ({{ $diskon->persentase }}%)
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('diskon')
-                                <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
                         <label class="col-sm-2 col-form-label" for="deskripsi">Deskripsi</label>
                         <div class="col-sm-10">
                             <textarea class="form-control @error('deskripsi') is-invalid @enderror" id="deskripsi" name="deskripsi" rows="4" required>{{ old('deskripsi', $produk->deskripsi) }}</textarea>
