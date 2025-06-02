@@ -4,76 +4,65 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\User;
+use App\Models\User; // Keep if you use User model directly for other methods
 use App\Models\Transaksi;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator; // Keep if you use validation in other methods
+use Illuminate\Support\Facades\DB; // Keep if you use raw DB queries in other methods
 use Barryvdh\DomPDF\Facade\Pdf;
-use Carbon\Carbon;
+use Carbon\Carbon; // Keep if you use Carbon for date manipulations
 
 class TransaksiController extends Controller
 {
+    /**
+     * Menampilkan daftar transaksi dengan fitur filter bulan/tahun dan pencarian.
+     * Menggunakan eager loading untuk relasi 'detail'.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\View\View
+     */
     public function index(Request $request)
     {
         $bulan = $request->query('bulan');
         $tahun = $request->query('tahun');
+        $search = $request->input('search'); // Ambil input pencarian
 
-        $query = Transaksi::query();
+        // Mulai query Transaksi dengan eager loading 'detail'
+        $query = Transaksi::with('detail');
 
         // Filter jika ada bulan
         if ($bulan) {
-            $query->whereMonth('created_at', $bulan);
+            $query->whereMonth('tglTransaksi', $bulan); // Pastikan kolom tanggal transaksi yang benar
         }
 
         // Filter jika ada tahun
         if ($tahun) {
-            $query->whereYear('created_at', $tahun);
+            $query->whereYear('tglTransaksi', $tahun); // Pastikan kolom tanggal transaksi yang benar
         }
 
-        $transaksi = $query->orderBy('created_at', 'desc')->get();
-
-        return view('admin.allTransaksi', compact('transaksi', 'bulan', 'tahun'));
-    }
-
-    public function exportPdf(Request $request)
-    {
-        $bulan = $request->query('bulan');
-        $tahun = $request->query('tahun');
-
-        $query = Transaksi::query();
-
-        if ($bulan) {
-            $query->whereMonth('created_at', $bulan);
+        // Filter jika ada pencarian (mirip dengan SearchTransaksi)
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('IdTransaksi', 'like', "%{$search}%")
+                  ->orWhereHas('detail', function ($qDetail) use ($search) {
+                      // Asumsi 'detail' adalah relasi ke model customer (User/Customer)
+                      // dan memiliki kolom 'f_name' atau nama lain yang relevan
+                      $qDetail->where('f_name', 'like', "%{$search}%");
+                  });
+            });
         }
 
-        if ($tahun) {
-            $query->whereYear('created_at', $tahun);
-        }
-
-        $transaksis = $query->orderBy('created_at', 'asc')->get();
-
-        $pdf = Pdf::loadView('admin.transaksi_pdf', compact('transaksis', 'bulan', 'tahun'))
-            ->setPaper('a4', 'portrait');
-
-        return $pdf->stream('laporan-transaksi.pdf');
-    }
-}
-
-    public function index()
-    {
-        // Ambil data transaksi
-        // Pastikan relasi 'detail' ada di model Transaksi dan mengarah ke customer
-        // Eager load 'detail' untuk menghindari N+1 query problem
-        $transaksi = Transaksi::with('detail')->get();
+        // Urutkan dan ambil data
+        $transaksi = $query->orderBy('tglTransaksi', 'desc')->get(); // Urutkan berdasarkan tglTransaksi
 
         // Kirim data ke view
-        return view("admin.allTransaksi", compact('transaksi'));
+        return view('admin.allTransaksi', compact('transaksi', 'bulan', 'tahun', 'search'));
     }
 
     /**
      * Metode untuk menerima orderan transaksi.
+     * Menggunakan POST request.
      *
-     * @param int $id ID dari transaksi yang akan diterima.
+     * @param string $id ID dari transaksi yang akan diterima.
      * @return \Illuminate\Http\RedirectResponse
      */
     public function terimaOrderan($id)
@@ -81,7 +70,6 @@ class TransaksiController extends Controller
         $transaksi = Transaksi::find($id);
 
         if (!$transaksi) {
-            // Jika transaksi tidak ditemukan, redirect dengan pesan error
             return redirect()->route('alltransaksi')->with('error', 'Transaksi tidak ditemukan.');
         }
 
@@ -89,14 +77,14 @@ class TransaksiController extends Controller
         $transaksi->StatusPesanan = 'Diterima';
         $transaksi->save();
 
-        // Redirect kembali ke halaman daftar transaksi dengan pesan sukses
         return redirect()->route('alltransaksi')->with('message', 'Orderan berhasil diterima!');
     }
 
     /**
      * Metode untuk menolak orderan transaksi.
+     * Menggunakan POST request.
      *
-     * @param int $id ID dari transaksi yang akan ditolak.
+     * @param string $id ID dari transaksi yang akan ditolak.
      * @return \Illuminate\Http\RedirectResponse
      */
     public function tolakOrderan($id)
@@ -104,7 +92,6 @@ class TransaksiController extends Controller
         $transaksi = Transaksi::find($id);
 
         if (!$transaksi) {
-            // Jika transaksi tidak ditemukan, redirect dengan pesan error
             return redirect()->route('alltransaksi')->with('error', 'Transaksi tidak ditemukan.');
         }
 
@@ -112,29 +99,38 @@ class TransaksiController extends Controller
         $transaksi->StatusPesanan = 'Ditolak';
         $transaksi->save();
 
-        // Redirect kembali ke halaman daftar transaksi dengan pesan sukses
         return redirect()->route('alltransaksi')->with('message', 'Orderan berhasil ditolak!');
     }
 
-    // Jika Anda memiliki metode pencarian untuk transaksi, tambahkan di sini
-    public function SearchTransaksi(Request $request)
+    /**
+     * Mengekspor data transaksi ke PDF dengan filter bulan/tahun.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function exportPdf(Request $request)
     {
-        $search = $request->input('search');
+        $bulan = $request->query('bulan');
+        $tahun = $request->query('tahun');
 
-        $transaksi = Transaksi::query()
-            ->when($search, function ($query, $search) {
-                $query->where('IdTransaksi', 'like', "%{$search}%")
-                      ->orWhereHas('detail', function ($query) use ($search) {
-                          // Asumsi 'detail' adalah relasi ke model customer,
-                          // dan customer memiliki kolom 'f_name' atau nama lain yang relevan
-                          $query->where('f_name', 'like', "%{$search}%");
-                      });
-            })
-            ->with('detail') // Eager load detail juga untuk hasil pencarian
-            ->get();
+        $query = Transaksi::query()->with('detail'); // Eager load detail juga untuk PDF
 
-        return view('admin.allTransaksi', compact('transaksi', 'search'));
+        if ($bulan) {
+            $query->whereMonth('tglTransaksi', $bulan); // Pastikan kolom tanggal transaksi yang benar
+        }
+
+        if ($tahun) {
+            $query->whereYear('tglTransaksi', $tahun); // Pastikan kolom tanggal transaksi yang benar
+        }
+
+        $transaksis = $query->orderBy('tglTransaksi', 'asc')->get();
+
+        $pdf = Pdf::loadView('admin.transaksi_pdf', compact('transaksis', 'bulan', 'tahun'))
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->stream('laporan-transaksi.pdf');
     }
 
-    // ... metode lain jika ada (ManageTransaksi, AddTransaksi, StoreTransaksi, EditTransaksi, UpdateTransaksi, DeleteTransaksi)
+    // Catatan: Jika ada metode lain seperti ManageTransaksi, AddTransaksi, StoreTransaksi,
+    // EditTransaksi, UpdateTransaksi, DeleteTransaksi, tambahkan di sini sesuai kebutuhan.
 }
