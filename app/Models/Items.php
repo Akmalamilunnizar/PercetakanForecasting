@@ -19,6 +19,7 @@ class Items extends Model
         'IdSatuan'
     ];
 
+    public $timestamps = true;
     public function jenisBarang()
     {
         return $this->belongsTo(TypeItems::class, 'IdJenisBarang', 'IdJenisBarang');

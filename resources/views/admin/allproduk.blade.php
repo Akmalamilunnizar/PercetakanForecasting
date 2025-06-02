@@ -55,7 +55,6 @@ CIME | Halaman Daftar Produk
                                 <th class="fw-bold text-center">Ukuran</th>
                                 <th class="fw-bold text-center">Bahan</th>
                                 <th class="fw-bold text-center">Custom</th>
-                                <th class="fw-bold text-center">Diskon</th>
                                 <th class="fw-bold text-center">Actions</th>
                             </tr>
                         </thead>
@@ -99,15 +98,6 @@ CIME | Halaman Daftar Produk
                                             Rp {{ number_format($produk->custom_harga, 0, ',', '.') }}
                                         @else
                                             -
-                                        @endif
-                                    </td>
-                                    <td class="text-center">
-                                        @if($produk->diskonRelasi && $produk->diskonRelasi->persentase !== null)
-                                            <span class="badge bg-label-success">
-                                                {{ $produk->diskonRelasi->persentase }}%
-                                            </span>
-                                        @else
-                                            <span class="text-muted">-</span>
                                         @endif
                                     </td>
                                     <td class="text-center">

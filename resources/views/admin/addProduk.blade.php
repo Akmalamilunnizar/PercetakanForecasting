@@ -51,11 +51,11 @@
                                 <input type="number" name="harga_per_size[]" class="form-control" placeholder="Harga" required>
                             </div>
                             <div class="col-md-2">
-                                <button type="button" class="btn btn-danger remove-ukuran-harga">Hapus</button>
+                                <button type="button" class="btn btn-danger" style="border-radius: 8px;">Hapus</button>
                             </div>
                         </div>
                     </div>
-                    <button type="button" id="add-ukuran-harga" class="btn btn-secondary btn-sm mt-2">+ Tambah Ukuran</button>
+                    <button type="button" id="add-ukuran-harga" class="btn btn-outline-secondary btn-sm mt-2">+ Tambah Ukuran</button>
                 </div>
                 <!-- Custom Harga -->
                 <div class="mb-3">
@@ -69,16 +69,6 @@
                         <option value="">Pilih Bahan</option>
                         @foreach($bahanList as $bahan)
                             <option value="{{ $bahan->IdBarang }}" {{ old('id_bahan') == $bahan->IdBarang ? 'selected' : '' }}>{{ $bahan->NamaBarang }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <!-- Diskon -->
-                <div class="mb-3">
-                    <label for="diskon" class="form-label">Diskon</label>
-                    <select name="diskon" class="form-select">
-                        <option value="">Pilih Diskon</option>
-                        @foreach($diskonList as $diskon)
-                            <option value="{{ $diskon->id }}" {{ old('diskon') == $diskon->id ? 'selected' : '' }}>{{ $diskon->nama }} ({{ $diskon->persentase }}%)</option>
                         @endforeach
                     </select>
                 </div>
