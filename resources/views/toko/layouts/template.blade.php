@@ -6,10 +6,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>@yield('page_title') | Toko Percetakan</title>
 
-  <!-- CSS Bootstrap -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="css/style.css" rel="stylesheet">
-  <link rel="stylesheet" href="{{ asset('css/toko.css') }}" />
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{{ asset('dashboard2/assets/img/icons/logocime.png') }}" type="image/png" />
+    <!-- CSS Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/toko.css') }}" />
 
 
   <!-- Bootstrap Icons -->
@@ -91,8 +93,12 @@
         <div class="dropdown">
           <a class="nav-link p-0" href="#" role="button" id="profileDropdown" data-bs-toggle="dropdown"
             aria-expanded="false">
-            <img src="{{ Auth::user()->img ? asset('storage/' . Auth::user()->img) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->f_name) . '&color=FFFFFF&background=C2185B' }}" alt="Profile" class="rounded-circle" width="40" height="40">
-          </a>
+           @auth
+    <img src="{{ Auth::user()->img ? asset('storage/' . Auth::user()->img) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->f_name) . '&color=FFFFFF&background=C2185B' }}" alt="Profile" class="rounded-circle" width="40" height="40">
+@else
+    <img src="https://ui-avatars.com/api/?name=Guest&color=FFFFFF&background=C2185B" alt="Guest" class="rounded-circle" width="40" height="40">
+@endauth
+  </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
             <li><a class="dropdown-item" href="{{ route('profile.edit') }}">Profile</a></li>
             <li>
