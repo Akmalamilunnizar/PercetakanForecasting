@@ -118,7 +118,7 @@ CIME | Halaman Laporan Barang
                                     <td class="text-center">{{ $value }}</td>
                                 @endforeach
                                 <td class="text-center">
-                                    <a href="#" class="btn btn-warning">Detail</a>
+                                    <a href="{{ route('admin.detail-laporantransaksi', $laporan->Idlaporan_transaksi) }}" class="btn btn-warning">Detail</a>
                                 </td>
                             </tr>
                         @empty

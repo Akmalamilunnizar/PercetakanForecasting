@@ -200,6 +200,7 @@ Route::controller(LaporanController::class)->group(function () {
     Route::delete('/admin/laporanbarang/{id}', 'destroy')->name('laporanbarang.destroy');
 });
 
+
 Route::controller(LaporanTransaksiController::class)->group(function () {
     Route::get('/admin/laporantransaksi', 'index')->name('laporantransaksi');
     Route::get('admin/detail-laporantransaksi/{id}', 'show')->name('admin.detail-laporantransaksi');

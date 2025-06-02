@@ -9,11 +9,25 @@ use Illuminate\Database\Eloquent\Model;
 class DetailMasuk extends Model
 {
     use HasFactory;
+    protected $table = 'detail_barangmasuk';
+    protected $fillable = [
+        'IdBarang',
+        'IdMasuk',
+        'IdSupplier', // ini buat id
+        'QtyMasuk',
+        'HargaSatuan',
+        'SubTotal'
+    ];
 
-    protected $table = 'detail_barangmasuk'; // Specify the table name
-    protected $primaryKey = null; // No primary key for pivot table
-    public $incrementing = false; // Disable auto-incrementing
-    protected $guarded = []; // Allow mass assignment for all fields
+    // relasi ke laporan
+    public function laporan()
+    {
+        return $this->hasMany(Laporan::class, 'IdMasuk', 'IdMasuk');
+    }
+
+    // If you really have no primary key, you can uncomment the next two lines:
+    // public $incrementing = false;
+    // protected $primaryKey = null;
 
     // Relationship to BarangMasuk
     public function barangMasuk()
