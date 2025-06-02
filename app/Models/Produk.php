@@ -36,6 +36,11 @@ class Produk extends Model
     public $timestamps = false;
 
     // Relationships
+
+    public function diskonRelasi()
+    {
+        return $this->belongsTo(Items::class, 'diskon', 'id');
+    }
     public function bahan()
     {
         return $this->belongsTo(Items::class, 'id_bahan', 'IdBarang');
