@@ -103,6 +103,8 @@
                         <th style="text-align: center; font-weight: bold;">Jumlah yang dibayarkan</th>
                         <th style="text-align: center; font-weight: bold;">Actions</th>
                         <th style="text-align: center; font-weight: bold;">Status Orderan</th>
+                        <th style="text-align: center; font-weight: bold;">Jenis Pembayaran</th>
+                        <th style="text-align: center; font-weight: bold;">Status Pembayaran</th>
                     </tr>
                 </thead>
                 <tbody>
