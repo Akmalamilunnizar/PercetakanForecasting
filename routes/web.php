@@ -14,7 +14,7 @@ use App\Http\Controllers\Api\V1\DiseaseReportController;
 use App\Http\Controllers\Api\V1\ProductController;
 use App\Http\Controllers\Api\V1\SubCategoryController;
 use App\Http\Controllers\Api\V1\UserController;
-use App\Http\Controllers\Api\V1\TransaksiController;
+use App\Http\Controllers\Api\V1\TransaksiController; // Pastikan ini di-import
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController; // Pastikan ini di-import
 use App\Models\Items; /* */
@@ -42,6 +42,7 @@ use App\Http\Controllers\Api\V1\PaymentController;
 use App\Http\Controllers\Api\V1\DetailProdukController;
 use App\Http\Controllers\Api\V1\SizeController;
 use App\Http\Controllers\Api\V1\DiskonController;
+
 
 
 // Route::get('/', function () {
@@ -140,6 +141,12 @@ Route::controller(TransaksiController::class)->group(function () {
     Route::get('/admin/edit-transaksi/{id}', 'EditTransaksi')->name('edittransaksi');
     Route::post('/admin/update-transaksi', 'UpdateTransaksi')->name('updatetransaksi');
     Route::get('/admin/delete-transaksi/{id}', 'DeleteTransaksi')->name('deletetransaksi');
+
+    // Tambahkan atau pastikan rute ini ada dan benar
+    // Ini adalah rute untuk Menerima Orderan
+    Route::get('/admin/transaksi/{id}/terima', 'terimaOrderan')->name('terimaOrderan');
+    // Ini adalah rute untuk Menolak Orderan
+    Route::get('/admin/transaksi/{id}/tolak', 'tolakOrderan')->name('tolakOrderan');
 });
 
 
