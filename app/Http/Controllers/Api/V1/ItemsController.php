@@ -21,11 +21,50 @@ class ItemsController extends Controller
 {
     public function Index()
     {
-        $items = Items::with(['detailBarangMasuk', 'jenisBarang', 'satuan', 'detailBarangKeluar'])->get();
+        // Get all items
+        $items = Items::with(['jenisBarang', 'satuan'])->get();
+
+        // Manually load the latest detailBarangMasuk and detailBarangKeluar for each item
+        foreach ($items as $item) {
+            $item->latestDetailMasuk = DetailMasuk::where('IdBarang', $item->IdBarang)
+                ->orderBy('created_at', 'desc')
+                ->first();
+            // Penting: Pastikan Anda juga memuat relasi supplier di sini jika ingin menggunakannya
+            if ($item->latestDetailMasuk) {
+                $item->latestDetailMasuk->load('supplier');
+            }
+
+            $item->latestDetailKeluar = DB::table('detail_barangkeluar')
+                ->where('IdBarang', $item->IdBarang)
+                ->orderBy('created_at', 'desc')
+                ->first();
+        }
+
+        // Urutkan koleksi $items berdasarkan tanggal masuk terbaru
+        // Jika Anda memiliki 'tglMasuk' di BarangMasuk yang lebih relevan, gunakan itu.
+        // Asumsi 'created_at' di DetailMasuk adalah indikator terbaik untuk "terbaru".
+        $items = $items->sortByDesc(function ($item) {
+            return optional($item->latestDetailMasuk)->created_at;
+        });
 
 
-        // Kirim data ke view
-        return view("admin.allitems", compact('items'));
+        // Tetap ambil riwayat stok secara terpisah untuk ditampilkan di tabel bawah.
+        $riwayatStok = DB::table('detail_barangmasuk')
+            ->join('databarang', 'detail_barangmasuk.IdBarang', '=', 'databarang.IdBarang')
+            ->join('barangmasuk', 'detail_barangmasuk.IdMasuk', '=', 'barangmasuk.IdMasuk')
+            ->select(
+                'detail_barangmasuk.IdMasuk',
+                'databarang.NamaBarang',
+                'detail_barangmasuk.QtyMasuk',
+                'barangmasuk.tglMasuk as tanggal_masuk'
+            )
+            ->orderBy('barangmasuk.tglMasuk', 'desc')
+            ->orderBy('detail_barangmasuk.created_at', 'desc')
+            ->get();
+
+
+        // Kirim kedua data ke view
+        return view("admin.allitems", compact('items', 'riwayatStok'));
     }
 
 
@@ -59,6 +98,7 @@ class ItemsController extends Controller
 
         return view("admin.additems", compact('typeid', 'typeS', 'newIdSupplier', 'newIdMasuk', 'typeid', 'typeS', 'suppliers', 'username'));
     }
+
 
     public function StoreItem(Request $request)
     {
@@ -173,9 +213,9 @@ class ItemsController extends Controller
         $username = Auth::user()->username;
         $lastKeluar = DB::table('barangkeluar')->orderBy('IdKeluar', 'desc')->first();
         $newIdKeluar = $lastKeluar ? 'BK' . str_pad((int) substr($lastKeluar->IdKeluar, 2) + 1, 4, '0', STR_PAD_LEFT) : 'BK0001';
-        
+
         $items = Items::with('jenisBarang', 'satuan')->get();
-        
+
         return view('admin.keluaritems', compact('items', 'newIdKeluar', 'username'));
     }
 
@@ -218,6 +258,54 @@ class ItemsController extends Controller
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
+
+    public function tambahQty(Request $request)
+    {
+        $request->validate([
+            'IdBarang' => 'required',
+            'QtyMasuk' => 'required|integer|min:1',
+        ]);
+
+        // Ambil IdMasuk terakhir dari tabel barangmasuk
+        $lastMasuk = DB::table('barangmasuk')->orderByDesc('IdMasuk')->first();
+
+        // Buat IdMasuk baru berdasarkan yang terakhir
+        $newIdMasuk = $lastMasuk
+            ? 'BM' . str_pad((int) substr($lastMasuk->IdMasuk, 2) + 1, 4, '0', STR_PAD_LEFT)
+            : 'BM0001';
+
+        // Ambil data detail masuk terakhir untuk IdBarang ini untuk mendapatkan HargaSatuan terbaru
+        $latestDetailMasuk = DetailMasuk::where('IdBarang', $request->IdBarang)
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        $hargaSatuan = $latestDetailMasuk ? $latestDetailMasuk->HargaSatuan : 0;
+        $subTotal = $request->QtyMasuk * $hargaSatuan;
+
+        // Ambil IdSupplier dari detail masuk terakhir, atau gunakan default jika tidak ada
+        $idSupplier = $latestDetailMasuk ? $latestDetailMasuk->IdSupplier : 'SP0001';
+
+        // Simpan data ke tabel barangmasuk
+        DB::table('barangmasuk')->insert([
+            'IdMasuk' => $newIdMasuk,
+            'username' => auth()->user()->username ?? 'admin',
+            'tglMasuk' => now(),
+        ]);
+
+        // Simpan data ke tabel detail_barangmasuk
+        DB::table('detail_barangmasuk')->insert([
+            'IdMasuk' => $newIdMasuk,
+            'IdSupplier' => $idSupplier, // Gunakan IdSupplier yang diambil
+            'IdBarang' => $request->IdBarang,
+            'QtyMasuk' => $request->QtyMasuk,
+            'HargaSatuan' => $hargaSatuan, // Gunakan HargaSatuan yang diambil
+            'SubTotal' => $subTotal, // Gunakan SubTotal yang dihitung
+        ]);
+
+        return redirect()->back()->with('message', 'Qty berhasil ditambahkan!');
+    }
+
+
 
     /**
      * Title for current resource.

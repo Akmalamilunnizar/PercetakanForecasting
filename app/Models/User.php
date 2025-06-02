@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+// use Illuminate\Contracts\Auth\MustVerifyEmail; // Anda bisa un-comment ini jika ingin menggunakan fitur verifikasi email Laravel
 
 use Illuminate\Auth\Authenticatable as AuthenticableTrait;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -27,14 +27,12 @@ class User extends Authenticatable implements CanResetPasswordContract
     protected $fillable = [
         'f_name',
         'email',
-        'nomor_telepon',
-        'alamat',
+        'nomor_telepon', // Sudah ada, tidak perlu diduplikasi
+        'alamat',        // Sudah ada, tidak perlu diduplikasi
         'password',
-        'nomor_telepon',
         'username',
-        'user',
-        'alamat',
-        'img'
+        'user',          // Kolom 'user' untuk peran (role)
+        'img'            // Kolom untuk gambar profil
     ];
 
     protected $attributes = [
@@ -56,7 +54,7 @@ class User extends Authenticatable implements CanResetPasswordContract
      *
      * @var bool
      */
-    public $timestamps = false;
+    public $timestamps = false; // Set ke true jika Anda ingin menggunakan created_at dan updated_at
 
     /**
      * The primary key for the model.
@@ -86,36 +84,24 @@ class User extends Authenticatable implements CanResetPasswordContract
      */
     protected $casts = [
         'id' => 'integer',
-        'user_id' => 'integer',
+        // 'user_id' => 'integer', // Ini mungkin tidak diperlukan di sini kecuali ada kolom 'user_id' di tabel users
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
 
-
-
-    public function role()
-    {
-        return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id');
-    }
+    // Relasi untuk Laratrust jika Anda menggunakan role_user_table
     public function roles()
     {
         return $this->morphToMany(
             config('laratrust.models.role'),
-            'user',
+            'user', // Ini harus sesuai dengan nama morph 'user' di konfigurasi Laratrust Anda
             config('laratrust.tables.role_user'),
             'user_id',
             'role_id'
         );
     }
-    // public function roles()
-    // {
-    //     return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id', 'username', 'id');
-    // }
-    // public function users()
-    // {
-    //     return $this->belongsTo(Order::class,'user_id', 'id');
-    // }
 
+    // Jika Anda memiliki relasi satu-ke-banyak dengan Address, ini sudah benar
     public function addresses()
     {
         return $this->hasMany(\App\Models\Address::class, 'user_id');
