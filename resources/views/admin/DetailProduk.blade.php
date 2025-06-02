@@ -1,6 +1,6 @@
 @extends('toko.layouts.template')
 @section('page_title')
-    SANKE | Halaman detail produk Admin
+    CIME | Detail Produk
 @endsection
 
 @section('search')
@@ -55,8 +55,10 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="product-image-container">
-                        <img src="{{ asset('storage/' . $produk->Img) }}" alt="{{ $produk->NamaProduk }}"
-                            class="product-image" id="main-image">
+                        <img src="{{ asset('storage/' . ($produk->Img ?? 'assets/images/poster1.jpeg')) }}"
+                            alt="{{ $produk->NamaProduk }}"
+                            class="product-image" id="main-image"
+                            onerror="this.onerror=null; this.src='{{ asset('assets/images/poster1.jpeg') }}';">
                     </div>
                     <div class="thumbnail-scroll-wrapper mt-3" id="thumbnailScrollWrapper">
                         

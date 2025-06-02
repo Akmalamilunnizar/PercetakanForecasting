@@ -1,6 +1,6 @@
 @extends('admin.layouts.template')
 @section('page_title')
-    SANKE | Halaman detail produk Admin
+    CIME | Detail Produk
 @endsection
 
 @section('search')

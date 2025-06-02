@@ -4,6 +4,7 @@
 CIME | Halaman Dashboard E-Commerce
     @endsection
     @section('js')
+    
         <!-- Load jQuery terlebih dahulu -->
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -14,7 +15,6 @@ CIME | Halaman Dashboard E-Commerce
         <!-- Load ApexCharts setelahnya -->
         <script src="{{ asset('assets/apexcharts/dist/apexcharts.js') }}"></script>
         <link rel="stylesheet" href="{{ asset('assets/apexcharts/dist/apexcharts.css') }}" />
-        <link rel="shortcut icon" href="{{ asset('dashboard2/assets/img/icons/logocime.png') }}" type="image/png" />
         <link rel="stylesheet" href="{{ URL::asset('assets/apexcharts/dist/apexcharts.css') }}">
         <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
         <script src="{{ URL('assets/apexcharts/dist/apexcharts.min.js') }}"></script>
