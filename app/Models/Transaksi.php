@@ -20,6 +20,8 @@ class Transaksi extends Model
         'IdTransaksi',
         'username',
         'id',
+        'address_id',
+        'alamat_pengiriman',
         'Bayar',
         'GrandTotal',
         'tglTransaksi',
@@ -63,8 +65,7 @@ class Transaksi extends Model
 
     public function address()
     {
-        return $this->belongsTo(Address::class, 'address_id'); // atau 'id_alamat' sesuai nama kolomnya di tabel transaksi
+        return $this->belongsTo(Address::class, 'address_id');
     }
-
 
 }

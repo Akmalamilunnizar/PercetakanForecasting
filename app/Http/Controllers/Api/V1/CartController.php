@@ -19,7 +19,7 @@ class CartController extends Controller
     // Menambahkan item ke keranjang
     public function add(Request $request)
     {
-        try {   
+        try {
             // Validate file if present
             if ($request->hasFile('design_file')) {
                 $request->validate([
@@ -35,6 +35,7 @@ class CartController extends Controller
             $productId = $request->id;
             $ukuran = $request->ukuran; // ukuran id or custom string
             $ukuran_label = $request->ukuran_label ?? null; // label for display (optional)
+            $custom_ukuran = $request->custom_ukuran ?? null; // custom ukuran (optional)
             // Make a unique key for product+ukuran
             $cartKey = $productId . '|' . $ukuran;
 
@@ -52,6 +53,7 @@ class CartController extends Controller
                     "ukuran" => $ukuran,
                     "ukuran_label" => $ukuran_label,
                     "subtotal" => $request->subtotal,
+                    "custom_ukuran" => $custom_ukuran,
                 ];
             }
 
@@ -69,7 +71,6 @@ class CartController extends Controller
                 'cartCount' => array_sum(array_column($cart, 'quantity')),
                 'message' => 'Produk berhasil ditambahkan ke keranjang'
             ]);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -200,6 +201,11 @@ class CartController extends Controller
         session(['shipping_method' => $shippingData['method']]);
         session(['shipping_cost' => $shippingData['cost']]);
 
+        $selectedAddressId = $request->address_id;
+        if ($request->has('address_id')) {
+            session(['selected_address_id' => $selectedAddressId]);
+        }
+
         return response()->json(['success' => true]);
     }
 
@@ -207,13 +213,28 @@ class CartController extends Controller
     {
         $cart = session('cart');
         if (!$cart || count($cart) === 0) {
-            // Option 1: Redirect with a message
             return redirect()->route('tokodashboard')->with('error', 'Keranjang kosong. Silakan pilih produk terlebih dahulu.');
-
-            // Option 2: Show a view with an error message
-            // return view('toko.empty_cart');
         }
-        return view('toko.shipping', compact('cart'));
+
+        // Get the selected address ID from session
+        $selectedAddressId = session('selected_address_id');
+        
+        // Get the address details
+        $selectedAddress = null;
+        if ($selectedAddressId) {
+            $selectedAddress = Address::find($selectedAddressId);
+        }
+
+        // If no address is selected, get the default address
+        if (!$selectedAddress) {
+            $selectedAddress = Address::where('user_id', auth()->id())
+                                    ->where('is_default', true)
+                                    ->first();
+        }
+
+        \Log::info('selected_address_id in session: ' . session('selected_address_id'));
+
+        return view('toko.shipping', compact('cart', 'selectedAddress'));
     }
 
 }

@@ -46,24 +46,22 @@ class OrderController extends Controller
             $isPaid = session('midtrans_paid', false);
             $total = 0;
             foreach ($cart as $id => $details) {
-                $parts = explode('|', $id);
-                $productId = $parts[0];
-                $sizeId = $parts[1] ?? null;
-
+                $isCustom = ($details['ukuran'] === 'custom');
                 $detailData = [
                     'IdTransaksi' => $transactionId,
                     'IdProduk' => $details['id'],
+                    'id_ukuran' => $isCustom ? null : $details['ukuran'],
+                    'CustomUkuran' => $isCustom ? ($details['custom_ukuran'] ?? null) : null,
                     'QtyProduk' => $details['quantity'],
                     'SubTotal' => $details['harga'] * $details['quantity'],
                     'design_file' => $details['design_file'] ?? null,
                 ];
-                if ($sizeId !== null) {
-                    $detailData['id_ukuran'] = $sizeId;
-                }
-
                 $detail = DetailTransaksi::create($detailData);
                 $total += $details['harga'] * $details['quantity'];
             }
+
+            $shippingCost = session('shipping_cost', 0);
+            $total += $shippingCost;
 
             $selectedAddressId = session('selected_address_id');
             $address = \App\Models\Address::find($selectedAddressId);
@@ -77,10 +75,8 @@ class OrderController extends Controller
             $transaction->tglTransaksi = now();
             $transaction->StatusPembayaran = $isPaid ? 'Lunas' : 'Belum Lunas';
             $transaction->StatusPesanan = 'Menunggu Konfirmasi';
-            if ($address) {
-                $transaction->address_id = $address->id;
-                $transaction->alamat_pengiriman = $address->full_address;
-            }
+            $transaction->address_id = $address ? $address->id : null;
+            $transaction->alamat_pengiriman = $address ? $address->full_address : null;
             $transaction->save();
 
             // ... existing code ...
