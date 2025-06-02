@@ -27,7 +27,8 @@ class Transaksi extends Model
         'tglTransaksi',
         'StatusPembayaran',
         'StatusPesanan',
-        'tglUpdate'
+        'tglUpdate',
+        'notes',
     ];
 
     public function detailTransaksi()

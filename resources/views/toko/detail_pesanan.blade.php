@@ -96,6 +96,16 @@
                 <div class="col-sm-8">{{ $pesanan->tglUpdate ? \Carbon\Carbon::parse($pesanan->tglUpdate)->format('d M Y H:i') : '-' }}</div>
             </div>
 
+            <div class="row mb-3">
+                <div class="col-sm-4 fw-semibold text-secondary">Catatan</div>
+                <div class="col-sm-8">{{ $pesanan->notes ?? '-' }}</div>
+            </div>
+
+            <div>
+                <strong>Metode Pengiriman:</strong> {{ $pesanan->shipping_method ?? '-' }}<br>
+                <strong>Jenis Pengiriman:</strong> {{ $pesanan->shipping_type ?? '-' }}
+            </div>
+
         </div>
     </div>
 

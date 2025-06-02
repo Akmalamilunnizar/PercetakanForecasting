@@ -98,6 +98,8 @@ class OrderController extends Controller
             $transaction->username = $user->username;
             $transaction->id = $user->id;
             $transaction->address_id = $address ? $address->id : null;
+            $transaction->shipping_method = session('shipping_method');
+            $transaction->shipping_type = session('shipping_type');
             $transaction->alamat_pengiriman = $address ? $address->full_address : null;
 
             if ($paymentMethod === 'midtrans' && $isPaid) {

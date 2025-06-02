@@ -245,6 +245,7 @@ document.addEventListener('DOMContentLoaded', function() {
   proceedButton.addEventListener('click', function() {
     const shippingData = {
       method: selectedMethod,
+      type: selectedMethod === 'kurir' ? (selectedOption == 20000 ? 'Reguler' : 'Express') : null,
       cost: selectedMethod === 'kurir' ? parseInt(selectedOption) : 0,
       address_id: '{{ session('selected_address_id') }}'
     };

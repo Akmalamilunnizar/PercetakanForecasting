@@ -381,7 +381,12 @@ Route::middleware(['auth'])->group(function () {
 
     // Order routes
     Route::controller(OrderController::class)->group(function () {
-        Route::post('/confirm-order', 'confirmOrder')->name('confirm.order');
+        Route::post('/confirm-order', function () {
+            $transaction = new Transaksi();
+            $transaction->IdTransaksi = $transactionId;
+            $transaction->notes = session('order_notes', null);
+            $transaction->save();
+        })->name('confirm.order');
     });
 
     Route::controller(AddressController::class)->group(function () {
