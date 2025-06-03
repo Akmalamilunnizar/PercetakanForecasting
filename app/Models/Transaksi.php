@@ -29,6 +29,8 @@ class Transaksi extends Model
         'StatusPesanan',
         'tglUpdate',
         'notes',
+        'shipping_method',
+        'shipping_type'
     ];
 
     public function detailTransaksi()

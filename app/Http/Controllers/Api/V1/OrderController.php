@@ -101,6 +101,7 @@ class OrderController extends Controller
             $transaction->shipping_method = session('shipping_method');
             $transaction->shipping_type = session('shipping_type');
             $transaction->alamat_pengiriman = $address ? $address->full_address : null;
+            $transaction->notes = session('order_notes', null); // Add order notes
 
             if ($paymentMethod === 'midtrans' && $isPaid) {
                 $transaction->Bayar = $total;
@@ -125,7 +126,6 @@ class OrderController extends Controller
                     'IdTransaksi' => $transactionId,
                     'IdProduk' => $details['id'],
                     'id_ukuran' => $isCustom ? null : $details['ukuran'],
-                    // 'CustomUkuran' => $isCustom ? $details['ukuran_label'] : null,
                     'QtyProduk' => $details['quantity'],
                     'SubTotal' => $details['harga'] * $details['quantity'],
                     'design_file' => $details['design_file'] ?? null,
@@ -136,12 +136,7 @@ class OrderController extends Controller
             }
 
             // Clear cart and payment flags
-            session()->forget('cart');
-            session()->forget('midtrans_paid');
-            session()->forget('payment_method');
-            Log::info('Cart cleared from session');
-
-            
+            session()->forget(['cart', 'midtrans_paid', 'payment_method', 'shipping_cost', 'shipping_method', 'shipping_type', 'selected_address_id', 'order_notes']);
 
             DB::commit();
 
