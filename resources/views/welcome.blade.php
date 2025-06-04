@@ -680,7 +680,7 @@
                 <li>
                 <li>Citramedia@gmail.com</li>
                 <li>
-                Kabupaten Jember, Jawa Timur 68121<br />
+                Kabupaten Pamekasan, Jawa Timur 68121<br />
                 Indonesia
                 </li>
               </ul>
@@ -696,7 +696,7 @@
               <div class="copyright-content">
                 <p class="text">
                   Percetakan Citra Media |
-                  <a href="" rel="nofollow">Kabupaten Jember</a>
+                  <a href="" rel="nofollow">Kabupaten Pamekasan</a>
                 </p>
               </div>
 
@@ -795,7 +795,6 @@ document.addEventListener("DOMContentLoaded", function () {
 @if(Auth::check())
     <p>Welcome, {{ Auth::user()->f_name ?? Auth::user()->username }}!</p>
 @else
-    <p>Welcome, Guest!</p>
 @endif
 
 </body>
