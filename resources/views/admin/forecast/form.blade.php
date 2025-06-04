@@ -23,8 +23,8 @@ CIME | Halaman Forecasting
                     <div class="mb-4">
                         <div class="btn-group" role="group">
                             <!-- <button type="button" class="btn btn-primary" onclick="loadFromDatabase()">Load from Database</button> -->
-                            <button type="button" class="btn btn-outline-primary" onclick="generateSampleData()">Generate Sample Data</button>
-                            <button type="button" class="btn btn-outline-primary" onclick="clearForm()">Clear Form</button>
+                            <button type="button" class="btn btn-outline-primary" onclick="generateSampleData()">Klik Disini Sebelum Mengisi</button>
+                            <button type="button" class="btn btn-outline-primary" onclick="clearForm()">Bersihkan Form</button>
                         </div>
                     </div>
 
@@ -52,8 +52,7 @@ CIME | Halaman Forecasting
                                     @endfor
                                 </tbody>
                             </table>
-                        </div>
-                        
+                        </div>                        
                         <button type="submit" class="btn btn-outline-primary">Prediksi</button>
                     </form>
                 </div>
@@ -72,7 +71,7 @@ function addRow() {
         newRow.innerHTML = `
             <td><input type="text" class="form-control" name="bulan[]" placeholder="YYYY-MM" required></td>
             <td><input type="number" class="form-control" name="terjual[]" required></td>
-            <td><button type="button" class="btn btn-danger mx-1 delete-confirm" onclick="removeRow(this)">Delete</button></td>
+            <td><button type="button" class="btn btn-outline-danger mx-1 delete-confirm" onclick="removeRow(this)">Hapus</button></td>
         `;
         tbody.appendChild(newRow);
         rowCount++;
@@ -92,7 +91,7 @@ function clearForm() {
         <tr>
             <td><input type="text" class="form-control" name="bulan[]" placeholder="2024-01" required></td>
             <td><input type="number" class="form-control" name="terjual[]" required></td>
-            <td><button type="button" class="btn btn-danger mx-1 delete-confirm" onclick="removeRow(this)">Delete</button></td>
+            <td><button type="button" class="btn btn-outline-danger mx-1 delete-confirm" onclick="removeRow(this)">Hapus</button></td>
         </tr>
     `;
     rowCount = 1;
@@ -114,7 +113,7 @@ function generateSampleData() {
         newRow.innerHTML = `
             <td><input type="text" class="form-control" name="bulan[]" value="${year}-${month}" required></td>
             <td><input type="number" class="form-control" name="terjual[]" value="${sales}" required></td>
-            <td><button type="button" class="btn btn-danger mx-1 delete-confirm" onclick="removeRow(this)">Delete</button></td>
+            <td><button type="button" class="btn btn-outline-danger mx-1 delete-confirm" onclick="removeRow(this)">Hapus</button></td>
         `;
         tbody.appendChild(newRow);
         rowCount++;
@@ -156,7 +155,7 @@ function loadFromDatabase() {
             newRow.innerHTML = `
                 <td><input type="text" class="form-control" name="bulan[]" value="${item.bulan}" required></td>
                 <td><input type="number" class="form-control" name="terjual[]" value="${item.terjual}" required></td>
-                <td><button type="button" class="btn btn-danger mx-1 delete-confirm" onclick="removeRow(this)">Delete</button></td>
+                <td><button type="button" class="btn btn-outline-danger mx-1 delete-confirm" onclick="removeRow(this)">Hapus</button></td>
             `;
             tbody.appendChild(newRow);
             rowCount++;

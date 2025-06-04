@@ -3,7 +3,11 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3307
--- Generation Time: May 27, 2025 at 05:04 PM
+<<<<<<<< Updated upstream:database/dbpercetakan (6).sql
+-- Generation Time: Jun 04, 2025 at 06:52 AM
+========
+-- Generation Time: Jun 03, 2025 at 06:54 AM
+>>>>>>>> Stashed changes:database/dbpercetakan (4).sql
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -46,8 +50,8 @@ CREATE TABLE `addresses` (
 --
 
 INSERT INTO `addresses` (`id`, `user_id`, `label`, `recipient_name`, `phone_number`, `city`, `postal_code`, `full_address`, `is_default`, `created_at`, `updated_at`) VALUES
-(1, 4, 'awd', 'Ahmad Muzakki', '19272342', 'jshd', 'asjdb', 'ajshbdw\r\njknasd', 1, '2025-05-18 06:48:43', '2025-05-18 06:48:43'),
-(2, 4, 'Jember', 'Alan', '081238288', 'Jember', '190237', 'Asdjbiwdxz', 0, '2025-05-23 15:00:02', '2025-05-23 15:00:02');
+(1, 4, 'awd', 'Ahmad Muzakki', '19272342', 'jshd', 'asjdb', 'ajshbdw\r\njknasd', 0, '2025-05-18 06:48:43', '2025-05-31 00:02:12'),
+(2, 4, 'Jember', 'Alan', '081238288', 'Jember', '190237', 'Jalan Kamilantan', 0, '2025-05-23 15:00:02', '2025-05-31 00:02:12');
 
 -- --------------------------------------------------------
 
@@ -115,21 +119,23 @@ CREATE TABLE `databarang` (
   `NamaBarang` varchar(25) DEFAULT NULL,
   `IdJenisBarang` varchar(6) DEFAULT NULL,
   `JumlahStok` int(11) NOT NULL DEFAULT 0,
-  `IdSatuan` varchar(6) DEFAULT NULL
+  `IdSatuan` varchar(6) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `databarang`
 --
 
-INSERT INTO `databarang` (`IdBarang`, `NamaBarang`, `IdJenisBarang`, `JumlahStok`, `IdSatuan`) VALUES
-('173462738912', 'Mousepad', 'S0005', 50, 'S0002'),
-('3423531787', 'Banner', 'S0001', 30, 'S0006'),
-('4005401171027', 'F4', 'S0001', 33, 'S0001'),
-('4970129727514', 'Buffalo', 'S0001', 26, 'S0002'),
-('4970129759652', 'A4', 'S0001', 45, 'S0001'),
-('6923655547512', 'Tinta', 'S0003', 8, 'S0004'),
-('8991389230237', 'A5', 'S0001', 27, 'S0001');
+INSERT INTO `databarang` (`IdBarang`, `NamaBarang`, `IdJenisBarang`, `JumlahStok`, `IdSatuan`, `created_at`, `updated_at`) VALUES
+('173462738912', 'Satin', 'S0005', 50, 'S0006', NULL, '2025-06-02 21:26:47'),
+('3423531787', 'Banner', 'S0001', 30, 'S0006', NULL, '2025-05-31 09:35:20'),
+('4005401171027', 'F4', 'S0001', 33, 'S0001', NULL, '2025-05-31 09:35:20'),
+('4970129727514', 'Buffalo', 'S0001', 26, 'S0002', NULL, '2025-05-31 09:35:20'),
+('4970129759652', 'A4', 'S0001', 45, 'S0001', NULL, '2025-05-31 09:35:20'),
+('6923655547512', 'Tinta', 'S0003', 8, 'S0004', NULL, '2025-05-31 09:35:20'),
+('8991389230237', 'A5', 'S0001', 27, 'S0001', NULL, '2025-05-31 09:35:20');
 
 -- --------------------------------------------------------
 
@@ -140,23 +146,25 @@ INSERT INTO `databarang` (`IdBarang`, `NamaBarang`, `IdJenisBarang`, `JumlahStok
 CREATE TABLE `detail_barangkeluar` (
   `IdKeluar` varchar(6) DEFAULT NULL,
   `IdBarang` varchar(13) DEFAULT NULL,
-  `QtyKeluar` int(3) DEFAULT NULL
+  `QtyKeluar` int(3) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `detail_barangkeluar`
 --
 
-INSERT INTO `detail_barangkeluar` (`IdKeluar`, `IdBarang`, `QtyKeluar`) VALUES
-('BK0003', '4970129759652', 4),
-('BK0003', '6923655547512', 5),
-('BK0004', '6923655547512', 5),
-('BK0005', '8991389230237', 3),
-('BK0005', '6923655547512', 15),
-('BK0006', '4970129759652', 10),
-('BK0007', '4970129727514', 5),
-('BK0008', '4970129727514', 3),
-('BK0009', '3423531787', 20);
+INSERT INTO `detail_barangkeluar` (`IdKeluar`, `IdBarang`, `QtyKeluar`, `created_at`, `updated_at`) VALUES
+('BK0003', '4970129759652', 4, NULL, NULL),
+('BK0003', '6923655547512', 5, NULL, NULL),
+('BK0004', '6923655547512', 5, NULL, NULL),
+('BK0005', '8991389230237', 3, NULL, NULL),
+('BK0005', '6923655547512', 15, NULL, NULL),
+('BK0006', '4970129759652', 10, NULL, NULL),
+('BK0007', '4970129727514', 5, NULL, NULL),
+('BK0008', '4970129727514', 3, NULL, NULL),
+('BK0009', '3423531787', 20, NULL, NULL);
 
 --
 -- Triggers `detail_barangkeluar`
@@ -188,22 +196,24 @@ CREATE TABLE `detail_barangmasuk` (
   `IdBarang` varchar(13) DEFAULT NULL,
   `QtyMasuk` int(3) DEFAULT NULL,
   `HargaSatuan` int(11) NOT NULL,
-  `SubTotal` int(11) NOT NULL
+  `SubTotal` int(11) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `detail_barangmasuk`
 --
 
-INSERT INTO `detail_barangmasuk` (`IdMasuk`, `IdSupplier`, `IdBarang`, `QtyMasuk`, `HargaSatuan`, `SubTotal`) VALUES
-('BM0004', 'SP0002', '4970129727514', 20, 55000, 1100000),
-('BM0005', 'SP0003', '8991389230237', 25, 50000, 1250000),
-('BM0006', 'SP0002', '4970129759652', 54, 45000, 2430000),
-('BM0007', 'SP0003', '6923655547512', 3, 34000, 102000),
-('BM0007', 'SP0003', '4005401171027', 4, 45000, 180000),
-('BM0008', 'SP0001', '4005401171027', 5, 38500, 192500),
-('BM0009', 'SP0001', '3423531787', 50, 55000, 2750000),
-('BM0010', 'SP0001', '173462738912', 50, 55000, 2750000);
+INSERT INTO `detail_barangmasuk` (`IdMasuk`, `IdSupplier`, `IdBarang`, `QtyMasuk`, `HargaSatuan`, `SubTotal`, `created_at`, `updated_at`) VALUES
+('BM0004', 'SP0002', '4970129727514', 20, 55000, 1100000, NULL, '2025-05-31 09:32:43'),
+('BM0005', 'SP0003', '8991389230237', 25, 50000, 1250000, NULL, '2025-05-31 09:32:43'),
+('BM0006', 'SP0002', '4970129759652', 54, 45000, 2430000, NULL, '2025-05-31 09:32:43'),
+('BM0007', 'SP0003', '6923655547512', 3, 34000, 102000, NULL, '2025-05-31 09:32:43'),
+('BM0007', 'SP0003', '4005401171027', 4, 45000, 180000, NULL, '2025-05-31 09:32:43'),
+('BM0008', 'SP0001', '4005401171027', 5, 38500, 192500, NULL, '2025-05-31 09:32:43'),
+('BM0009', 'SP0001', '3423531787', 50, 55000, 2750000, NULL, '2025-05-31 09:32:43'),
+('BM0010', 'SP0001', '173462738912', 50, 55000, 2750000, NULL, '2025-05-31 09:32:43');
 
 --
 -- Triggers `detail_barangmasuk`
@@ -232,47 +242,25 @@ DELIMITER ;
 CREATE TABLE `detail_transaksi` (
   `IdTransaksi` varchar(8) DEFAULT NULL,
   `IdProduk` varchar(6) DEFAULT NULL,
+  `id_ukuran` int(6) DEFAULT NULL,
   `QtyProduk` int(3) DEFAULT NULL,
-  `SubTotal` int(11) DEFAULT NULL
+  `SubTotal` int(11) DEFAULT NULL,
+  `CustomUkuran` varchar(100) DEFAULT NULL,
+  `design_file` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `detail_transaksi`
 --
 
-INSERT INTO `detail_transaksi` (`IdTransaksi`, `IdProduk`, `QtyProduk`, `SubTotal`) VALUES
-('TR0002', 'P0002', 1, 12000),
-('TR0002', 'P0003', 1, 10500),
-('TR0003', 'P0002', 5, 60000),
-('TR0003', 'P0001', 2, 50000),
-('TR0004', 'P0002', 3, 36000),
-('TR0004', 'P0001', 2, 50000),
-('TR0005', 'P0002', 2, 24000),
-('TR0005', 'P0003', 1, 10500),
-('TR0006', 'P0002', 1, 12000),
-('TR0006', 'P0001', 1, 25000),
-('TR0007', 'P0002', 1, 12000),
-('TR0008', 'P0003', 1, 10500);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `diskon`
---
-
-CREATE TABLE `diskon` (
-  `id` int(6) NOT NULL,
-  `nama` varchar(50) NOT NULL,
-  `description` varchar(250) NOT NULL,
-  `persentase` int(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `diskon`
---
-
-INSERT INTO `diskon` (`id`, `nama`, `description`, `persentase`) VALUES
-(1, 'Akhir Tahun', 'Diskon 50% setiap akhir tahun', 30);
+INSERT INTO `detail_transaksi` (`IdTransaksi`, `IdProduk`, `id_ukuran`, `QtyProduk`, `SubTotal`, `CustomUkuran`, `design_file`) VALUES
+('TR0001', 'P0006', 4, 3, 60000, NULL, 'designs/3T0CvMQDUVb4plSbCV83fgUE62CRwdr146f5aNw5.png'),
+('TR0001', 'P0006', NULL, 4, 112000, NULL, 'designs/gjT7SjIbYb9q2zrQGwdUrfWPSfZltViJypORZPaF.png'),
+('TR0001', 'P0001', NULL, 2, 112000, '2x3 Meter', 'designs/YiZJu6uAqvMlvlD9knNbEoXn8Zgv6gBGvABb96p4.jpg'),
+('TR0002', 'P0006', NULL, 3, 84000, '2x3 Meter', 'designs/Ou8v0DXcwZMeFCKuLK63BGZ0gXcekx3DFnWlqKEt.jpg'),
+('TR0003', 'P0003', 3, 1, 23000, NULL, 'designs/f7dfT11iPKU0JbHUqGc5ktuvIyPgkUT4zl5V4B3y.png'),
+('TR0004', 'P0002', 1, 3, 120000, NULL, 'designs/tCBS6Z7J6OCePudJKn8y4BSZOaoXcGF9Ea2RX1O8.jpg'),
+('TR0005', 'P0003', NULL, 2, 64000, '2x3 Meter', 'designs/qZhbtWimkJyHGzkJPuohfeV83yTzK9HmH5JBN9nu.jpg');
 
 -- --------------------------------------------------------
 
@@ -290,15 +278,17 @@ CREATE TABLE `jenisbarang` (
 --
 
 INSERT INTO `jenisbarang` (`IdJenisBarang`, `JenisBarang`) VALUES
-('S0001', 'Kertas'),
-('S0002', 'Lem'),
-('S0003', 'Tinta'),
-('S0004', 'Plat'),
-('S0005', 'Fountain'),
-('S0006', 'Plastik'),
+('S0005', 'Kain'),
 ('S0007', 'Karton'),
-('S0008', 'Koko');
+('S0001', 'Kertas'),
+('S0008', 'Koko'),
+('S0002', 'Lem'),
+('S0006', 'Plastik'),
+('S0004', 'Plat'),
+('S0003', 'Tinta');
 
+<<<<<<<< Updated upstream:database/dbpercetakan (6).sql
+========
 -- --------------------------------------------------------
 
 --
@@ -337,13 +327,7 @@ CREATE TABLE `laporantransaksi` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `laporantransaksi`
---
-
-INSERT INTO `laporantransaksi` (`Idlaporan_transaksi`, `IdTransaksi`, `IdProduk`, `created_at`, `updated_at`) VALUES
-('1213', 'T0001', 'P0001', '2025-05-20 14:44:55', '2025-05-20 14:44:55');
-
+>>>>>>>> Stashed changes:database/dbpercetakan (4).sql
 -- --------------------------------------------------------
 
 --
@@ -367,7 +351,10 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (4, '2025_05_18_131611_create_addresses_table', 2),
 (5, '2025_05_18_131648_create_addresses_table', 3),
 (6, '2025_05_22_064504_alter_produk_columns_to_nullable', 4),
-(7, '2025_05_24_000000_modify_produk_table_structure', 5);
+(7, '2025_05_24_000000_modify_produk_table_structure', 5),
+(8, '2025_05_30_084741_add_design_file_to_detail_transaksi_table', 6),
+(9, '2025_06_02_093641_add_shipping_method_to_transaksi_table', 7),
+(10, '2025_06_02_095211_add_notes_to_transaksi_table', 8);
 
 -- --------------------------------------------------------
 
@@ -397,14 +384,9 @@ INSERT INTO `password_reset_tokens` (`email`, `token`, `created_at`) VALUES
 CREATE TABLE `produk` (
   `IdProduk` varchar(6) NOT NULL,
   `NamaProduk` varchar(25) DEFAULT NULL,
-  `HargaProduk` int(11) DEFAULT NULL,
-  `ukuran_produk` varchar(100) DEFAULT NULL,
-  `jenis_bahan_produk` varchar(100) DEFAULT NULL,
-  `custom_produk` varchar(100) DEFAULT NULL,
+  `custom_harga` int(50) NOT NULL,
   `Img` varchar(255) DEFAULT NULL,
-  `ukuran` int(6) NOT NULL,
   `deskripsi` varchar(1500) NOT NULL,
-  `diskon` int(6) DEFAULT NULL,
   `id_bahan` varchar(13) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -412,12 +394,14 @@ CREATE TABLE `produk` (
 -- Dumping data for table `produk`
 --
 
-INSERT INTO `produk` (`IdProduk`, `NamaProduk`, `HargaProduk`, `ukuran_produk`, `jenis_bahan_produk`, `custom_produk`, `Img`, `ukuran`, `deskripsi`, `diskon`, `id_bahan`) VALUES
-('P0001', 'Kalender', 25000, NULL, NULL, NULL, 'produk/kalender.jpg', 1, '🗓️ Kalender Custom: Promosi & Hadiah yang Tahan Lama!\r\n\r\nKalender adalah media promosi sepanjang tahun. Cocok untuk souvenir akhir tahun, branding perusahaan, atau kebutuhan pribadi.\r\n\r\n📐 Jenis Kalender:\r\n\r\nKalender Meja: Ukuran A5, A6 (14 Halaman + Cover)\r\n\r\nKalender Dinding: Ukuran A3 / A4 (1 Lembar atau 12 Lembar)\r\n\r\n🎨 Jenis Kertas:\r\n\r\nArt Paper 150gr / 210gr\r\n\r\nIvory 260gr / Duplex\r\n\r\n💰 Harga Mulai Rp8.000 / pcs (untuk cetak banyak)\r\n\r\nKeunggulan:\r\n☑️ Bisa Custom Foto, Logo, & Warna\r\n☑️ Sudah Termasuk Spiral & Dudukan (untuk kalender meja)\r\n☑️ Cocok untuk Hadiah & Branding Perusahaan\r\n☑️ Minimal order hanya 10 pcs', 1, '8991389230237'),
-('P0002', 'Brosur', 12000, NULL, NULL, NULL, 'produk/brosur.jpg', 1, '📄 Cetak Brosur: Media Informasi Cepat & Efisien untuk Promosi\r\n\r\nBrosur adalah cara jitu menyampaikan informasi lengkap dalam satu genggaman. Cocok untuk promosi produk, jasa, event, atau profil perusahaan.\r\n\r\n📐 Ukuran Tersedia: A5, A4, A3 (Lipat 2 atau 3)\r\n\r\n🎨 Jenis Kertas:\r\n\r\nArt Paper 120gr / 150gr\r\n\r\nArt Carton 190gr / 210gr\r\n\r\nFinishing: Laminasi, Lipat Dua / Tiga\r\n\r\n💰 Harga Mulai Rp150 / lembar (untuk cetak banyak)\r\n\r\nKelebihan:\r\n☑️ Hasil Cetak Tajam & Warna Cerah\r\n☑️ Gratis Cek File Desain\r\n☑️ Bisa Pakai Template atau Desain Sendiri\r\n☑️ Proses cepat, hasil maksimal!', NULL, '8991389230237'),
-('P0003', 'Kartu Nama', 10500, NULL, NULL, NULL, 'produk/kartunama.jpg', 1, '👔 Cetak Kartu Nama Eksklusif: Bangun Citra Profesional dari Pertemuan Pertama\r\n\r\nKartu nama adalah kesan pertama yang tak terlupakan. Cetak kartu nama kamu dengan kualitas terbaik, bahan premium, dan desain eksklusif di Citra Media!\r\n\r\n📐 Ukuran Standard: 9 x 5.5 cm\r\n\r\n🎨 Jenis Kertas:\r\n\r\nArt Carton 260gr / 310gr\r\n\r\nLinen / Ivory / Matte Paper\r\n\r\nFinishing: Laminasi Doff / Glossy, Sudut Tumpul (Rounded)\r\n\r\n💰 Harga Mulai Rp30.000 / 100 pcs\r\n\r\nKelebihan:\r\n☑️ Desain Custom atau Pakai Template Siap Cetak\r\n☑️ Proses Cepat 1–2 Hari Kerja\r\n☑️ Bisa Cetak 1 atau 2 Sisi\r\n☑️ Bonus File Digital untuk Branding Online', NULL, '8991389230237'),
-('P0004', 'Buku', 30000, NULL, NULL, NULL, 'produk/buku.jpg', 1, 'Custom Buku Cetak - Citra Media Digital Printing\r\n\r\n📚 Cetak Buku Custom: Solusi Cetak Profesional untuk Kebutuhan Kamu!\r\n\r\nKini kamu bisa mencetak buku custom untuk berbagai kebutuhan seperti laporan tahunan, skripsi, modul pelatihan, buku yasin, hingga buku agenda pribadi. Citra Media menghadirkan layanan cetak buku dengan kualitas tinggi dan pilihan finishing lengkap yang bisa disesuaikan!\r\n\r\n📏 Tersedia Berbagai Ukuran Populer\r\nMulai dari A5, A4, B5, hingga ukuran custom sesuai kebutuhanmu. Uk', NULL, '8991389230237'),
-('P0005', 'Spanduk', 60000, NULL, NULL, NULL, 'produk/spanduk.jpg', 1, '📢 Cetak Spanduk Custom: Media Promosi Andal & Efektif!\r\n\r\nTingkatkan daya tarik bisnis dan event kamu dengan spanduk berkualitas dari Citra Media Digital Printing! Kami melayani cetak spanduk berbagai ukuran dan bahan sesuai kebutuhan promosi kamu.\r\n\r\n🖼️ Ukuran Tersedia:\r\nMulai dari ukuran kecil 50x50cm, 100x50cm, hingga ukuran besar seperti 3x4m, 4x6m, 10x5m.\r\n\r\n💰 Harga Mulai Rp13.000/meter (untuk pemesanan banyak)\r\nHarga normal Rp19.500/m — sudah FREE Finishing\r\n\r\nBahan yang Tersedia:\r\n\r\nChina', NULL, '8991389230237');
+INSERT INTO `produk` (`IdProduk`, `NamaProduk`, `custom_harga`, `Img`, `deskripsi`, `id_bahan`) VALUES
+('P0001', 'Kalender', 6000, 'produk/kalender.jpg', '🗓️ Kalender Custom: Promosi & Hadiah yang Tahan Lama!\r\n\r\nKalender adalah media promosi sepanjang tahun. Cocok untuk souvenir akhir tahun, branding perusahaan, atau kebutuhan pribadi.\r\n\r\n📐 Jenis Kalender:\r\n\r\nKalender Meja: Ukuran A5, A6 (14 Halaman + Cover)\r\n\r\nKalender Dinding: Ukuran A3 / A4 (1 Lembar atau 12 Lembar)\r\n\r\n🎨 Jenis Kertas:\r\n\r\nArt Paper 150gr / 210gr\r\n\r\nIvory 260gr / Duplex\r\n\r\n💰 Harga Mulai Rp8.000 / pcs (untuk cetak banyak)\r\n\r\nKeunggulan:\r\n☑️ Bisa Custom Foto, Logo, & Warna\r\n☑️ Sudah Termasuk Spiral & Dudukan (untuk kalender meja)\r\n☑️ Cocok untuk Hadiah & Branding Perusahaan\r\n☑️ Minimal order hanya 10 pcs', '8991389230237'),
+('P0002', 'Brosur', 7000, 'produk/brosur.jpg', '📄 Cetak Brosur: Media Informasi Cepat & Efisien untuk Promosi\r\n\r\nBrosur adalah cara jitu menyampaikan informasi lengkap dalam satu genggaman. Cocok untuk promosi produk, jasa, event, atau profil perusahaan.\r\n\r\n📐 Ukuran Tersedia: A5, A4, A3 (Lipat 2 atau 3)\r\n\r\n🎨 Jenis Kertas:\r\n\r\nArt Paper 120gr / 150gr\r\n\r\nArt Carton 190gr / 210gr\r\n\r\nFinishing: Laminasi, Lipat Dua / Tiga\r\n\r\n💰 Harga Mulai Rp150 / lembar (untuk cetak banyak)\r\n\r\nKelebihan:\r\n☑️ Hasil Cetak Tajam & Warna Cerah\r\n☑️ Gratis Cek File Desain\r\n☑️ Bisa Pakai Template atau Desain Sendiri\r\n☑️ Proses cepat, hasil maksimal!', '6923655547512'),
+('P0003', 'Kartu Nama', 9000, 'produk/kartunama.jpg', '👔 Cetak Kartu Nama Eksklusif: Bangun Citra Profesional dari Pertemuan Pertama\r\n\r\nKartu nama adalah kesan pertama yang tak terlupakan. Cetak kartu nama kamu dengan kualitas terbaik, bahan premium, dan desain eksklusif di Citra Media!\r\n\r\n📐 Ukuran Standard: 9 x 5.5 cm\r\n\r\n🎨 Jenis Kertas:\r\n\r\nArt Carton 260gr / 310gr\r\n\r\nLinen / Ivory / Matte Paper\r\n\r\nFinishing: Laminasi Doff / Glossy, Sudut Tumpul (Rounded)\r\n\r\n💰 Harga Mulai Rp30.000 / 100 pcs\r\n\r\nKelebihan:\r\n☑️ Desain Custom atau Pakai Template Siap Cetak\r\n☑️ Proses Cepat 1–2 Hari Kerja\r\n☑️ Bisa Cetak 1 atau 2 Sisi\r\n☑️ Bonus File Digital untuk Branding Online', '8991389230237'),
+('P0004', 'Buku', 9000, 'produk/buku.jpg', 'Custom Buku Cetak - Citra Media Digital Printing\r\n\r\n📚 Cetak Buku Custom: Solusi Cetak Profesional untuk Kebutuhan Kamu!\r\n\r\nKini kamu bisa mencetak buku custom untuk berbagai kebutuhan seperti laporan tahunan, skripsi, modul pelatihan, buku yasin, hingga buku agenda pribadi. Citra Media menghadirkan layanan cetak buku dengan kualitas tinggi dan pilihan finishing lengkap yang bisa disesuaikan!\r\n\r\n📏 Tersedia Berbagai Ukuran Populer\r\nMulai dari A5, A4, B5, hingga ukuran custom sesuai kebutuhanmu. Uk', '6923655547512'),
+('P0005', 'Spanduk', 7000, 'produk/H6CrHNmMCNzUDvaSFtd8Bkl3yeg9qhT231yNdv9v.png', '📢 Cetak Spanduk Custom: Media Promosi Andal & Efektif!\r\n\r\nTingkatkan daya tarik bisnis dan event kamu dengan spanduk berkualitas dari Citra Media Digital Printing! Kami melayani cetak spanduk berbagai ukuran dan bahan sesuai kebutuhan promosi kamu.\r\n\r\n🖼️ Ukuran Tersedia:\r\nMulai dari ukuran kecil 50x50cm, 100x50cm, hingga ukuran besar seperti 3x4m, 4x6m, 10x5m.\r\n\r\n💰 Harga Mulai Rp13.000/meter (untuk pemesanan banyak)\r\nHarga normal Rp19.500/m — sudah FREE Finishing\r\n\r\nBahan yang Tersedia:\r\n\r\nChina', '4005401171027'),
+('P0006', 'Sticker Label', 8000, 'produk/LPsFKlRNXHoVA2vyWxZ5RN7PanozEq07pwVvdsac.jpg', 'Cetak Stiker Label Custom - Identitas Produk Anda dalam Genggaman!\r\n\r\nIngin produk Anda tampil beda dan profesional? Ciptakan sticker label custom yang unik dan personal untuk bisnis, kemasan, atau acara Anda! Tersedia dalam berbagai bentuk, ukuran, dan bahan berkualitas tinggi yang tahan air dan awet. Desain sesuka hati Anda, kami cetak dengan presisi terbaik! Mulai dari label makanan, logo produk, hingga stiker komunitas, semua bisa Anda wujudkan di sini. Desain mudah, hasil maksimal!', '4970129727514'),
+('P0007', 'Poster', 3000, 'produk/3KV93nhR5oRXIwuMNhnUphqFvFq2m0KCcA190W76.png', 'Poster Edukasi adalah media yang memuat informasi berupa teks atau gambar atau kombinasi antara teks dan gambar yang didesain dengan indah dan untuk pengetahuan umum anak. di Produksi dengan Mesin yang berKualitas HP Indigo 10000', '173462738912');
 
 -- --------------------------------------------------------
 
@@ -432,6 +416,24 @@ CREATE TABLE `produk_size` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `produk_size`
+--
+
+INSERT INTO `produk_size` (`IdProduk`, `id_ukuran`, `harga`, `created_at`, `updated_at`) VALUES
+('P0001', 1, 50000, '2024-03-30 22:23:27', '2024-05-05 16:08:36'),
+('P0001', 2, 40000, '2022-01-01 00:23:25', '2022-01-01 00:23:25'),
+('P0002', 1, 40000, '2025-06-02 02:15:05', '2025-06-02 02:15:05'),
+('P0003', 2, 17000, '2025-06-02 02:15:57', '2025-06-02 02:15:57'),
+('P0003', 3, 23000, '2025-06-02 02:15:57', '2025-06-02 02:15:57'),
+('P0004', 1, 40000, '2025-06-02 21:25:07', '2025-06-02 21:25:07'),
+('P0004', 2, 33000, '2025-06-02 21:25:07', '2025-06-02 21:25:07'),
+('P0005', 1, 23000, '2025-06-02 21:26:05', '2025-06-02 21:26:05'),
+('P0006', 3, 10000, '2025-05-28 07:02:32', '2025-05-28 07:04:59'),
+('P0006', 4, 20000, '2025-05-28 07:02:32', '2025-05-28 07:04:59'),
+('P0007', 2, 20000, '2025-06-02 21:52:05', '2025-06-02 21:52:05'),
+('P0007', 6, 12000, '2025-06-02 21:52:05', '2025-06-02 21:52:05');
 
 -- --------------------------------------------------------
 
@@ -496,13 +498,13 @@ CREATE TABLE `satuan` (
 --
 
 INSERT INTO `satuan` (`IdSatuan`, `Satuan`) VALUES
-('S0001', 'Rim'),
-('S0002', 'Pack'),
+('S0009', 'Cm'),
 ('S0003', 'Kg'),
-('S0004', 'Set'),
+('S0002', 'Pack'),
 ('S0005', 'Pcs'),
+('S0001', 'Rim'),
 ('S0006', 'Roll'),
-('S0009', 'Cm');
+('S0004', 'Set');
 
 -- --------------------------------------------------------
 
@@ -523,7 +525,11 @@ CREATE TABLE `size` (
 --
 
 INSERT INTO `size` (`id_ukuran`, `nama`, `panjang`, `lebar`, `id_satuan`) VALUES
-(1, 'A3', 430, 530, 'S0009');
+(1, 'A3', 430, 530, 'S0009'),
+(2, 'A5', 500, 450, 'S0001'),
+(3, 'Sticker Pendek', 33, 10, 'S0009'),
+(4, 'Sticker Medium', 44, 22, 'S0009'),
+(6, 'A2', 30, 40, 'S0009');
 
 -- --------------------------------------------------------
 
@@ -535,21 +541,27 @@ CREATE TABLE `supplier` (
   `IdSupplier` varchar(6) NOT NULL,
   `NamaSupplier` varchar(30) DEFAULT NULL,
   `NoTelp` char(13) DEFAULT NULL,
-  `Alamat` varchar(50) DEFAULT NULL
+  `Alamat` varchar(50) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `supplier`
 --
 
-INSERT INTO `supplier` (`IdSupplier`, `NamaSupplier`, `NoTelp`, `Alamat`) VALUES
-('SP0001', 'Putra', '084567654323', 'Jl.Kalimantan No.12'),
-('SP0002', 'Ramai Jaya', '083567676567', 'Jl.Sumatera No.122'),
-('SP0003', 'Suka Aja', '0986252728', 'Jl.Sana'),
-('SP0004', 'Mentari', '0856436896435', 'Jl.Kenanga'),
-('SP0005', 'matahari', '087876565678', 'Jl.Karimata'),
-('SP0006', 'Cita Jaya', '087876567656', 'Jl.Jawa'),
-('SP0007', 'Citra Baru', '089765678765', 'Surabaya');
+INSERT INTO `supplier` (`IdSupplier`, `NamaSupplier`, `NoTelp`, `Alamat`, `created_at`, `updated_at`) VALUES
+<<<<<<<< Updated upstream:database/dbpercetakan (6).sql
+('SP0001', 'Putra', '084567654323', 'Jl.Kalimantan No.13', NULL, '2025-05-31 09:33:51'),
+========
+('SP0001', 'Putra', '084567654323', 'Jl.Kalimantan No.12', NULL, '2025-05-31 09:33:51'),
+>>>>>>>> Stashed changes:database/dbpercetakan (4).sql
+('SP0002', 'Ramai Jaya', '083567676567', 'Jl.Sumatera No.122', NULL, '2025-05-31 09:33:51'),
+('SP0003', 'Suka Aja', '0986252728', 'Jl.Sana', NULL, '2025-05-31 09:33:51'),
+('SP0004', 'Mentari', '0856436896435', 'Jl.Kenanga', NULL, '2025-05-31 09:33:51'),
+('SP0005', 'matahari', '087876565678', 'Jl.Karimata', NULL, '2025-05-31 09:33:51'),
+('SP0006', 'Cita Jaya', '087876567656', 'Jl.Jawa', NULL, '2025-05-31 09:33:51'),
+('SP0007', 'Citra Baru', '089765678765', 'Surabaya', NULL, '2025-05-31 09:33:51');
 
 -- --------------------------------------------------------
 
@@ -561,29 +573,31 @@ CREATE TABLE `transaksi` (
   `IdTransaksi` varchar(8) NOT NULL,
   `username` varchar(20) NOT NULL,
   `id` bigint(20) NOT NULL,
+  `address_id` bigint(20) UNSIGNED NOT NULL,
+  `alamat_pengiriman` varchar(255) NOT NULL,
   `Bayar` int(11) NOT NULL,
-  `SisaBayar` int(11) DEFAULT NULL,
-  `Kembali` int(11) DEFAULT NULL,
   `GrandTotal` int(11) NOT NULL,
   `tglTransaksi` datetime NOT NULL,
   `StatusPembayaran` varchar(20) NOT NULL,
   `StatusPesanan` varchar(20) DEFAULT NULL,
-  `tglUpdate` datetime DEFAULT NULL
+  `tglUpdate` datetime DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `shipping_method` varchar(255) DEFAULT NULL,
+  `shipping_type` varchar(255) DEFAULT NULL,
+  `notes` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `transaksi`
 --
 
-INSERT INTO `transaksi` (`IdTransaksi`, `username`, `id`, `Bayar`, `SisaBayar`, `Kembali`, `GrandTotal`, `tglTransaksi`, `StatusPembayaran`, `StatusPesanan`, `tglUpdate`) VALUES
-('T0001', 'tsy24', 1, 1000000, NULL, NULL, 1000000, '2025-05-06 18:43:00', 'Lunas', 'lunas', '2025-05-06 23:43:01'),
-('TR0002', 'jasjus841', 4, 0, 22500, 0, 22500, '2025-05-17 16:09:13', 'Belum Lunas', 'Menunggu Konfirmasi', NULL),
-('TR0003', 'jasjus841', 4, 0, 110000, 0, 110000, '2025-05-19 00:27:29', 'Belum Lunas', 'Menunggu Konfirmasi', NULL),
-('TR0004', 'jasjus841', 4, 0, 86000, 0, 86000, '2025-05-19 06:23:48', 'Belum Lunas', 'Menunggu Konfirmasi', NULL),
-('TR0005', 'jasjus841', 4, 0, 34500, 0, 34500, '2025-05-20 08:34:42', 'Belum Lunas', 'Menunggu Konfirmasi', NULL),
-('TR0006', 'jasjus841', 4, 0, 37000, 0, 37000, '2025-05-23 21:46:47', 'Belum Lunas', 'Menunggu Konfirmasi', NULL),
-('TR0007', 'jasjus841', 4, 0, 12000, 0, 12000, '2025-05-23 22:03:53', 'Belum Lunas', 'Menunggu Konfirmasi', NULL),
-('TR0008', 'jasjus841', 4, 10500, 0, 0, 10500, '2025-05-23 22:08:41', 'Lunas', 'Menunggu Konfirmasi', NULL);
+INSERT INTO `transaksi` (`IdTransaksi`, `username`, `id`, `address_id`, `alamat_pengiriman`, `Bayar`, `GrandTotal`, `tglTransaksi`, `StatusPembayaran`, `StatusPesanan`, `tglUpdate`, `created_at`, `updated_at`, `shipping_method`, `shipping_type`, `notes`) VALUES
+('TR0001', 'jasjus841', 4, 2, 'Jalan Kamilantan', 0, 224000, '2025-05-31 08:08:47', 'Belum Lunas', 'Menunggu Konfirmasi', NULL, '2025-06-02 06:14:26', '2025-06-02 06:14:26', NULL, NULL, NULL),
+('TR0002', 'jasjus841', 4, 2, 'Jalan Kamilantan', 104000, 104000, '2025-05-31 08:36:44', 'Lunas', 'Menunggu Konfirmasi', '2025-05-31 08:36:44', '2025-06-02 06:14:26', '2025-06-02 06:14:26', NULL, NULL, NULL),
+('TR0003', 'jasjus841', 4, 2, 'Jalan Kamilantan', 0, 58000, '2025-06-02 09:45:18', 'Belum Lunas', 'Menunggu Konfirmasi', '2025-06-02 09:45:18', '2025-06-02 09:45:18', '2025-06-02 09:45:18', 'kurir', 'Express', NULL),
+('TR0004', 'jasjus841', 4, 2, 'Jalan Kamilantan', 0, 120000, '2025-06-02 09:46:13', 'Belum Lunas', 'Menunggu Konfirmasi', '2025-06-02 09:46:13', '2025-06-02 09:46:13', '2025-06-02 09:46:13', 'pickup', NULL, NULL),
+('TR0005', 'jasjus841', 4, 2, 'Jalan Kamilantan', 84000, 84000, '2025-06-03 04:15:23', 'Lunas', 'Menunggu Konfirmasi', '2025-06-03 04:15:23', '2025-06-03 04:15:23', '2025-06-03 04:15:23', 'kurir', 'Reguler', 'test note');
 
 -- --------------------------------------------------------
 
@@ -611,9 +625,13 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `f_name`, `email`, `nomor_telepon`, `email_verified_at`, `username`, `password`, `user`, `alamat`, `remember_token`, `img`) VALUES
 (1, 'Admin', 'admin1@gmail.com', '', '2025-04-30 08:50:56', 'admin', '$2y$10$a5CeW7r8VeUPy2hQXI5xJuNhnPo8CWfDwJJQhauP0g1BJ/77olWh.', 'Admin', '', '', 'images/1815883516605523.jpeg'),
-(4, 'Ahmad Muzakki', 'jasjus841@gmail.com', '0879272342', '2025-05-23 15:34:22', 'jasjus841', '$2y$12$X4cGX1XP/QkWh9c5bVOrKO8b5a68gTdscbDHNGMEn/.KUmqf/ZCui', 'User', '', 'f5eGUIj1N7fF7JyvK5qZSgxx3GK2KoFmAGApnvndW1J0WD3vmRscsVdpJd6i', ''),
+<<<<<<<< Updated upstream:database/dbpercetakan (6).sql
+(4, 'Ahmad Muzakki', 'jasjus841@gmail.com', '0879272342', '2025-06-04 03:37:46', 'jasjus841', '$2y$12$X4cGX1XP/QkWh9c5bVOrKO8b5a68gTdscbDHNGMEn/.KUmqf/ZCui', 'User', '', 'ZZ7cPQgK1Mk3XqaQpMRjdtqtTyVDRRYIV4spb798VQiZ4fXwT71SfB5Nh1Uw', ''),
+========
+(4, 'Ahmad Muzakki', 'jasjus841@gmail.com', '0879272342', '2025-06-02 06:18:47', 'jasjus841', '$2y$12$X4cGX1XP/QkWh9c5bVOrKO8b5a68gTdscbDHNGMEn/.KUmqf/ZCui', 'User', '', 's9Igv2q5s9BkdEST3GK1edXly4kOMcCpuDanyL7w0s3OUZWD20ud3M6zUgoO', ''),
+>>>>>>>> Stashed changes:database/dbpercetakan (4).sql
 (5, 'Ahmad Rojali', 'rojali@gmail.com', '08970833227', '2025-05-23 15:16:50', 'rojali', '$2y$12$0o0UcbPaQuotlWGvgAtXceAz.fzSfuIhfOXx8XRwJ8M6pNbhRPhYS', 'User', '', NULL, 'default-avatar.png'),
-(2, 'Fanidiya Tasya', 'admin@gmail.com', '082472332', '2025-05-24 09:11:37', 'tsy24', '$2y$12$X4cGX1XP/QkWh9c5bVOrKO8b5a68gTdscbDHNGMEn/.KUmqf/ZCui', 'Admin', '', 'OBU0oXgUD5G7R8Ic1ssg6A7QO849vmZlYjHI62q4Q3NlueLFuYZoZl18bYm9', 'images/1815883516605523.jpeg');
+(2, 'Fanidiya Tasya', 'admin@gmail.com', '082472332', '2025-06-02 09:25:09', 'tsy24', '$2y$12$X4cGX1XP/QkWh9c5bVOrKO8b5a68gTdscbDHNGMEn/.KUmqf/ZCui', 'Admin', '', 'cn6qC26YYn2VTxHObHkskWa2cV98hMp6Xn9xhXhtVA1Ogo3F7bYsSORVHVLn', 'images/1815883516605523.jpeg');
 
 --
 -- Indexes for dumped tables
@@ -668,19 +686,17 @@ ALTER TABLE `detail_barangmasuk`
 --
 ALTER TABLE `detail_transaksi`
   ADD KEY `IdTransaksi` (`IdTransaksi`),
-  ADD KEY `IdProduk` (`IdProduk`);
-
---
--- Indexes for table `diskon`
---
-ALTER TABLE `diskon`
-  ADD PRIMARY KEY (`id`);
+  ADD KEY `IdProduk` (`IdProduk`),
+  ADD KEY `id_ukuran` (`id_ukuran`);
 
 --
 -- Indexes for table `jenisbarang`
 --
 ALTER TABLE `jenisbarang`
-  ADD PRIMARY KEY (`IdJenisBarang`);
+  ADD PRIMARY KEY (`IdJenisBarang`),
+  ADD UNIQUE KEY `JenisBarang` (`JenisBarang`);
+<<<<<<<< Updated upstream:database/dbpercetakan (6).sql
+========
 
 --
 -- Indexes for table `laporanbarang`
@@ -699,6 +715,7 @@ ALTER TABLE `laporantransaksi`
   ADD PRIMARY KEY (`Idlaporan_transaksi`),
   ADD UNIQUE KEY `IdTransaksi` (`IdTransaksi`,`IdProduk`),
   ADD KEY `IdProduk` (`IdProduk`);
+>>>>>>>> Stashed changes:database/dbpercetakan (4).sql
 
 --
 -- Indexes for table `migrations`
@@ -717,9 +734,7 @@ ALTER TABLE `password_reset_tokens`
 --
 ALTER TABLE `produk`
   ADD PRIMARY KEY (`IdProduk`),
-  ADD KEY `diskon` (`diskon`,`id_bahan`),
-  ADD KEY `id_bahan` (`id_bahan`),
-  ADD KEY `ukuran` (`ukuran`);
+  ADD KEY `id_bahan` (`id_bahan`);
 
 --
 -- Indexes for table `produk_size`
@@ -746,13 +761,15 @@ ALTER TABLE `role_user`
 -- Indexes for table `satuan`
 --
 ALTER TABLE `satuan`
-  ADD PRIMARY KEY (`IdSatuan`);
+  ADD PRIMARY KEY (`IdSatuan`),
+  ADD UNIQUE KEY `Satuan` (`Satuan`);
 
 --
 -- Indexes for table `size`
 --
 ALTER TABLE `size`
   ADD PRIMARY KEY (`id_ukuran`),
+  ADD UNIQUE KEY `nama` (`nama`),
   ADD KEY `id_satuan` (`id_satuan`);
 
 --
@@ -767,7 +784,8 @@ ALTER TABLE `supplier`
 ALTER TABLE `transaksi`
   ADD PRIMARY KEY (`IdTransaksi`),
   ADD KEY `username` (`username`),
-  ADD KEY `IdCust` (`id`);
+  ADD KEY `IdCust` (`id`),
+  ADD KEY `address_id` (`address_id`);
 
 --
 -- Indexes for table `users`
@@ -787,22 +805,19 @@ ALTER TABLE `addresses`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `diskon`
---
-ALTER TABLE `diskon`
-  MODIFY `id` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
+<<<<<<<< Updated upstream:database/dbpercetakan (6).sql
+========
 -- AUTO_INCREMENT for table `laporanbarang`
 --
 ALTER TABLE `laporanbarang`
   MODIFY `IdLaporan` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=123124;
 
 --
+>>>>>>>> Stashed changes:database/dbpercetakan (4).sql
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -814,7 +829,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `size`
 --
 ALTER TABLE `size`
-  MODIFY `id_ukuran` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_ukuran` int(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -871,7 +886,9 @@ ALTER TABLE `detail_barangmasuk`
 --
 ALTER TABLE `detail_transaksi`
   ADD CONSTRAINT `detail_transaksi_ibfk_1` FOREIGN KEY (`IdProduk`) REFERENCES `produk` (`IdProduk`),
-  ADD CONSTRAINT `detail_transaksi_ibfk_2` FOREIGN KEY (`IdTransaksi`) REFERENCES `transaksi` (`IdTransaksi`);
+  ADD CONSTRAINT `detail_transaksi_ibfk_2` FOREIGN KEY (`id_ukuran`) REFERENCES `produk_size` (`id_ukuran`) ON DELETE CASCADE ON UPDATE CASCADE;
+<<<<<<<< Updated upstream:database/dbpercetakan (6).sql
+========
 
 --
 -- Constraints for table `laporanbarang`
@@ -888,14 +905,13 @@ ALTER TABLE `laporanbarang`
 ALTER TABLE `laporantransaksi`
   ADD CONSTRAINT `laporantransaksi_ibfk_1` FOREIGN KEY (`IdTransaksi`) REFERENCES `transaksi` (`IdTransaksi`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `laporantransaksi_ibfk_2` FOREIGN KEY (`IdProduk`) REFERENCES `produk` (`IdProduk`) ON DELETE CASCADE ON UPDATE CASCADE;
+>>>>>>>> Stashed changes:database/dbpercetakan (4).sql
 
 --
 -- Constraints for table `produk`
 --
 ALTER TABLE `produk`
-  ADD CONSTRAINT `produk_ibfk_1` FOREIGN KEY (`id_bahan`) REFERENCES `databarang` (`IdBarang`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `produk_ibfk_2` FOREIGN KEY (`diskon`) REFERENCES `diskon` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `produk_ibfk_3` FOREIGN KEY (`ukuran`) REFERENCES `size` (`id_ukuran`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `produk_ibfk_1` FOREIGN KEY (`id_bahan`) REFERENCES `databarang` (`IdBarang`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `produk_size`
@@ -921,7 +937,8 @@ ALTER TABLE `size`
 --
 ALTER TABLE `transaksi`
   ADD CONSTRAINT `transaksi_ibfk_2` FOREIGN KEY (`username`) REFERENCES `users` (`username`),
-  ADD CONSTRAINT `transaksi_ibfk_3` FOREIGN KEY (`id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `transaksi_ibfk_3` FOREIGN KEY (`id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `transaksi_ibfk_4` FOREIGN KEY (`address_id`) REFERENCES `addresses` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

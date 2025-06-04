@@ -6,7 +6,6 @@ use App\Http\Controllers\Api\V1\CategoryController;
 use App\Http\Controllers\Api\V1\DashboardController;
 use App\Http\Controllers\Api\V1\SatuanController;
 use App\Http\Controllers\Api\V1\FoodTypeController;
-// use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Api\V1\OrderController;
 use App\Http\Controllers\Api\V1\ItemsController; /* */
 use App\Http\Controllers\Api\V1\ParameterReportController;
@@ -24,7 +23,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\DiagnosaController;
 use App\Http\Controllers\Api\V1\AdminProfileController;
 use App\Http\Controllers\Api\V1\TypeItemsController;
-use App\Http\Controllers\Api\V1\PcvController;
 use App\Http\Controllers\Api\V1\SupplierController;
 use App\Models\TypeItems;
 use App\Http\Controllers\Api\V1\TokoController;
@@ -133,20 +131,11 @@ Route::controller(SatuanController::class)->group(function () {
 });
 
 Route::controller(TransaksiController::class)->group(function () {
-    Route::get('/admin/all-transaksi', 'Index')->name('alltransaksi');
-    Route::get('/admin/manage-transaksi', 'ManageTransaksi')->name('managetransaksi');
-    Route::get('/admin/all-transaksi/search', 'SearchTransaksi')->name('searchtransaksi');
-    Route::get('/admin/add-transaksi', 'AddTransaksi')->name('addtransaksi');
-    Route::post('/admin/store-transaksi', 'StoreTransaksi')->name('store-transaksi');
-    Route::get('/admin/edit-transaksi/{id}', 'EditTransaksi')->name('edittransaksi');
-    Route::post('/admin/update-transaksi', 'UpdateTransaksi')->name('updatetransaksi');
-    Route::get('/admin/delete-transaksi/{id}', 'DeleteTransaksi')->name('deletetransaksi');
-
-    // Tambahkan atau pastikan rute ini ada dan benar
-    // Ini adalah rute untuk Menerima Orderan
-    Route::get('/admin/transaksi/{id}/terima', 'terimaOrderan')->name('terimaOrderan');
-    // Ini adalah rute untuk Menolak Orderan
-    Route::get('/admin/transaksi/{id}/tolak', 'tolakOrderan')->name('tolakOrderan');
+    Route::get('/admin/all-transaksi', 'index')->name('alltransaksi');
+    Route::get('/admin/all-transaksi/exportpdf', 'exportPdf')->name('alltransaksi.exportpdf');
+    Route::get('/admin/all-transaksi/{id}/terima', 'terimaOrderan')->name('terimaOrderan');
+    Route::post('/admin/all-transaksi/{id}/tolak', 'tolakOrderan')->name('tolakOrderan');
+    Route::get('/admin/view-order/{id}', 'ViewOrder')->name('vieworder');
 });
 
 
@@ -195,7 +184,9 @@ Route::controller(TokoController::class)->group(function () {
     Route::get('/keranjang', function () {return view('toko.dashboardToko');})->name('keranjang');
     Route::get('/faq', function () {return view('toko.dashboardToko');})->name('faq');
     Route::get('/lacak', function () {return view('toko.dashboardToko');})->name('lacak');
-    Route::get('/kontak', function () {return view('toko.dashboardToko');})->name('kontak');
+    Route::get('/kontak', function () {
+        return redirect('/#contact-us');
+    })->name('kontak');
 });
 
 Route::controller(ParameterReportController::class)->group(function () {
@@ -251,28 +242,8 @@ Route::controller(SupplierController::class)->group(function () {
 Route::controller(CustomerController::class)->group(function () {
     // Tampilkan semua supplier
     Route::get('/admin/daftar-customer', 'index')->name('allcustomer');
+    Route::get('/customer/{id}', 'show')->name('customerDetails');
     // Tampilkan form tambah supplier
-    // Hapus supplier
-    Route::delete('/admin/daftar-supplier/{id}', 'deleteCustomer')->name('deletecustomer');
-    // Cari supplier
-});
-Route::controller(CustomerController::class)->group(function () {
-    // Tampilkan semua supplier
-    Route::get('/admin/daftar-customer', 'index')->name('allcustomer');
-    // Tampilkan form tambah supplier
-    Route::get('/admin/daftar-supplier/add', 'addSupplier')->name('addsupplier');
-    // Proses form tambah supplier
-    Route::post('/admin/daftar-supplier/add', 'storeSupplier')->name('storesupplier');
-    // Form edit supplier
-    Route::get('/admin/daftar-supplier/{id}/edit', 'editSupplier')->name('editsupplier');
-    // Update supplier
-    Route::put('/admin/daftar-supplier/{id}/update', 'updateSupplier')->name('updatesupplier');
-    // Hapus supplier
-    Route::delete('/admin/daftar-supplier/{id}', 'deleteCustomer')->name('deletecustomer');
-    // Cari supplier
-    Route::get('/admin/search-supplier', 'searchSupplier')->name('searchsupplier');
-    // API get list supplier (JSON)
-    Route::get('/api/suppliers', 'get_supplier_list')->name('getsuppliers');
 });
 
 
@@ -298,38 +269,23 @@ Route::controller(DiagnosaController::class)->group(function () {
 });
 
 
-Route::controller(OrderController::class)->group(function () {
-    Route::get('/admin/pending-order', 'Index')->name('pendingorder');
-    Route::get('/admin/pending-order/search', 'SearchPending')->name('searchorder');
-    Route::get('/admin/history-order', 'IndexHistory')->name('historyorder');
-    Route::get('/admin/view-order/{id}', 'ViewOrder')->name('vieworder');
-    Route::get('/admin/update-order/{id}', 'UpdateOrder')->name('updateorder');
-    Route::get('/admin/delete-order/{id}', 'DeleteOrder')->name('deleteorder');
-});
+// Route::controller(OrderController::class)->group(function () {
+//     Route::get('/admin/pending-order', 'Index')->name('pendingorder');
+//     Route::get('/admin/pending-order/search', 'SearchPending')->name('searchorder');
+//     Route::get('/admin/history-order', 'IndexHistory')->name('historyorder');
+//     Route::get('/admin/update-order/{id}', 'UpdateOrder')->name('updateorder');
+//     Route::get('/admin/delete-order/{id}', 'DeleteOrder')->name('deleteorder');
+// });
 
 Route::controller(AdminProfileController::class)->group(function () {
     Route::get('/admin/admin-profile', 'Index')->name('profile');
     Route::post('/admin/store-profile', 'StoreProfile')->name('storeprofile');
     Route::get('/admin/pending-order/search', 'SearchPending')->name('searchorder');
     Route::get('/admin/history-order', 'IndexHistory')->name('historyorder');
-    Route::get('/admin/view-order/{id}', 'ViewOrder')->name('vieworder');
-    Route::get('/admin/update-order/{id}', 'UpdateOrder')->name('updateorder');
-    Route::get('/admin/delete-order/{id}', 'DeleteOrder')->name('deleteorder');
+
     Route::post('/admin/profile', [AdminProfileController::class, 'StoreProfile'])->name('storeprofile');
 });
 
-
-
-Route::controller(PcvController::class)->group(function () {
-    Route::get('/admin/pcv-page', 'Index')->name('pcv');
-    Route::post('/admin/predict', 'Result')->name('predict');
-    Route::post('/admin/store-profile', 'StoreProfile')->name('storeprofile');
-    Route::get('/admin/pending-order/search', 'SearchPending')->name('searchorder');
-    Route::get('/admin/history-order', 'IndexHistory')->name('historyorder');
-    Route::get('/admin/view-order/{id}', 'ViewOrder')->name('vieworder');
-    Route::get('/admin/update-order/{id}', 'UpdateOrder')->name('updateorder');
-    Route::get('/admin/delete-order/{id}', 'DeleteOrder')->name('deleteorder');
-});
 
 // Forecast routes
 Route::get('/admin/forecast', [ForecastController::class, 'showForm'])->name('forecast.form');
@@ -352,9 +308,9 @@ Route::controller(TokoController::class)->group(function () {
     Route::get('/tokodashboard', [TokoController::class, 'tokodashboard'])->name('tokodashboard');
     Route::get('/search', [ProductController::class, 'search'])->name('searchProduct');
     Route::get('/pesanan', [TokoController::class, 'pesanan'])->middleware('auth')->name('pesanan');
-    Route::get('/kontak', function () {return view('toko.kontak');})->name('kontak');
-
-
+    Route::get('/kontak', function () {
+        return redirect('/#contact-us');
+    })->name('kontak');
 });
 
 Route::get('/pesanan/{id}', [PesananController::class, 'detail'])->name('pesanan.detail');

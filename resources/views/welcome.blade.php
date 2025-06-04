@@ -671,7 +671,7 @@
           </div>
 
           <div class="col-lg-3 col-md-5 col-sm-12" style="margin-left: 550px;">
-            <div class="footer-contact mt-50 wow fadeIn" data-wow-duration="1s" data-wow-delay="0.8s">
+            <div class="footer-contact mt-50 wow fadeIn" data-wow-duration="1s" data-wow-delay="0.8s" id="contact-us">
               <div class="footer-title">
                 <h4 class="title">Contact Us</h4>
               </div>
@@ -680,7 +680,7 @@
                 <li>
                 <li>Citramedia@gmail.com</li>
                 <li>
-                Kabupaten Jember, Jawa Timur 68121<br />
+                Kabupaten Pamekasan, Jawa Timur 68121<br />
                 Indonesia
                 </li>
               </ul>
@@ -696,7 +696,7 @@
               <div class="copyright-content">
                 <p class="text">
                   Percetakan Citra Media |
-                  <a href="" rel="nofollow">Kabupaten Jember</a>
+                  <a href="" rel="nofollow">Kabupaten Pamekasan</a>
                 </p>
               </div>
 
@@ -792,11 +792,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 </script>
 
-@if(Auth::check())
-    <p>Welcome, {{ Auth::user()->f_name ?? Auth::user()->username }}!</p>
-@else
-    <p>Welcome, Guest!</p>
-@endif
+
 
 </body>
 

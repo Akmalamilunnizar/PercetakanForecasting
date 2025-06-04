@@ -21,10 +21,32 @@ class ItemsController extends Controller
 {
     public function Index(Request $request)
     {
-        $bulan = $request->bulan;
-        $tahun = $request->tahun;
+        $bulan = $request->query('bulan');
+        $tahun = $request->query('tahun');
+        $search = $request->input('search');
+        $jenis_barang = $request->input('jenis_barang');
 
-        $items = Items::with(['jenisBarang', 'satuan'])->get();
+        // Get all jenis barang for the filter dropdown
+        $jenisBarang = TypeItems::all();
+
+        // Start query with relationships
+        $query = Items::with(['jenisBarang', 'satuan']);
+
+        // Filter by jenis barang if selected
+        if ($jenis_barang) {
+            $query->where('IdJenisBarang', $jenis_barang);
+        }
+
+        // Filter by search term
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('IdBarang', 'like', "%{$search}%")
+                  ->orWhere('NamaBarang', 'like', "%{$search}%");
+            });
+        }
+
+        // Get all items
+        $items = $query->get();
 
         foreach ($items as $item) {
             // Try to get the latest stock-in for the selected month/year
@@ -57,14 +79,19 @@ class ItemsController extends Controller
                 ->first();
         }
 
-        // Sorting items by latestDetailMasuk created_at
-        $items = $items->sortByDesc(function ($item) {
-            return optional($item->latestDetailMasuk)->created_at;
-        });
-
+        // Get stock history with filters
         $riwayatStok = DB::table('detail_barangmasuk')
             ->join('databarang', 'detail_barangmasuk.IdBarang', '=', 'databarang.IdBarang')
             ->join('barangmasuk', 'detail_barangmasuk.IdMasuk', '=', 'barangmasuk.IdMasuk')
+            ->when($bulan, function ($q) use ($bulan) {
+                $q->whereMonth('barangmasuk.tglMasuk', $bulan);
+            })
+            ->when($tahun, function ($q) use ($tahun) {
+                $q->whereYear('barangmasuk.tglMasuk', $tahun);
+            })
+            ->when($jenis_barang, function ($q) use ($jenis_barang) {
+                $q->where('databarang.IdJenisBarang', $jenis_barang);
+            })
             ->select(
                 'detail_barangmasuk.IdMasuk',
                 'databarang.NamaBarang',
@@ -75,7 +102,30 @@ class ItemsController extends Controller
             ->orderBy('detail_barangmasuk.created_at', 'desc')
             ->get();
 
-        return view("admin.allitems", compact('items', 'riwayatStok'));
+        // Get stock exit history with filters
+        $riwayatKeluar = DB::table('detail_barangkeluar')
+            ->join('databarang', 'detail_barangkeluar.IdBarang', '=', 'databarang.IdBarang')
+            ->join('barangkeluar', 'detail_barangkeluar.IdKeluar', '=', 'barangkeluar.IdKeluar')
+            ->when($bulan, function ($q) use ($bulan) {
+                $q->whereMonth('barangkeluar.tglKeluar', $bulan);
+            })
+            ->when($tahun, function ($q) use ($tahun) {
+                $q->whereYear('barangkeluar.tglKeluar', $tahun);
+            })
+            ->when($jenis_barang, function ($q) use ($jenis_barang) {
+                $q->where('databarang.IdJenisBarang', $jenis_barang);
+            })
+            ->select(
+                'detail_barangkeluar.IdKeluar',
+                'databarang.NamaBarang',
+                'detail_barangkeluar.QtyKeluar',
+                'barangkeluar.tglKeluar as tanggal_keluar'
+            )
+            ->orderBy('barangkeluar.tglKeluar', 'desc')
+            ->orderBy('detail_barangkeluar.created_at', 'desc')
+            ->get();
+
+        return view("admin.allitems", compact('items', 'riwayatStok', 'riwayatKeluar', 'jenisBarang'));
     }
 
     public function exportPdf(Request $request)
