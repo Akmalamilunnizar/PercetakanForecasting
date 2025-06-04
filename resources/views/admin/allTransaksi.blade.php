@@ -121,7 +121,7 @@
                             <td class="text-center">Rp. {{ number_format($item->Bayar, 0, ',', '.') }}</td> {{-- Ini seharusnya jumlah yang dibayarkan --}}
                             <td class="text-center">
                                 {{-- KONDISIONAL UNTUK TOMBOL AKSI --}}
-                                @if ($item->StatusPesanan == 'Pending' || $item->StatusPesanan == 'MENUNGGU KONFIRMASI')
+                                @if ($item->StatusPesanan == 'menunggu konfirmasi' || $item->StatusPesanan == 'MENUNGGU KONFIRMASI')
                                     {{-- FORM UNTUK TOMBOL TERIMA --}}
                                     <form id="terimaForm{{ $item->IdTransaksi }}" action="{{ route('terimaOrderan', $item->IdTransaksi) }}" method="POST" style="display:inline;">
                                         @csrf {{-- Penting: Laravel CSRF Token --}}

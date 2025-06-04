@@ -225,7 +225,7 @@ Route::controller(ProdukController::class)->group(function () {
 Route::controller(TransaksiController::class)->group(function () {
     Route::get('/admin/all-transaksi', 'index')->name('alltransaksi');
     Route::get('/admin/all-transaksi/exportpdf', 'exportPdf')->name('alltransaksi.exportpdf');
-    Route::get('/admin/all-transaksi/{id}/terima', 'terimaOrderan')->name('terimaOrderan');
+    Route::post('/admin/all-transaksi/{id}/terima', 'terimaOrderan')->name('terimaOrderan');
     Route::post('/admin/all-transaksi/{id}/tolak', 'tolakOrderan')->name('tolakOrderan');
 });
 
