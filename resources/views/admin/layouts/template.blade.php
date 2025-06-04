@@ -281,7 +281,12 @@
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Ya, keluar!',
-            cancelButtonText: 'Tidak'
+            cancelButtonText: 'Tidak',
+            customClass: {
+                confirmButton: 'btn btn-outline-primary',
+                cancelButton: 'btn btn-outline-danger'
+            },
+            buttonsStyling: true
         }).then((result) => {
             if (result.isConfirmed) {
                 document.getElementById('logout-form').submit();

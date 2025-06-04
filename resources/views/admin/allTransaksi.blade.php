@@ -71,8 +71,8 @@
                 </div>
 
                 {{-- Filter Button --}}
-                <button type="submit" class="btn btn-primary" style="border-radius: 8px;">
-                    <i class='bx bx-filter me-1'></i> Filter
+                <button type="submit" class="btn btn-outline-primary" style="border-radius: 8px; border-width: 2px; transition: all 0.3s ease;">
+                    <i class='bx bx-filter-outline me-1'></i> Filter
                 </button>
 
                 {{-- Print Button (dengan mempertahankan filter) --}}
@@ -97,9 +97,10 @@
             <table class="table table-striped">
                 <thead class="table-primary">
                     <tr>
-                        <th style="text-align: center; font-weight: bold;">Id Transaksi</th> {{-- Perjelas Id menjadi Id Transaksi --}}
+                        <th style="text-align: center; font-weight: bold;">Id Transaksi</th>
+                        <th style="text-align: center; font-weight: bold;">Tanggal Transaksi</th>
                         <th style="text-align: center; font-weight: bold;">Nama Customer</th>
-                        <th style="text-align: center; font-weight: bold;">Total Grand</th> {{-- Ubah Total menjadi Total Grand --}}
+                        <th style="text-align: center; font-weight: bold;">Total Grand</th>
                         <th style="text-align: center; font-weight: bold;">Jumlah yang dibayarkan</th>
                         <th style="text-align: center; font-weight: bold;">Actions</th>
                         <th style="text-align: center; font-weight: bold;">Status Orderan</th>
@@ -115,12 +116,14 @@
                                     {{ $item->IdTransaksi }}
                                 </a>
                             </td>
-
                             <td class="text-center">
-                            {{ $item->detail->f_name ?? 'N/A' }}
+                                {{ \Carbon\Carbon::parse($item->tglTransaksi)->format('d-m-Y H:i') }}
                             </td>
-                            <td class="text-center">Rp. {{ number_format($item->GrandTotal, 0, ',', '.') }}</td> {{-- Ini seharusnya Total transaksi --}}
-                            <td class="text-center">Rp. {{ number_format($item->Bayar, 0, ',', '.') }}</td> {{-- Ini seharusnya jumlah yang dibayarkan --}}
+                            <td class="text-center">
+                                {{ $item->detail->f_name ?? 'N/A' }}
+                            </td>
+                            <td class="text-center">Rp. {{ number_format($item->GrandTotal, 0, ',', '.') }}</td>
+                            <td class="text-center">Rp. {{ number_format($item->Bayar, 0, ',', '.') }}</td>
                             <td class="text-center">
                                 {{-- KONDISIONAL UNTUK TOMBOL AKSI --}}
                                 @if ($item->StatusPesanan == 'Pending' || $item->StatusPesanan == 'MENUNGGU KONFIRMASI')

@@ -24,38 +24,42 @@ class TransaksiController extends Controller
     {
         $bulan = $request->query('bulan');
         $tahun = $request->query('tahun');
-        $search = $request->input('search'); // Ambil input pencarian
+        $search = $request->input('search');
+        $status_pesanan = $request->input('status_pesanan'); // Add status_pesanan filter
 
         // Mulai query Transaksi dengan eager loading 'detail'
         $query = Transaksi::with('detail');
 
         // Filter jika ada bulan
         if ($bulan) {
-            $query->whereMonth('tglTransaksi', $bulan); // Pastikan kolom tanggal transaksi yang benar
+            $query->whereMonth('tglTransaksi', $bulan);
         }
 
         // Filter jika ada tahun
         if ($tahun) {
-            $query->whereYear('tglTransaksi', $tahun); // Pastikan kolom tanggal transaksi yang benar
+            $query->whereYear('tglTransaksi', $tahun);
         }
 
-        // Filter jika ada pencarian (mirip dengan SearchTransaksi)
+        // Filter jika ada status pesanan
+        if ($status_pesanan) {
+            $query->where('StatusPesanan', $status_pesanan);
+        }
+
+        // Filter jika ada pencarian
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('IdTransaksi', 'like', "%{$search}%")
                   ->orWhereHas('detail', function ($qDetail) use ($search) {
-                      // Asumsi 'detail' adalah relasi ke model customer (User/Customer)
-                      // dan memiliki kolom 'f_name' atau nama lain yang relevan
                       $qDetail->where('f_name', 'like', "%{$search}%");
                   });
             });
         }
 
         // Urutkan dan ambil data
-        $transaksi = $query->orderBy('tglTransaksi', 'desc')->get(); // Urutkan berdasarkan tglTransaksi
+        $transaksi = $query->orderBy('tglTransaksi', 'desc')->get();
 
         // Kirim data ke view
-        return view('admin.allTransaksi', compact('transaksi', 'bulan', 'tahun', 'search'));
+        return view('admin.allTransaksi', compact('transaksi', 'bulan', 'tahun', 'search', 'status_pesanan'));
     }
 
     /**
