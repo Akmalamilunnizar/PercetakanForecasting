@@ -27,6 +27,7 @@ class ItemsController extends Controller
         $items = Items::with(['jenisBarang', 'satuan'])->get();
 
         foreach ($items as $item) {
+            // Try to get the latest stock-in for the selected month/year
             $queryMasuk = DetailMasuk::where('IdBarang', $item->IdBarang)
                 ->when($bulan, function ($q) use ($bulan) {
                     $q->whereMonth('created_at', $bulan);
@@ -36,6 +37,13 @@ class ItemsController extends Controller
                 })
                 ->orderBy('created_at', 'desc')
                 ->first();
+
+            // If not found, get the latest stock-in regardless of filter
+            if (!$queryMasuk) {
+                $queryMasuk = DetailMasuk::where('IdBarang', $item->IdBarang)
+                    ->orderBy('created_at', 'desc')
+                    ->first();
+            }
 
             $item->latestDetailMasuk = $queryMasuk;
 
@@ -157,8 +165,8 @@ class ItemsController extends Controller
             'SubTotal' => 'required|numeric',
         ]);
 
-        // Simpan ke tabel databarang
-        Items::insert([
+        // Simpan ke tabel databarang (timestamps auto)
+        Items::create([
             'IdBarang' => $request->IdBarang,
             'NamaBarang' => $request->NamaBarang,
             'IdJenisBarang' => $request->IdJenisBarang,
@@ -166,15 +174,15 @@ class ItemsController extends Controller
             'IdSatuan' => $request->IdSatuan,
         ]);
 
-        // Simpan ke tabel barangmasuk (master transaksi)
-        BarangMasuk::insert([
+        // Simpan ke tabel barangmasuk (master transaksi, no timestamps)
+        BarangMasuk::create([
             'IdMasuk' => $request->IdMasuk,
             'username' => $request->username,
             'tglMasuk' => Carbon::now(),
         ]);
 
-        // Simpan ke tabel detail_barangmasuk (detail transaksi)
-        DetailMasuk::insert([
+        // Simpan ke tabel detail_barangmasuk (timestamps auto)
+        DetailMasuk::create([
             'IdMasuk' => $request->IdMasuk,
             'IdSupplier' => $request->IdSupplier,
             'IdBarang' => $request->IdBarang,
@@ -327,15 +335,15 @@ class ItemsController extends Controller
         // Begin transaction
         DB::beginTransaction();
         try {
-            // Insert into barangkeluar
-            DB::table('barangkeluar')->insert([
+            // Insert into barangkeluar (no timestamps)
+            \App\Models\BarangKeluar::create([
                 'IdKeluar' => $request->IdKeluar,
                 'username' => $request->username,
                 'tglKeluar' => Carbon::now(),
             ]);
 
-            // Insert into detail_barangkeluar
-            DB::table('detail_barangkeluar')->insert([
+            // Insert into detail_barangkeluar (timestamps auto)
+            \App\Models\DetailKeluar::create([
                 'IdKeluar' => $request->IdKeluar,
                 'IdBarang' => $request->IdBarang,
                 'QtyKeluar' => $request->QtyKeluar,

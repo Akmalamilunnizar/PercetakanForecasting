@@ -199,6 +199,7 @@ class CartController extends Controller
     {
         $shippingData = $request->all();
         session(['shipping_method' => $shippingData['method']]);
+        session(['shipping_type' => $shippingData['type'] ?? null]);
         session(['shipping_cost' => $shippingData['cost']]);
 
         $selectedAddressId = $request->address_id;

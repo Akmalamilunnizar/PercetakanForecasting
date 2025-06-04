@@ -16,8 +16,6 @@ class DetailKeluar extends Model
         'QtyKeluar'
     ];
 
-    public $timestamps = false;  
-
     // relasi ke laporan
     public function laporan()
     {

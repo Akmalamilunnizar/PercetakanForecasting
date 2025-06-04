@@ -191,7 +191,7 @@
                                     <div class="row fw-bold text-primary">
                                         <div class="col-6" style="margin-top: 10px;">Total Pembayaran</div>
                                         <div class="col-6 text-end" style="margin-top: 10px;">Rp
-                                            <span id="summaryTotalPembayaran">{{ number_format($hargaSetelahDiskon, 0, ',', '.') }}</span>
+                                            <span id="summaryTotalPembayaran">{{ number_format($minHarga, 0, ',', '.') }}</span>
                                         </div>
                                     </div>
                                     <div class="d-grid gap-2" style="margin-top: 20px;">

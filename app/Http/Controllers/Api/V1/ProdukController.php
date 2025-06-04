@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Produk;
 use App\Models\Items;
-use App\Models\Diskon;
 use App\Models\Size;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -16,7 +15,7 @@ class ProdukController extends Controller
     // Menampilkan semua produk
     public function index()
     {
-        $dataProduk = Produk::with(['bahan', 'diskonRelasi', 'sizes.satuan'])->get();
+        $dataProduk = Produk::with(['bahan', 'sizes.satuan'])->get();
         return view('admin.allproduk', compact('dataProduk'));
     }
 
@@ -27,12 +26,11 @@ class ProdukController extends Controller
         $lastProduk = Produk::orderBy('IdProduk', 'desc')->first();
         $newId = $lastProduk ? 'P' . str_pad((substr($lastProduk->IdProduk, 1) + 1), 4, '0', STR_PAD_LEFT) : 'P0001';
 
-        // Ambil data bahan, diskon, dan ukuran untuk dropdown
+        // Ambil data bahan dan ukuran untuk dropdown
         $bahanList = Items::all();
-        $diskonList = Diskon::all();
         $sizeList = Size::with('satuan')->get();
 
-        return view('admin.addproduk', compact('newId', 'bahanList', 'diskonList', 'sizeList'));
+        return view('admin.addproduk', compact('newId', 'bahanList', 'sizeList'));
     }
 
     // Menyimpan produk baru
@@ -47,7 +45,6 @@ class ProdukController extends Controller
                 'harga_per_size' => 'required|array',
                 'harga_per_size.*' => 'required|integer',
                 'custom_harga' => 'required|integer',
-                'diskon' => 'nullable|exists:diskon,id',
                 'id_bahan' => 'nullable|exists:databarang,IdBarang',
                 'Img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 'deskripsi' => 'required|string|max:1500',
@@ -66,7 +63,6 @@ class ProdukController extends Controller
                 'IdProduk' => $newId,
                 'NamaProduk' => $request->NamaProduk,
                 'custom_harga' => $request->custom_harga,
-                'diskon' => $request->diskon,
                 'id_bahan' => $request->id_bahan,
                 'Img' => $path,
                 'deskripsi' => $request->deskripsi,
@@ -90,11 +86,10 @@ class ProdukController extends Controller
     // Menampilkan form edit produk
     public function editProduk($id)
     {
-        $produk = Produk::with(['bahan', 'diskonRelasi', 'sizes.satuan'])->findOrFail($id);
+        $produk = Produk::with(['bahan', 'sizes.satuan'])->findOrFail($id);
         $bahanList = Items::all();
-        $diskonList = Diskon::all();
         $sizeList = Size::with('satuan')->get();
-        return view('admin.editproduk', compact('produk', 'bahanList', 'diskonList', 'sizeList'));
+        return view('admin.editproduk', compact('produk', 'bahanList', 'sizeList'));
     }
 
     // Memperbarui data produk
@@ -108,7 +103,6 @@ class ProdukController extends Controller
             'sizes' => 'required|array',
             'sizes.*' => 'exists:size,id_ukuran',
             'custom_harga' => 'required|integer',
-            'diskon' => 'nullable|exists:diskon,id',
             'id_bahan' => 'nullable|exists:databarang,IdBarang',
             'Img' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'deskripsi' => 'required|string|max:1500',
@@ -129,7 +123,6 @@ class ProdukController extends Controller
             $produk->update([
                 'NamaProduk' => $request->NamaProduk,
                 'custom_harga' => $request->custom_harga,
-                'diskon' => $request->diskon,
                 'id_bahan' => $request->id_bahan,
                 'deskripsi' => $request->deskripsi,
             ]);
@@ -175,7 +168,7 @@ class ProdukController extends Controller
     // Menampilkan list produk dalam format JSON
     public function get_produk_list()
     {
-        $produk = Produk::with(['bahan', 'diskonRelasi'])->get();
+        $produk = Produk::with(['bahan'])->get();
         return response()->json($produk, 200);
     }
 
@@ -184,7 +177,7 @@ class ProdukController extends Controller
     {
         $search = $request->search;
 
-        $dataProduk = Produk::with(['bahan', 'diskonRelasi'])
+        $dataProduk = Produk::with(['bahan'])
             ->leftJoin('databarang', 'produk.id_bahan', '=', 'databarang.IdBarang')
             ->where(function ($query) use ($search) {
                 $query->where('IdProduk', 'like', "%$search%")
@@ -218,7 +211,7 @@ class ProdukController extends Controller
 
     public function show($id)
     {
-        $produk = Produk::with(['bahan', 'diskonRelasi', 'sizes.satuan'])->findOrFail($id);
+        $produk = Produk::with(['bahan', 'sizes.satuan'])->findOrFail($id);
 
         if ($produk->ukuran) {
             // Standard size

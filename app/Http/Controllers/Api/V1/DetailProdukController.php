@@ -13,11 +13,7 @@ class DetailProdukController extends Controller
 {
     public function show(string $id): View
     {
-        $produk = Produk::with(['diskonRelasi', 'sizes.satuan'])->findOrFail($id);
-
-        $hargaAsli = $produk->HargaProduk;
-        $diskonPersen = $produk->diskonRelasi ? $produk->diskonRelasi->persentase : 0;
-        $hargaSetelahDiskon = $hargaAsli - ($hargaAsli * ($diskonPersen / 100));
+        $produk = Produk::with(['sizes.satuan'])->findOrFail($id);
 
         // Get description from database
         $description = $produk->deskripsi ?? 'Produk berkualitas dengan hasil cetak yang memukau. Tersedia dalam berbagai ukuran dan finishing.';
@@ -32,11 +28,9 @@ class DetailProdukController extends Controller
 
         return view('admin.DetailProduk', [
             'produk' => $produk,
-            'hargaSetelahDiskon' => $hargaSetelahDiskon,
             'userPhone' => $userPhone,
             'description' => $description,
-            'user' => $user,
-            'diskonPersen' => $diskonPersen
+            'user' => $user
         ]);
     }
 
