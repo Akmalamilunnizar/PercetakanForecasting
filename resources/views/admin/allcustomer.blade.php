@@ -12,7 +12,7 @@ CIME | Halaman Daftar Customer
             {{-- <form method="GET" action={{ route('searchitem') }}> --}}
             <input type="text" name="search" class="form-control border-0 shadow-none ps-1 ps-sm-2 w-100"
                 placeholder="Pencarian id atau nama..." value="{{ isset($search) ? $search : '' }}" aria-label="Pencarian..."
-                style="600px" />
+                style="width: 600px;" />
             </form>
         </div>
     </div>
@@ -41,13 +41,19 @@ CIME | Halaman Daftar Customer
             </thead>
             <tbody class="table-border-bottom-0">
 
-                @foreach ($customer as $item)
+                @foreach ($customer->where('user', 'User') as $item)
                     <tr>
                         <td style="text-align: center;">{{ $item->id }}</td>
-                        <td style="text-align: center;">{{ $item->f_name }}</td>
+                        <td style="text-align: center;">
+                            <a href="{{ route('customerDetails', $item->id) }}" class="text-primary fw-bold">
+                                {{ $item->f_name }}
+                            </a>
+                        </td>
                         <td style="text-align: center;">{{ $item->nomor_telepon }}</td>
                         <td style="text-align: center;">{{ $item->email }}</td>
-                        <td style="text-align: center;">{{ $item->alamat }}</td>
+                        <td style="text-align: center;">
+                            {{ $item->defaultAddress ? $item->defaultAddress->full_address : '-' }}
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

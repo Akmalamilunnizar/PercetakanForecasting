@@ -110,12 +110,14 @@
                 <tbody>
                     @foreach ($transaksi as $item)
                         <tr>
-                            <td class="text-center">{{ $item->IdTransaksi }}</td>
-                            <td class="text-center">
-                                {{-- Pastikan Id Customer yang benar dipass ke rute customerDetails --}}
-                                <a href="{{ route('customerDetails', $item->detail->id ?? '#') }}" class="text-primary fw-bold">
-                                    {{ $item->detail->f_name ?? 'N/A' }}
+                            <td style="text-align: center;">
+                                <a href="{{ route('vieworder', $item->IdTransaksi) }}" class="text-primary">
+                                    {{ $item->IdTransaksi }}
                                 </a>
+                            </td>
+
+                            <td class="text-center">
+                            {{ $item->detail->f_name ?? 'N/A' }}
                             </td>
                             <td class="text-center">Rp. {{ number_format($item->GrandTotal, 0, ',', '.') }}</td> {{-- Ini seharusnya Total transaksi --}}
                             <td class="text-center">Rp. {{ number_format($item->Bayar, 0, ',', '.') }}</td> {{-- Ini seharusnya jumlah yang dibayarkan --}}

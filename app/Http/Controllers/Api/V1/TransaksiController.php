@@ -131,6 +131,24 @@ class TransaksiController extends Controller
         return $pdf->stream('laporan-transaksi.pdf');
     }
 
+    public function showTransaction($id)
+    {
+        $transaksi = Transaksi::with(['user', 'address', 'detailTransaksi.produk', 'detailTransaksi.size'])
+            ->where('IdTransaksi', $id)
+            ->firstOrFail();
+
+        return view('admin.transaction_details', compact('transaksi'));
+    }
+
+    public function ViewOrder($id)
+    {
+        $orders = Transaksi::with(['user', 'address', 'detailTransaksi.produk', 'detailTransaksi.size'])
+            ->where('IdTransaksi', $id)
+            ->firstOrFail();
+
+        return view('admin.vieworder', compact('orders'));
+    }
+
     // Catatan: Jika ada metode lain seperti ManageTransaksi, AddTransaksi, StoreTransaksi,
     // EditTransaksi, UpdateTransaksi, DeleteTransaksi, tambahkan di sini sesuai kebutuhan.
 }

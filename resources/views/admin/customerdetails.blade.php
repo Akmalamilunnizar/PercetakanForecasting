@@ -6,58 +6,227 @@ CIME | Detail Pelanggan
 
 @section('content')
 <div class="container-xxl flex-grow-1 container-p-y">
-    <h4 class="py-3 mb-4"><span class="text-muted fw-light">Detail</span> Pelanggan</h4>
-    <div class="card">
-        <h5 class="card-header fw-bold">Informasi Pelanggan</h5>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold py-3 mb-0">
+            <span class="text-muted fw-light">Detail</span> Pelanggan
+        </h4>
+        <a href="{{ url()->previous() }}" class="btn btn-outline-primary">
+            <i class='bx bx-arrow-back me-1'></i> Kembali
+        </a>
+    </div>
+
+    @if (session()->has('message'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session()->get('message') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    <!-- Customer Info Card -->
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class='bx bx-user me-2'></i>Informasi Pelanggan
+            </h5>
+        </div>
         <div class="card-body">
-            <p><strong>ID Pelanggan:</strong> {{ $customer->id }}</p>
-            <p><strong>Nama Lengkap:</strong> {{ $customer->f_name }}</p>
-            <p><strong>Email:</strong> {{ $customer->email }}</p>
-            <p><strong>Nomor Telepon:</strong> {{ $customer->nomor_telepon }}</p>
-            <p><strong>Alamat:</strong> {{ $customer->alamat }}</p>
-            {{-- Tambahkan informasi lain yang mungkin ada di model Customer Anda --}}
-            {{-- Contoh: --}}
-            {{-- <p><strong>Tanggal Bergabung:</strong> {{ $customer->created_at->format('d M Y') }}</p> --}}
-
-            <h6 class="mt-4">Informasi Tambahan untuk Pengiriman:</h6>
-            <ul>
-                <li>**Catatan Khusus Pengiriman:** {{ $customer->catatan_pengiriman ?? 'Tidak ada' }}</li>
-                <li>**Preferensi Waktu Pengiriman:** {{ $customer->preferensi_waktu_pengiriman ?? 'Tidak ada' }}</li>
-                <li>**Jenis Bangunan:** {{ $customer->jenis_bangunan ?? 'Tidak ada' }}</li>
-                <li>**Instruksi Khusus (misal: "ketuk pintu 3x"):** {{ $customer->instruksi_khusus ?? 'Tidak ada' }}</li>
-                {{-- Anda perlu memastikan kolom-kolom ini ada di tabel 'customers' atau tabel terkait lainnya --}}
-                {{-- Jika tidak ada, Anda bisa menambahkan kolom baru ke tabel 'customers' melalui migrasi Laravel --}}
-            </ul>
-
-            {{-- Jika Anda ingin menampilkan riwayat transaksi pelanggan di sini: --}}
-            {{-- @if ($customer->transaksis->isNotEmpty())
-                <h6 class="mt-4">Riwayat Transaksi:</h6>
-                <table class="table table-bordered mt-2">
-                    <thead>
-                        <tr>
-                            <th>ID Transaksi</th>
-                            <th>Tanggal</th>
-                            <th>Grand Total</th>
-                            <th>Status Pesanan</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($customer->transaksis as $transaksi)
-                            <tr>
-                                <td>{{ $transaksi->IdTransaksi }}</td>
-                                <td>{{ $transaksi->tglTransaksi->format('d M Y') }}</td>
-                                <td>Rp{{ number_format($transaksi->GrandTotal, 0, ',', '.') }}</td>
-                                <td>{{ $transaksi->StatusPesanan }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            @else
-                <p class="mt-4">Pelanggan ini belum memiliki riwayat transaksi.</p>
-            @endif --}}
-
-            <a href="{{ url()->previous() }}" class="btn btn-primary mt-3">Kembali ke Daftar Transaksi</a>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">ID Pelanggan</label>
+                        <p class="form-control-static">{{ $customer->id }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nama Lengkap</label>
+                        <p class="form-control-static">{{ $customer->f_name }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Email</label>
+                        <p class="form-control-static">{{ $customer->email }}</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Nomor Telepon</label>
+                        <p class="form-control-static">{{ $customer->nomor_telepon }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Status</label>
+                        <p class="form-control-static">
+                            <span class="badge bg-label-primary">{{ $customer->user }}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
+    <!-- Addresses Section -->
+    <div class="row">
+        <!-- All Addresses -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class='bx bx-map me-2'></i>Daftar Alamat
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if($customer->addresses && $customer->addresses->isNotEmpty())
+                        <div class="list-group">
+                            @foreach($customer->addresses as $address)
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">{{ $address->label ?? '-' }}</h6>
+                                        @if($address->is_default)
+                                            <span class="badge bg-label-success">Default</span>
+                                        @endif
+                                    </div>
+                                    <p class="mb-1">{{ $address->recipient_name ?? '-' }}</p>
+                                    <small class="text-muted">{{ $address->phone_number ?? '-' }}</small>
+                                    <p class="mb-1 mt-2">
+                                        {{ $address->full_address ?? '-' }}<br>
+                                        {{ $address->city ?? '-' }}, {{ $address->postal_code ?? '-' }}
+                                    </p>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="alert alert-info mb-0">
+                            <i class='bx bx-info-circle me-2'></i>Tidak ada alamat yang terdaftar
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+
+        <!-- Transaction Addresses -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class='bx bx-package me-2'></i>Alamat Transaksi
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if($addresses->isNotEmpty())
+                        <div class="list-group">
+                            @foreach($addresses as $address)
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">{{ $address->label ?? '-' }}</h6>
+                                        @if($address->is_default)
+                                            <span class="badge bg-label-success">Default</span>
+                                        @endif
+                                    </div>
+                                    <p class="mb-1">{{ $address->recipient_name ?? '-' }}</p>
+                                    <small class="text-muted">{{ $address->phone_number ?? '-' }}</small>
+                                    <p class="mb-1 mt-2">
+                                        {{ $address->full_address ?? '-' }}<br>
+                                        {{ $address->city ?? '-' }}, {{ $address->postal_code ?? '-' }}
+                                    </p>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="alert alert-info mb-0">
+                            <i class='bx bx-info-circle me-2'></i>Tidak ada alamat yang digunakan dalam transaksi
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transaction History -->
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">
+                <i class='bx bx-history me-2'></i>Riwayat Transaksi
+            </h5>
+        </div>
+        <div class="card-body">
+            @if($transaksis->isNotEmpty())
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="text-align: center;">ID Transaksi</th>
+                                <th style="text-align: center;">Tanggal</th>
+                                <th style="text-align: center;">Total</th>
+                                <th style="text-align: center;">Status Pembayaran</th>
+                                <th style="text-align: center;">Status Pesanan</th>
+                                <th style="text-align: center;">Metode Pengiriman</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($transaksis as $transaksi)
+                                <tr>
+                                    <td style="text-align: center;">
+                                        <a href="{{ route('vieworder', $transaksi->IdTransaksi) }}" class="text-primary fw-bold">
+                                            {{ $transaksi->IdTransaksi }}
+                                        </a>
+                                    </td>
+                                    <td style="text-align: center;">{{ $transaksi->tglTransaksi ? \Carbon\Carbon::parse($transaksi->tglTransaksi)->format('d M Y') : '-' }}</td>
+                                    <td style="text-align: center;">Rp {{ number_format($transaksi->GrandTotal, 0, ',', '.') }}</td>
+                                    <td style="text-align: center;">
+                                        <span class="badge bg-label-{{ $transaksi->StatusPembayaran == 'Lunas' ? 'success' : 'warning' }}">
+                                            {{ $transaksi->StatusPembayaran }}
+                                        </span>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <span class="badge bg-label-{{ 
+                                            $transaksi->StatusPesanan == 'Diterima' ? 'success' : 
+                                            ($transaksi->StatusPesanan == 'Ditolak' ? 'danger' : 'warning') 
+                                        }}">
+                                            {{ $transaksi->StatusPesanan }}
+                                        </span>
+                                    </td>
+                                    <td style="text-align: center;">{{ $transaksi->shipping_method ?? '-' }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @else
+                <div class="alert alert-info mb-0">
+                    <i class='bx bx-info-circle me-2'></i>Belum ada transaksi untuk customer ini
+                </div>
+            @endif
+        </div>
+    </div>
+
+    <!-- Transaction Notes -->
+    @if($transaksis->isNotEmpty())
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class='bx bx-note me-2'></i>Catatan Transaksi
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>ID Transaksi</th>
+                                <th>Tanggal</th>
+                                <th>Catatan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($transaksis as $transaksi)
+                                <tr>
+                                    <td>{{ $transaksi->IdTransaksi }}</td>
+                                    <td>{{ $transaksi->tglTransaksi ? \Carbon\Carbon::parse($transaksi->tglTransaksi)->format('d M Y') : '-' }}</td>
+                                    <td>{{ $transaksi->notes ?? '-' }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    @endif
 </div>
 @endsection

@@ -21,10 +21,7 @@ class CustomerController extends Controller
 
     public function Index()
     {
-        // Ambil data customer
-        $customer = Customer::all();
-
-        // Kirim data ke view
+        $customer = User::with('defaultAddress')->get();
         return view("admin.allcustomer", compact('customer'));
     }
 
@@ -57,20 +54,30 @@ class CustomerController extends Controller
     }
 
     // Jika Anda memiliki metode deleteCustomer, Anda bisa menambahkannya di sini
-    // public function deleteCustomer($id)
-    // {
-    //     // Logika untuk menghapus customer
-    //     $customer = Customer::find($id);
-    //     if ($customer) {
-    //         $customer->delete();
-    //         return redirect()->back()->with('message', 'Pelanggan berhasil dihapus!');
-    //     }
-    //     return redirect()->back()->with('error', 'Pelanggan tidak ditemukan!');
-    // }
+    public function deleteCustomer($id)
+    {
+        // Logika untuk menghapus customer
+        $customer = Customer::find($id);
+        if ($customer) {
+            $customer->delete();
+            return redirect()->back()->with('message', 'Pelanggan berhasil dihapus!');
+        }
+        return redirect()->back()->with('error', 'Pelanggan tidak ditemukan!');
+    }
     public function show($id)
     {
-        $customer = Customer::findOrFail($id);
-        return view('admin.customerdetails', compact('customer'));
+        // Get the customer (User)
+        $customer = User::findOrFail($id);
+
+        // Get all transaksi for this customer, eager load the address
+        $transaksis = \App\Models\Transaksi::with('address')
+            ->where('id', $id)
+            ->get();
+
+        // Get unique addresses used in transaksi
+        $addresses = $transaksis->pluck('address')->unique('id')->values();
+
+        return view('admin.customerdetails', compact('customer', 'addresses', 'transaksis'));
     }
 
 }

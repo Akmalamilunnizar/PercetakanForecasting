@@ -68,7 +68,9 @@
                     <select name="id_bahan" class="form-select" required>
                         <option value="">Pilih Bahan</option>
                         @foreach($bahanList as $bahan)
-                            <option value="{{ $bahan->IdBarang }}" {{ old('id_bahan') == $bahan->IdBarang ? 'selected' : '' }}>{{ $bahan->NamaBarang }}</option>
+                            <option value="{{ $bahan->IdBarang }}" {{ old('id_bahan') == $bahan->IdBarang ? 'selected' : '' }}>
+                                {{ $bahan->jenisBarang->JenisBarang }} - {{ $bahan->NamaBarang }}
+                            </option>
                         @endforeach
                     </select>
                 </div>

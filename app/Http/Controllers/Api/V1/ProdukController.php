@@ -27,7 +27,7 @@ class ProdukController extends Controller
         $newId = $lastProduk ? 'P' . str_pad((substr($lastProduk->IdProduk, 1) + 1), 4, '0', STR_PAD_LEFT) : 'P0001';
 
         // Ambil data bahan dan ukuran untuk dropdown
-        $bahanList = Items::all();
+        $bahanList = Items::with('jenisBarang')->get();
         $sizeList = Size::with('satuan')->get();
 
         return view('admin.addproduk', compact('newId', 'bahanList', 'sizeList'));

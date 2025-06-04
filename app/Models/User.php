@@ -104,6 +104,16 @@ class User extends Authenticatable implements CanResetPasswordContract
     // Jika Anda memiliki relasi satu-ke-banyak dengan Address, ini sudah benar
     public function addresses()
     {
-        return $this->hasMany(\App\Models\Address::class, 'user_id');
+        return $this->hasMany(Address::class, 'user_id', 'id');
+    }
+
+    public function defaultAddress()
+    {
+        return $this->hasOne(Address::class, 'user_id', 'id')->where('is_default', 1);
+    }
+
+    public function latestAddress()
+    {
+        return $this->hasOne(Address::class, 'user_id', 'id')->latestOfMany();
     }
 }

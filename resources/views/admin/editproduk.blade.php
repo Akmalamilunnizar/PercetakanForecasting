@@ -79,7 +79,7 @@ CIME | Halaman Edit Produk
                                         <input type="number" name="harga_per_size[]" class="form-control" placeholder="Harga" value="{{ $size->pivot->harga }}" required>
                                     </div>
                                     <div class="col-md-2">
-                                        <button type="button" class="btn btn-danger remove-ukuran-harga">Hapus</button>
+                                        <button type="button" class="btn btn-outline-danger remove-ukuran-harga">Hapus</button>
                                     </div>
                                 </div>
                                 @endforeach
@@ -104,7 +104,7 @@ CIME | Halaman Edit Produk
                                 </div>
                                 @endif
                             </div>
-                            <button type="button" id="add-ukuran-harga" class="btn btn-secondary btn-sm mt-2">+ Tambah Ukuran</button>
+                            <button type="button" id="add-ukuran-harga" class="btn btn-outline-secondary btn-sm mt-2">+ Tambah Ukuran</button>
                         </div>
                     </div>
 
