@@ -130,7 +130,7 @@
                                     {{-- FORM UNTUK TOMBOL TERIMA --}}
                                     <form id="terimaForm{{ $item->IdTransaksi }}" action="{{ route('terimaOrderan', $item->IdTransaksi) }}" method="POST" style="display:inline;">
                                         @csrf {{-- Penting: Laravel CSRF Token --}}
-                                        <button type="button" class="btn btn-success btn-sm mx-1"
+                                        <button type="button" class="btn btn-outline-success btn-sm mx-1"
                                             onclick="confirmAction('terima', 'terimaForm{{ $item->IdTransaksi }}');">
                                             <i class="fas fa-check me-1"></i> Terima
                                         </button>
@@ -139,7 +139,7 @@
                                     {{-- FORM UNTUK TOMBOL TOLAK --}}
                                     <form id="tolakForm{{ $item->IdTransaksi }}" action="{{ route('tolakOrderan', $item->IdTransaksi) }}" method="POST" style="display:inline;">
                                         @csrf {{-- Penting: Laravel CSRF Token --}}
-                                        <button type="button" class="btn btn-danger btn-sm mx-1"
+                                        <button type="button" class="btn btn-outline-danger btn-sm mx-1"
                                             onclick="confirmAction('tolak', 'tolakForm{{ $item->IdTransaksi }}');">
                                             <i class="fas fa-times me-1"></i> Tolak
                                         </button>
